@@ -1,80 +1,88 @@
-# .NET Desktop\
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.\
-# Add steps that publish symbols, save build artifacts, and more:\
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net\
-\
-trigger:\
-- master\
-\
-pool:\
-  vmImage: 'windows-latest'\
-\
-variables:\
-  solution: '**/*.sln'\
-  buildPlatform: 'Any CPU'\
-  buildConfiguration: 'Release'\
-\
-steps:\
-\
-- task: NuGetToolInstaller@1\
-- task: NuGetCommand@2\
-  inputs:\
-    restoreSolution: '$(solution)'\
-- task: SonarCloudPrepare@1\
-  inputs:\
-    SonarCloud: 'Sonar Cloud'\
-    organization: 'souly84'\
-    scannerMode: 'MSBuild'\
-    projectKey: 'souly84_InventoryOperations'\
-    projectName: 'Warehouse.Core'\
-- task: VSBuild@1\
-  inputs:\
-    solution: '$(solution)'\
-    platform: '$(buildPlatform)'\
-    configuration: '$(buildConfiguration)'\
-\
-- task: VSTest@2\
-  displayName: 'Run unit tests'\
-  inputs:\
-    platform: '$(buildPlatform)'\
-    configuration: '$(buildConfiguration)'\
-    testSelector: 'testAssemblies'\
-    testAssemblyVer2: | # Required when testSelector == TestAssemblies\
-     **\\*Tests*.dll\
-     !**\\*TestAdapter.dll\
-     !**\\obj\\** \
-    searchFolder: '$(System.DefaultWorkingDirectory)'\
-    codeCoverageEnabled: true\
-\
-- task: PublishTestResults@2\
-  displayName: 'Publish Test Results **/*.trx'\
-  inputs:\
-    testResultsFormat: VSTest\
-    testResultsFiles: '**/*.trx'\
-    searchFolder: '$(Build.SourcesDirectory)'\
-    failTaskOnFailedTests: true\
-    testRunTitle: 'Unit tests'\
-\
-- task: PublishCodeCoverageResults@1\
-  displayName: 'Publish code coverage result'\
-  inputs:\
-    codeCoverageTool: Cobertura\
-    summaryFileLocation: '**/*.cobertura.xml'\
-    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverageResults'\
-\
-- task: SonarCloudAnalyze@1\
-- task: SonarCloudPublish@1\
-  inputs:\
-    pollingTimeoutSec: '300'\
-# - task: DotNetCoreCLI@2\
-#   inputs:\
-#     command: 'pack'\
-#     packagesToPack: '**/*.csproj'\
-#     versioningScheme: 'byPrereleaseNumber'\
-\
-# - task: DotNetCoreCLI@2\
-#   inputs:\
-#     command: 'push'\
-#     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'\
-#     nuGetFeedType: 'external'\
-#     publishFeedCredentials: 'WebRequest.Elegant'}
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  releaseBuildNumber: '1.0.0'
+  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+  isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+name: $(releaseBuildNumber).$(Build.BuildId)
+
+steps:
+
+- task: NuGetToolInstaller@1
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonar Cloud'
+    organization: 'souly84'
+    scannerMode: 'MSBuild'
+    projectKey: 'souly84_InventoryOperations'
+    projectName: 'Warehouse.Core'
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  displayName: 'Run unit tests'
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: | # Required when testSelector == TestAssemblies
+     ***Tests*.dll
+     !***TestAdapter.dll
+     !**obj** 
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    codeCoverageEnabled: true
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results **/*.trx'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(Build.SourcesDirectory)'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Unit tests'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage result'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '**/*.cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverageResults'
+
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: MSBuild@1
+  displayName: 'NuGet pack Warehouse.Core'
+  inputs:
+    solution: src/Warehouse.Core.csproj
+    configuration: '$(buildConfiguration)'
+    msbuildArguments: '/p:PackageVersion=$(Build.BuildNumber) /t:pack /p:packageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeReferencedProjects=true'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  condition: and(succeeded(), eq(variables.isDevelop, true))
+  inputs:
+    command: push
+    publishVstsFeed: 'Warehouse/Warehouse'
+    allowPackageConflicts: true
