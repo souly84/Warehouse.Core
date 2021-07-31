@@ -30,7 +30,7 @@ steps:
     SonarCloud: 'Sonar Cloud'
     organization: 'souly84'
     scannerMode: 'MSBuild'
-    projectKey: 'souly84_InventoryOperations'
+    projectKey: 'souly84_Warehouse'
     projectName: 'Warehouse.Core'
 - task: VSBuild@1
   inputs:
