@@ -39,8 +39,6 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    msbuildArguments: '/p:OutputPath="$(outputDirectory)"'
-    clean: true
 
 - task: VSTest@2
   displayName: 'Run unit tests'
@@ -49,9 +47,9 @@ steps:
     configuration: '$(buildConfiguration)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: | # Required when testSelector == TestAssemblies
-     ***Tests*.dll
-     !***TestAdapter.dll
-     !**obj** 
+     **\*Tests*.dll
+     !**\*TestAdapter.dll
+     !**\obj\** 
     searchFolder: '$(Build.SourcesDirectory)'
     codeCoverageEnabled: true
 
