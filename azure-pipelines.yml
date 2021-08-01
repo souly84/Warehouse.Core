@@ -27,10 +27,10 @@ steps:
     restoreSolution: '$(solution)'
 - task: SonarCloudPrepare@1
   inputs:
-    SonarCloud: 'Sonar Cloud'
+    SonarCloud: 'SonarCloud'
     organization: 'souly84'
     scannerMode: 'MSBuild'
-    projectKey: 'souly84_Warehouse'
+    projectKey: 'souly84_InventoryOperations'
     projectName: 'Warehouse.Core'
 - task: VSBuild@1
   inputs:
