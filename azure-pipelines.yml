@@ -52,7 +52,7 @@ steps:
      ***Tests*.dll
      !***TestAdapter.dll
      !**obj** 
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    searchFolder: '$(outputDirectory)'
     codeCoverageEnabled: true
 
 - task: PublishTestResults@2
@@ -60,7 +60,7 @@ steps:
   inputs:
     testResultsFormat: VSTest
     testResultsFiles: '**/*.trx'
-    searchFolder: '$(Build.SourcesDirectory)'
+    searchFolder: '$(outputDirectory)'
     failTaskOnFailedTests: true
     testRunTitle: 'Unit tests'
 
