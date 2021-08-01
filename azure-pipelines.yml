@@ -51,7 +51,13 @@ steps:
      !**\*TestAdapter.dll
      !**\obj\** 
     searchFolder: '$(Build.SourcesDirectory)'
+    runInParallel: true
     codeCoverageEnabled: true
+- task: Bash@3
+  displayName: 'Generate code coverage report'
+  inputs:
+    targetType: filePath
+    filePath: ./Scripts/CodeCoverage/WinRunner.bat
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results **/*.trx'
