@@ -1,1 +1,1 @@
-PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'CodeCoverage.ps1'";
+PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%./CodeCoverage.ps1'";

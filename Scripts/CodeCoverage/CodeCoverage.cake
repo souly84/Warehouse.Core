@@ -6,7 +6,7 @@ var target = Argument("target", "Report");
 /*  Specify the relative paths to your tests projects here. */
 var testProjectsRelativePaths = new string[]
 {
-    "../../tests/StoreMobile.Core.UnitTests/StoreMobile.Core.UnitTests.csproj"
+    "../../tests/Warehouse.Core.Tests.csproj"
 };
 
 /*  Change the output artifacts and their configuration here. */
