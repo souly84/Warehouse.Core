@@ -34,6 +34,8 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'souly84_InventoryOperations'
     projectName: 'Warehouse.Core'
+    extraProperties: |
+            sonar.cs.opencover.reportsPaths=$(Common.TestResultsDirectory)/coverage.opencover.xml
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -46,7 +48,7 @@ steps:
     command: 'test'
     projects: '**/*[Tt]est*/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(BuildConfiguration) --logger trx /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage result'
