@@ -40,37 +40,13 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-#- task: VSTest@2
-#  displayName: 'Run unit tests'
-#  inputs:
-#    platform: '$(buildPlatform)'
-#    configuration: '$(buildConfiguration)'
-#    testSelector: 'testAssemblies'
-#    testAssemblyVer2: | # Required when testSelector == TestAssemblies
-#     **\*Tests*.dll
-#     !**\*TestAdapter.dll
-#     !**\obj\** 
-#    searchFolder: '$(Build.SourcesDirectory)'
-#    resultsFolder: '$(System.DefaultWorkingDirectory)\TestResults'
-#    runInParallel: true
-#    codeCoverageEnabled: true
-
 - task: DotNetCoreCLI@2
   displayName: 'Run tests'
   inputs:
     command: 'test'
     projects: '**/*[Tt]est*/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-
-#- task: PublishTestResults@2
-#  displayName: 'Publish Test Results **/*.trx'
-#  inputs:
-#    testResultsFormat: VSTest
-#    testResultsFiles: '**/*.trx'
-#    searchFolder: '$(System.DefaultWorkingDirectory)\TestResults'
-#    failTaskOnFailedTests: true
-#    testRunTitle: 'Unit tests'
+    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover,cobertura'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage result'
