@@ -7,7 +7,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public void Test1()
         {
-            Assert.NotNull(new Class1());
+            Assert.Equal(
+                "Hello world",
+                new Class1().HelloWorld()
+            );
         }
     }
 }
