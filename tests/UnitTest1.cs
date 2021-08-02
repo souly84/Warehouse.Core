@@ -1,15 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace Warehouse.Core.Tests
 {
     public class Tests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        [Test]
+        [Fact]
         public void Test1()
         {
             Assert.NotNull(new Class1());
