@@ -36,7 +36,6 @@ steps:
     projectName: 'Warehouse.Core'
     extraProperties: |
         sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)\tests\coverage.opencover.xml
-        sonar.testExecutionReportPaths=$(Agent.TempDirectory)
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -49,7 +48,7 @@ steps:
     command: 'test'
     projects: '**/*[Tt]est*/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\"" /p:ResultsDirectory=$(Common.TestResultsDirectory)'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage result'
