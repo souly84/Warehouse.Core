@@ -36,7 +36,7 @@ steps:
     projectName: 'Warehouse.Core'
     extraProperties: |
         sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)\tests\coverage.opencover.xml
-        sonar.testExecutionReportPaths=$(Agent.TempDirectory)\*.trx
+        sonar.testExecutionReportPaths=$(Agent.TempDirectory)
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
