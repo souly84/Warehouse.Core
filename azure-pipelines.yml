@@ -48,7 +48,7 @@ steps:
     command: 'test'
     projects: '**/*[Tt]est*/*.csproj'
     publishTestResults: true
-    arguments: '--configuration $(BuildConfiguration) --ResultsDirectory $(Common.TestResultsDirectory) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
+    arguments: '--configuration $(BuildConfiguration) /p:ResultsDirectory=$(Common.TestResultsDirectory) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage result'
