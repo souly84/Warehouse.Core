@@ -51,6 +51,7 @@ steps:
      !**\*TestAdapter.dll
      !**\obj\** 
     searchFolder: '$(Build.SourcesDirectory)'
+    resultsFolder: '$(System.DefaultWorkingDirectory)\TestResults'
     runInParallel: true
     codeCoverageEnabled: true
 
@@ -58,8 +59,8 @@ steps:
   displayName: 'Publish Test Results **/*.trx'
   inputs:
     testResultsFormat: VSTest
-    testResultsFiles: '**/TestResults/*.trx'
-    searchFolder: '$(Build.SourcesDirectory)'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(System.DefaultWorkingDirectory)\TestResults'
     failTaskOnFailedTests: true
     testRunTitle: 'Unit tests'
 
@@ -67,7 +68,7 @@ steps:
   displayName: 'Publish code coverage result'
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: '**/TestResults/*.cobertura.xml'
+    summaryFileLocation: '**/*.cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)/CodeCoverageResults'
 
 - task: SonarCloudAnalyze@1
