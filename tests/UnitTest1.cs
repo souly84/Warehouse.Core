@@ -12,7 +12,7 @@ namespace Warehouse.Core.Tests
         [Test]
         public void Test1()
         {
-            Assert.Pass();
+            Assert.NotNull(new Class1());
         }
     }
 }
