@@ -34,41 +34,28 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'souly84_InventoryOperations'
     projectName: 'Warehouse.Core'
+    extraProperties: |
+        sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)\tests\coverage.opencover.xml
+        sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\*.trx
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  displayName: 'Run unit tests'
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests'
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: | # Required when testSelector == TestAssemblies
-     **\*Tests*.dll
-     !**\*TestAdapter.dll
-     !**\obj\** 
-    searchFolder: '$(Build.SourcesDirectory)'
-    runInParallel: true
-    codeCoverageEnabled: true
-
-- task: PublishTestResults@2
-  displayName: 'Publish Test Results **/*.trx'
-  inputs:
-    testResultsFormat: VSTest
-    testResultsFiles: '**/*.trx'
-    searchFolder: '$(Build.SourcesDirectory)'
-    failTaskOnFailedTests: true
-    testRunTitle: 'Unit tests'
+    command: 'test'
+    projects: '**/*[Tt]est*/*.csproj'
+    publishTestResults: true
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true "/p:CoverletOutputFormat=\"opencover,Cobertura\""'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage result'
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: '**/*.cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverageResults'
 
 - task: SonarCloudAnalyze@1
 - task: SonarCloudPublish@1
