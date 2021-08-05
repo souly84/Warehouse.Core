@@ -8,5 +8,10 @@ namespace Warehouse.Core
         {
             return "Hello world";
         }
+
+        public string HelloWorld2()
+        {
+            return "Hello world";
+        }
     }
 }
