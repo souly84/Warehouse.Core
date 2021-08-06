@@ -37,11 +37,9 @@ steps:
     extraProperties: |
         sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)\tests\coverage.opencover.xml
         sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\*.trx
-        sonar.pullrequest.base=main
-        sonar.pullrequest.branch=variables['Build.SourceBranch']
-        sonar.pullrequest.key=5
         sonar.pullrequest.provider=GitHub
         sonar.pullrequest.github.repository=souly84/Warehouse.Core
+        sonar.qualitygate.wait=true
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
