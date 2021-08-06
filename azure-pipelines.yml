@@ -39,6 +39,7 @@ steps:
         sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\*.trx
         sonar.pullrequest.provider=GitHub
         sonar.pullrequest.github.repository=souly84/Warehouse.Core
+        sonar.pullrequest.github.summary_comment=true
         sonar.qualitygate.wait=true
 - task: VSBuild@1
   inputs:
