@@ -16,6 +16,6 @@ namespace Warehouse.Core.Tests
             _odooReception = odooReception;
         }
 
-        public IGoods Goods => throw new NotImplementedException();
+        public IGoods Goods => new OdooGoods(_client);
     }
 }

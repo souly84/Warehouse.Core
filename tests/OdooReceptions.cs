@@ -5,6 +5,7 @@ using PortaCapena.OdooJsonRpcClient;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using PortaCapena.OdooJsonRpcClient.Models;
+using PortaCapena.OdooJsonRpcClient.Request;
 
 namespace Warehouse.Core.Tests
 {
@@ -19,13 +20,10 @@ namespace Warehouse.Core.Tests
 
         public async Task<IList<IReception>> ToListAsync()
         {
-            var tableName = "stock.picking";
-            var modelResult = await _client.GetModelAsync(tableName);
-
-            //var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
-
             var repository = new OdooRepository<OdooStockPickingDto>(_client.Config);
-            var receptions = await repository.Query().ToListAsync();
+            var receptions = await repository.Query()
+                .Where(OdooFilter.Create().EqualTo("picking_type_code", "incoming"))
+                .ToListAsync();
             return receptions.Value.Select(reception => new OdooReception(_client, reception)).ToList<IReception>();
         }
     }

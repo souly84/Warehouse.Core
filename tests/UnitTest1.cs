@@ -4,6 +4,7 @@ using PortaCapena.OdooJsonRpcClient;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
 using Xunit;
+using System.Linq;
 
 namespace Warehouse.Core.Tests
 {
@@ -55,6 +56,15 @@ namespace Warehouse.Core.Tests
         {
             var user = await _odooCompany.LoginAsync("zhukovskydenis@gmail.com", "mowmav-vande9-cUsfav");
             Assert.Equal(4, (await _odooCompany.Warehouse.Receptions.ToListAsync()).Count);
+        }
+
+        [Fact]
+        public async Task GetReceptionGoods()
+        {
+            var user = await _odooCompany.LoginAsync("zhukovskydenis@gmail.com", "mowmav-vande9-cUsfav");
+            var reception = (await _odooCompany.Warehouse.Receptions.ToListAsync()).First() ;
+            var goods = reception.Goods.ToListAsync();
+            Assert.Equal(4, 4);
         }
     }
 }
