@@ -52,7 +52,7 @@ namespace Warehouse.Core.Tests
         public async Task GetReceptions()
         {
             var user = await _odooCompany.LoginAsync("zhukovskydenis@gmail.com", "mowmav-vande9-cUsfav");
-            Assert.Equal(3, (await _odooCompany.Warehouse.Receptions.ToListAsync()).Count);
+            Assert.Equal(4, (await _odooCompany.Warehouse.Receptions.ToListAsync()).Count);
         }
     }
 }
