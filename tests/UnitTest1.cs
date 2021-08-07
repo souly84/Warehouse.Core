@@ -45,7 +45,9 @@ namespace Warehouse.Core.Tests
         [Fact]
         public Task UnsuccesfullLogin()
         {
-            return Assert.ThrowsAsync<InvalidOperationException>(() => _odooCompany.LoginAsync("zhukovskydenis@gmail.com", "wrongPassword"));
+            return Assert.ThrowsAsync<OdooInvalidLoginException<int>>(
+                () => _odooCompany.LoginAsync("zhukovskydenis@gmail.com", "wrongPassword")
+            );
         }
 
         [Fact]
