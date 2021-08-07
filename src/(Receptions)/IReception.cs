@@ -2,5 +2,6 @@
 {
     public interface IReception
     {
+        IGoods Goods { get; }
     }
 }
