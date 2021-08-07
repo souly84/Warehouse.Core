@@ -1,15 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <None Remove="%28Company%29\" />
-    <None Remove="User\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="%28Company%29\" />
-    <Folder Include="User\" />
-  </ItemGroup>
 </Project>
