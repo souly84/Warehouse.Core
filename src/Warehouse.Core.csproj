@@ -3,5 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <None Remove="%28Deliveries%29\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="%28Deliveries%29\" />
+  </ItemGroup>
 </Project>
