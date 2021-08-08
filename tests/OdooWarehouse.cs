@@ -1,5 +1,4 @@
-﻿using System;
-using PortaCapena.OdooJsonRpcClient;
+﻿using PortaCapena.OdooJsonRpcClient;
 
 namespace Warehouse.Core.Tests
 {

@@ -1,6 +1,5 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
-using PortaCapena.OdooJsonRpcClient;
+﻿using PortaCapena.OdooJsonRpcClient;
+using Warehouse.Core.Tests.Goods;
 
 namespace Warehouse.Core.Tests
 {
@@ -9,13 +8,14 @@ namespace Warehouse.Core.Tests
         private readonly OdooClient _client;
         private readonly OdooStockPickingDto _odooReception;
 
-
-        public OdooReception(OdooClient client, OdooStockPickingDto odooReception)
+        public OdooReception(
+            OdooClient client,
+            OdooStockPickingDto odooReception)
         {
             _client = client;
             _odooReception = odooReception;
         }
 
-        public IGoods Goods => throw new NotImplementedException();
+        public IGoods Goods => new OdooStockGoods(_client, _odooReception.Id);
     }
 }

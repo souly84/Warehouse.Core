@@ -13,7 +13,6 @@ namespace Warehouse.Core.Tests
     [System.Text.Json.Serialization.JsonConverter(typeof(OdooModelConverter))]
     public class OdooUserDto : IOdooModel
     {
-
         // res.partner
         // required
         [JsonProperty("partner_id")]
