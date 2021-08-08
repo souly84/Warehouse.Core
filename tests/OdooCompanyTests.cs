@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient;
 using PortaCapena.OdooJsonRpcClient.Models;
 using Warehouse.Core.Tests.Extensions;
@@ -35,9 +36,8 @@ namespace Warehouse.Core.Tests
         public async Task GetReceptions()
         {
             await _odooCompany.LoginAsync(_userName, _userPassword);
-            Assert.Equal(
-                4,
-                (await _odooCompany.Warehouse.Receptions.ToListAsync()).Count
+            Assert.NotEmpty(
+                (await _odooCompany.Warehouse.Receptions.ToListAsync())
             );
         }
 
@@ -53,7 +53,7 @@ namespace Warehouse.Core.Tests
                 )
             );
             await client.LoginAsync();
-            var aaa = await client.DotNetModel(new OdooStockGoodDto());
+            Debug.Write(await client.DotNetModel(new OdooStockGoodDto()));
         }
     }
 }
