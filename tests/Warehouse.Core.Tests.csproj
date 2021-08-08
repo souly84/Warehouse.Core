@@ -22,15 +22,4 @@
   <ItemGroup>
     <ProjectReference Include="..\src\Warehouse.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="PortaCapena.OdooJsonRpcClient" />
-    <None Remove="%28Receptions%29\" />
-    <None Remove="%28Extensiosn%29\" />
-    <None Remove="%28Goods%29\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="%28Receptions%29\" />
-    <Folder Include="%28Extensions%29\" />
-    <Folder Include="%28Goods%29\" />
-  </ItemGroup>
 </Project>
