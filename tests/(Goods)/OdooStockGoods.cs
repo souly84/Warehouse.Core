@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient;
+using PortaCapena.OdooJsonRpcClient.Consts;
 
 namespace Warehouse.Core.Tests.Goods
 {
@@ -32,7 +33,10 @@ namespace Warehouse.Core.Tests.Goods
 
         public async Task<IList<IGood>> ToListAsync()
         {
-            var goods = await _repository.Query().ToListAsync();
+            var goods = await _repository
+                .Query()
+                .Where(x => x.PickingId, OdooOperator.EqualsTo, _receptionId)
+                .ToListAsync();
             return goods.Value.Select(
                 good => new OddoGood(_client, good)
             ).ToList<IGood>();

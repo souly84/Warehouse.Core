@@ -1,21 +1,29 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient;
 using PortaCapena.OdooJsonRpcClient.Models;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Warehouse.Core.Tests
 {
-    public class Tests
+    public class OdooCompanyTests
     {
+        private readonly ITestOutputHelper _output;
         private string _userName = "zhukovskydenis@gmail.com";
         private string _userPassword = "mowmav-vande9-cUsfav";
         private OdooCompany _odooCompany = new OdooCompany(
             "https://testreception.odoo.com",
             "testreception"
         );
-       
+
+        public OdooCompanyTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public async Task SuccesfullLogin()
         {
@@ -41,6 +49,16 @@ namespace Warehouse.Core.Tests
             );
         }
 
+        [Fact]
+        public async Task GetReceptionGoods()
+        {
+            await _odooCompany.LoginAsync(_userName, _userPassword);
+            var receptions = await _odooCompany.Warehouse.Receptions.ToListAsync();
+            Assert.NotEmpty(
+                (await receptions.First().Goods.ToListAsync())
+            );
+        }
+
         [Fact(Skip = "Only for manual run")]
         public async Task ReceptionsDto()
         {
@@ -53,7 +71,7 @@ namespace Warehouse.Core.Tests
                 )
             );
             await client.LoginAsync();
-            Debug.Write(await client.DotNetModel(new OdooStockGoodDto()));
+            _output.WriteLine(await client.DotNetModel(new OdooStockGoodDto()));
         }
     }
 }

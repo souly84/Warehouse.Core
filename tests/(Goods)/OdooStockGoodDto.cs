@@ -21,10 +21,7 @@ namespace Warehouse.Core.Tests
         [JsonProperty("product_id")]
         public long ProductId { get; set; }
 
-        [JsonProperty("description_picking")]
-        public string DescriptionPicking { get; set; }
-
-        [JsonProperty("product_qty")]
-        public double? ProductQty { get; set; }
+        [JsonProperty("picking_id")]
+        public long? PickingId { get; set; }
     }
 }
