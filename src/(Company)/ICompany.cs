@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Warehouse.Core.Orders;
+using System.Linq;
+using Warehouse.Core.User;
 
 namespace Warehouse.Core
 {
@@ -14,15 +16,21 @@ namespace Warehouse.Core
 
     public class MockedCompany : ICompany
     {
-        public ICustomers Customers => throw new NotImplementedException();
+        public MockedCompany(ICustomers customers, IUsers users, IWarehouse warehouse)
+        {
+            Customers = customers;
+            Users = users;
+            Warehouse = warehouse;
+        }
+        public ICustomers Customers { get; }
 
-        public IUsers Users => throw new NotImplementedException();
+        public IUsers Users { get; }
 
-        public IWarehouse Warehouse => throw new NotImplementedException();
+        public IWarehouse Warehouse { get; }
 
         public Task<IUser> LoginAsync(string userName, string password)
         {
-            throw new NotImplementedException();
+            return Users.LoginAsync(userName, password);
         }
     }
 
