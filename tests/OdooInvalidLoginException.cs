@@ -7,10 +7,10 @@ namespace Warehouse.Core.Tests
     {
         public OdooResult<T> LoginResult{ get; }
 
-        public OdooInvalidLoginException(string message, OdooResult<T> result) : base(message)
+        public OdooInvalidLoginException(string message, OdooResult<T> result)
+            : base($"{message}. {result.Error}")
         {
             LoginResult = result;
         }
-
     }
 }

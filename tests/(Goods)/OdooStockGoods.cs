@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient;
 using PortaCapena.OdooJsonRpcClient.Consts;
+using Warehouse.Core.Core;
 
 namespace Warehouse.Core.Tests.Goods
 {
@@ -40,6 +41,11 @@ namespace Warehouse.Core.Tests.Goods
             return goods.Value.Select(
                 good => new OddoGood(_client, good)
             ).ToList<IGood>();
+        }
+
+        public IGoods With(IFilter filter)
+        {
+            return this;
         }
     }
 }
