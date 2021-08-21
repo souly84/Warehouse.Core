@@ -13,14 +13,18 @@ namespace Warehouse.Core.Tests
             string companyUri,
             string dbName
         ) : this(
-                new OdooClient(
-                    new OdooConfig(
-                        companyUri,
-                        dbName,
-                        string.Empty,
-                        string.Empty
-                    )
+                new OdooConfig(
+                    companyUri,
+                    dbName,
+                    string.Empty,
+                    string.Empty
                 )
+            )
+        {
+        }
+
+        public OdooCompany(OdooConfig config)
+            : this(new OdooClient(config)
             )
         {
         }

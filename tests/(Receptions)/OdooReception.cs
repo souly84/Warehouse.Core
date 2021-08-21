@@ -1,4 +1,5 @@
-﻿using PortaCapena.OdooJsonRpcClient;
+﻿using System.Threading.Tasks;
+using PortaCapena.OdooJsonRpcClient;
 using Warehouse.Core.Tests.Goods;
 
 namespace Warehouse.Core.Tests
@@ -17,5 +18,15 @@ namespace Warehouse.Core.Tests
         }
 
         public IGoods Goods => new OdooStockGoods(_client, _odooReception.Id);
+
+        public Task ConfirmAsync(IGood good)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task ValidateAsync()
+        {
+            return Task.CompletedTask;
+        }
     }
 }
