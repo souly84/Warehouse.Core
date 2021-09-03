@@ -5,7 +5,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=souly84_InventoryOperations&metric=ncloc)](https://sonarcloud.io/dashboard?id=souly84_InventoryOperations)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=souly84_InventoryOperations&metric=coverage)](https://sonarcloud.io/dashboard?id=souly84_InventoryOperations)
 
-The repository comtainn domain entities and contarct for Warehouse business area
+The repository contains domain entities and contracts for Warehouse business area. The main domain interface is [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/(Company)/ICompany.cs) which provides access to all business entities for the domain.
 
 # Status
 
