@@ -7,9 +7,9 @@
 
 The repository contains domain entities and contracts for Warehouse business area. The main domain interface is [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/(Company)/ICompany.cs) which provides access to all business entities for the domain.
 
-# Diagram
+# Models Diagram
 
-![Alt text](/docs/Warehouse.drawio.svg?raw=true "Classes dependencies diagram")
+![Alt text](/docs/Warehouse.svg?raw=true "Classes dependencies diagram")
 
 # Status
 
