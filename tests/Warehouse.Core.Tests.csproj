@@ -16,10 +16,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="PortaCapena.OdooJsonRpcClient" Version="1.0.16" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\src\Warehouse.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="%28Extensions%29\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="%28Extensions%29\" />
   </ItemGroup>
 </Project>

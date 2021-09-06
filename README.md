@@ -7,6 +7,10 @@
 
 The repository contains domain entities and contracts for Warehouse business area. The main domain interface is [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/(Company)/ICompany.cs) which provides access to all business entities for the domain.
 
+# Models Diagram
+
+![Alt text](/docs/Warehouse.svg?raw=true "Classes dependencies diagram")
+
 # Status
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=souly84_InventoryOperations&metric=alert_status)](https://sonarcloud.io/dashboard?id=souly84_InventoryOperations)
