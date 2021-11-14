@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Warehouse.Core.Core
+namespace Warehouse.Core
 {
     public interface IFilter
     {
