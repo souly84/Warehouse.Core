@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Warehouse.Core.Goods;
 
 namespace Warehouse.Core
 {
@@ -6,8 +8,28 @@ namespace Warehouse.Core
     {
         IGoods Goods { get; }
 
-        Task ConfirmAsync(IGood good);
+        Task ValidateAsync(IGoods goodsToValidate);
+    }
 
-        Task ValidateAsync();
+    public class MockReception : IReception
+    {
+        public MockReception(params IGood[] goods)
+            : this(new ListOfGoods(goods))
+        {
+        }
+
+        public MockReception(IGoods goods)
+        {
+            Goods = goods;
+        }
+
+        public IGoods Goods { get; }
+
+        public List<IGood> ValidatedGoods { get; } = new List<IGood>();
+
+        public async Task ValidateAsync(IGoods goodsToValidate)
+        {
+            ValidatedGoods.AddRange(await goodsToValidate.ToListAsync());
+        }
     }
 }
