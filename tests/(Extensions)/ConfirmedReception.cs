@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Warehouse.Core.Goods;
 using Warehouse.Core.Receptions;
 
 namespace Warehouse.Core.Tests.Extensions
@@ -15,20 +17,22 @@ namespace Warehouse.Core.Tests.Extensions
 
         public IGoods Goods => _origin.Goods;
 
-        public async Task<T> ValidateAsync()
+        public async Task<T> ConfirmAsync()
         {
-            var goodsToValidate = await _origin.Goods.ToListAsync();
-            var validation = _origin.Confirmation();
-            foreach (var good in goodsToValidate)
+            var confirmation = _origin.Confirmation();
+            foreach (var good in await _origin.Goods.ToListAsync())
             {
-                await validation.AddAsync(good);
+                while (!good.Confirmed())
+                {
+                    await confirmation.AddAsync(good);
+                }
             }
 
-            await validation.CommitAsync();
+            await confirmation.CommitAsync();
             return _origin;
         }
 
-        public Task ValidateAsync(IGoods goodsToValidate)
+        public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
             return _origin.ValidateAsync(goodsToValidate);
         }
