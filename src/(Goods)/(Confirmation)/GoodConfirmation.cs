@@ -40,7 +40,7 @@ namespace Warehouse.Core.Goods
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj) || TheSameAsDictionary(obj);
+            return object.ReferenceEquals(obj, this) || TheSameAsDictionary(obj);
         }
 
         public override int GetHashCode()
