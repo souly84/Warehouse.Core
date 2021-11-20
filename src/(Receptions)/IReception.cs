@@ -8,7 +8,7 @@ namespace Warehouse.Core
     {
         IGoods Goods { get; }
 
-        Task ValidateAsync(IGoods goodsToValidate);
+        Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate);
     }
 
     public class MockReception : IReception
@@ -25,11 +25,12 @@ namespace Warehouse.Core
 
         public IGoods Goods { get; }
 
-        public List<IGood> ValidatedGoods { get; } = new List<IGood>();
+        public List<IGoodConfirmation> ValidatedGoods { get; } = new List<IGoodConfirmation>();
 
-        public async Task ValidateAsync(IGoods goodsToValidate)
+        public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
-            ValidatedGoods.AddRange(await goodsToValidate.ToListAsync());
+            ValidatedGoods.AddRange(goodsToValidate);
+            return Task.CompletedTask;
         }
     }
 }

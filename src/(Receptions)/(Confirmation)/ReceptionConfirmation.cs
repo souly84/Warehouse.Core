@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Warehouse.Core.Goods;
 
@@ -6,53 +7,56 @@ namespace Warehouse.Core.Receptions
 {
     public class ReceptionConfirmation : IConfirmation
     {
-        private readonly IReception _reception;
-
-        private List<ConfirmedGood> _validatedGoods;
-
         public ReceptionConfirmation(IReception reception)
-            : this(reception, new List<ConfirmedGood>())
         {
+            Reception = reception;
         }
 
-        public ReceptionConfirmation(IReception reception, List<ConfirmedGood> scannedGoods)
+        public IReception Reception { get; }
+
+        public async Task<List<IGoodConfirmation>> ToListAsync()
         {
-            _reception = reception;
-            _validatedGoods = scannedGoods;
+            var goods = await Reception.Goods.ToListAsync();
+            return goods
+                .Select(good => good.Confirmation)
+                .ToList();
         }
 
-        public IGoods Goods => new ListOfGoods(new List<IGood>(_validatedGoods));
-
-        public Task AddAsync(IGood good)
+        public async Task AddAsync(IGood goodToAdd)
         {
-            var validatedGood = new ConfirmedGood(good);
-            var indexOfGood = _validatedGoods.IndexOf(validatedGood);
-            if (indexOfGood == -1)
+            var goods = await Reception
+                .Goods
+                .WhereAsync(good => good.Equals(goodToAdd));
+            foreach (var good in goods)
             {
-                _validatedGoods.Add(validatedGood);
-                indexOfGood = _validatedGoods.Count - 1;
+                good.Confirmation.Increase(1);
             }
-            _validatedGoods[indexOfGood].Increase();
-            return Task.CompletedTask;
         }
 
-        public Task RemoveAsync(IGood good)
+        public async Task RemoveAsync(IGood goodToDecrease)
         {
-            var indexOfGood = _validatedGoods.IndexOf(new ConfirmedGood(good));
-            if (indexOfGood != -1)
+            var goods = await Reception
+                .Goods
+                .WhereAsync(good => good.Equals(goodToDecrease));
+            foreach (var good in goods)
             {
-                var decreasedQuantity = _validatedGoods[indexOfGood].Decrease();
-                if (decreasedQuantity == 0)
-                {
-                    _validatedGoods.RemoveAt(indexOfGood);
-                }
+                good.Confirmation.Decrease(1);
             }
-            return Task.CompletedTask;
         }
 
-        public Task CommitAsync()
+        public async Task CommitAsync()
         {
-            return _reception.ValidateAsync(Goods);
+            await Reception.ValidateAsync(await ToListAsync());
+        }
+
+        public async Task ClearAsync()
+        {
+            var goods = await Reception
+                .Goods.ToListAsync();
+            foreach(var good in goods)
+            {
+                good.Confirmation.Clear();
+            }
         }
     }
 }
