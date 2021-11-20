@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MediaPrint;
 
 namespace Warehouse.Core.Goods
@@ -41,15 +40,12 @@ namespace Warehouse.Core.Goods
 
         public override bool Equals(object obj)
         {
-            return obj is GoodConfirmation confirmation &&
-                   _quantity == confirmation._quantity &&
-                   _total == confirmation._total &&
-                   EqualityComparer<IGood>.Default.Equals(Good, confirmation.Good);
+            return base.Equals(obj) || TheSameAsDictionary(obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_quantity, _total, Good);
+            return Good.GetHashCode();
         }
 
         public int Increase(int quantity)
@@ -70,6 +66,12 @@ namespace Warehouse.Core.Goods
                 .Put("Good", Good)
                 .Put("Total", _total)
                 .Put("Confirmed", _quantity);
+        }
+
+        private bool TheSameAsDictionary(object obj)
+        {
+            return obj is IGoodConfirmation confirmation
+                && confirmation.ToDictionary().Equals(this.ToDictionary());
         }
     }
 }
