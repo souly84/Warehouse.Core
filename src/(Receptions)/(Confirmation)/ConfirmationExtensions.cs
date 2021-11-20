@@ -10,5 +10,23 @@ namespace Warehouse.Core.Receptions
             var goods = await confirmation.ToListAsync();
             return goods.All(confirmation => confirmation.Done());
         }
+
+        public static async Task AddAsync(this IConfirmation confirmation, string barcode)
+        {
+            var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
+            foreach (var good in goodsByBracode)
+            {
+                await confirmation.AddAsync(good);
+            }
+        }
+
+        public static async Task RemoveAsync(this IConfirmation confirmation, string barcode)
+        {
+            var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
+            foreach (var good in goodsByBracode)
+            {
+                await confirmation.RemoveAsync(good);
+            }
+        }
     }
 }
