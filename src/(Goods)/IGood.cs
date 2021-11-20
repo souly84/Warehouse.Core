@@ -39,7 +39,9 @@ namespace Warehouse.Core
 
         public void PrintTo(IMedia media)
         {
-            media.Put("Id", _id);
+            media
+                .Put("Id", _id)
+                .Put("Barcode", _barcode);
         }
 
         private bool TheSameMockObject(object obj)

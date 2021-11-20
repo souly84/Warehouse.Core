@@ -56,7 +56,8 @@ namespace Warehouse.Core.Tests
                 @"{
                     ""Good"":
                     {
-                        ""Id"": ""good1""
+                        ""Id"": ""good1"",
+                        ""Barcode"": null
                     },
                     ""Total"": ""4"",
                     ""Confirmed"": ""1""
@@ -79,7 +80,8 @@ namespace Warehouse.Core.Tests
                 @"{
                     ""Good"":
                     {
-                        ""Id"": ""good1""
+                        ""Id"": ""good1"",
+                        ""Barcode"": null
                     },
                     ""Total"": ""4"",
                     ""Confirmed"": ""0""
@@ -100,7 +102,8 @@ namespace Warehouse.Core.Tests
                 @"{
                     ""Good"":
                     {
-                        ""Id"": ""good1""
+                        ""Id"": ""good1"",
+                        ""Barcode"": ""360600""
                     },
                     ""Total"": ""4"",
                     ""Confirmed"": ""1""
@@ -123,7 +126,8 @@ namespace Warehouse.Core.Tests
                 @"{
                     ""Good"":
                     {
-                        ""Id"": ""good1""
+                        ""Id"": ""good1"",
+                        ""Barcode"": ""360600""
                     },
                     ""Total"": ""4"",
                     ""Confirmed"": ""0""
