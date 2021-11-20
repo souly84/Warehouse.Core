@@ -11,6 +11,12 @@ namespace Warehouse.Core.Receptions
             return goods.All(confirmation => confirmation.Done());
         }
 
+        public static async Task<bool> ExistsAsync(this IConfirmation confirmation, string barcode)
+        {
+            var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
+            return goodsByBracode.Any();
+        }
+
         public static async Task AddAsync(this IConfirmation confirmation, string barcode)
         {
             var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
