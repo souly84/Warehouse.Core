@@ -16,9 +16,16 @@ namespace Warehouse.Core.Goods
 
         public IGood Good { get; }
 
-        public void Clear()
+        public int Increase(int quantity)
         {
-            _quantity = 0;
+            if (_quantity + quantity > _total)
+            {
+                throw new InvalidOperationException(
+                    $"Good confirmation can not be increased (total:{_total}, actual:{_quantity}, to increase: {quantity})"
+                 );
+            }
+            _quantity += quantity;
+            return _quantity;
         }
 
         public int Decrease(int quantity)
@@ -31,6 +38,11 @@ namespace Warehouse.Core.Goods
             }
             _quantity -= quantity;
             return _quantity;
+        }
+
+        public void Clear()
+        {
+            _quantity = 0;
         }
 
         public bool Done()
@@ -46,18 +58,6 @@ namespace Warehouse.Core.Goods
         public override int GetHashCode()
         {
             return Good.GetHashCode();
-        }
-
-        public int Increase(int quantity)
-        {
-            if (_quantity + quantity> _total)
-            {
-                throw new InvalidOperationException(
-                    $"Good confirmation can not be increased (total:{_total}, actual:{_quantity}, to increase: {quantity})"
-                 );
-            }
-            _quantity += quantity;
-            return _quantity;
         }
 
         public void PrintTo(IMedia media)
