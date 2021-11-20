@@ -11,18 +11,37 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task Reception_FullConfirmation()
         {
+            var reception = await new ConfirmedReception<MockReception>(
+                new MockReception(
+                    new MockGood("good1", 4),
+                    new MockGood("good2", 8)
+                )
+            ).ConfirmAsync();
+            Assert.True(
+                 await reception.ConfirmedAsync()
+            );
             Assert.Equal(
                 new ConfirmedGoods(
                     new MockGood("good1", 4),
                     new MockGood("good2", 8)
                 ).ToList(),
-                (await new ConfirmedReception<MockReception>(
-                    new MockReception(
-                        new MockGood("good1", 4),
-                        new MockGood("good2", 8)
-                    )
-                ).ConfirmAsync()).ValidatedGoods
+                reception.ValidatedGoods
             );  
+        }
+
+        [Fact]
+        public async Task Reception_Clear()
+        {
+            var reception = await new ConfirmedReception<MockReception>(
+                new MockReception(
+                    new MockGood("good1", 4),
+                    new MockGood("good2", 8)
+                )
+            ).ConfirmAsync();
+            await reception.Confirmation().ClearAsync();
+            Assert.False(
+                await reception.ConfirmedAsync()
+            );
         }
 
         [Fact]
