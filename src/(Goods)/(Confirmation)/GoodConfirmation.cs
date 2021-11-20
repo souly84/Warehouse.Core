@@ -6,7 +6,7 @@ namespace Warehouse.Core.Goods
     public class GoodConfirmation : IGoodConfirmation
     {
         private int _quantity;
-        private int _total;
+        private readonly int _total;
 
         public GoodConfirmation(IGood good, int totalQuantity)
         {

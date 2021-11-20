@@ -33,11 +33,11 @@ namespace Warehouse.Core.Receptions
             }
         }
 
-        public async Task RemoveAsync(IGood goodToDecrease)
+        public async Task RemoveAsync(IGood goodToRemove)
         {
             var goods = await Reception
                 .Goods
-                .WhereAsync(good => good.Equals(goodToDecrease));
+                .WhereAsync(good => good.Equals(goodToRemove));
             foreach (var good in goods)
             {
                 good.Confirmation.Decrease(1);

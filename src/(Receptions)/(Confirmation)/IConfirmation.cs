@@ -8,9 +8,9 @@ namespace Warehouse.Core.Receptions
     {
         IReception Reception { get; }
 
-        Task AddAsync(IGood good);
+        Task AddAsync(IGood goodToAdd);
 
-        Task RemoveAsync(IGood good);
+        Task RemoveAsync(IGood goodToRemove);
 
         Task CommitAsync();
 
