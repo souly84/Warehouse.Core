@@ -3,12 +3,12 @@ using Warehouse.Core.Receptions;
 
 namespace Warehouse.Core.Tests.Extensions
 {
-    public class ValidatedReception<T> : IReception
+    public class ConfirmedReception<T> : IReception
         where T : IReception
     {
         private readonly T _origin;
 
-        public ValidatedReception(T origin)
+        public ConfirmedReception(T origin)
         {
             _origin = origin;
         }
@@ -18,7 +18,7 @@ namespace Warehouse.Core.Tests.Extensions
         public async Task<T> ValidateAsync()
         {
             var goodsToValidate = await _origin.Goods.ToListAsync();
-            var validation = _origin.Validation();
+            var validation = _origin.Confirmation();
             foreach (var good in goodsToValidate)
             {
                 await validation.AddAsync(good);

@@ -2,12 +2,12 @@
 
 namespace Warehouse.Core.Receptions
 {
-    public class ValidatedGood : IGood
+    public class ConfirmedGood : IGood
     {
         private readonly IGood _good;
         private int _quantity;
 
-        public ValidatedGood(IGood good)
+        public ConfirmedGood(IGood good)
         {
             _good = good;
         }

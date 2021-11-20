@@ -5,12 +5,12 @@ using Xunit;
 
 namespace Warehouse.Core.Tests
 {
-    public class ReceptionValidationTests
+    public class ReceptionConfirmationTests
     {
         [Fact]
         public async Task ReceptionValidation()
         {
-            var validatedReception = await new ValidatedReception<MockReception>(
+            var validatedReception = await new ConfirmedReception<MockReception>(
                 new MockReception(
                     new MockGood("good1"),
                     new MockGood("good2")

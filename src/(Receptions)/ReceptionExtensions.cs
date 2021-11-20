@@ -2,9 +2,9 @@
 {
     public static class ReceptionExtensions
     {
-        public static IValidation Validation(this IReception reception)
+        public static IConfirmation Confirmation(this IReception reception)
         {
-            return new ReceptionValidation(reception);
+            return new ReceptionConfirmation(reception);
         }
     }
 }

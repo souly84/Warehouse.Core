@@ -4,18 +4,18 @@ using Warehouse.Core.Goods;
 
 namespace Warehouse.Core.Receptions
 {
-    public class ReceptionValidation : IValidation
+    public class ReceptionConfirmation : IConfirmation
     {
         private readonly IReception _reception;
 
-        private List<ValidatedGood> _validatedGoods;
+        private List<ConfirmedGood> _validatedGoods;
 
-        public ReceptionValidation(IReception reception)
-            : this(reception, new List<ValidatedGood>())
+        public ReceptionConfirmation(IReception reception)
+            : this(reception, new List<ConfirmedGood>())
         {
         }
 
-        public ReceptionValidation(IReception reception, List<ValidatedGood> scannedGoods)
+        public ReceptionConfirmation(IReception reception, List<ConfirmedGood> scannedGoods)
         {
             _reception = reception;
             _validatedGoods = scannedGoods;
@@ -25,7 +25,7 @@ namespace Warehouse.Core.Receptions
 
         public Task AddAsync(IGood good)
         {
-            var validatedGood = new ValidatedGood(good);
+            var validatedGood = new ConfirmedGood(good);
             var indexOfGood = _validatedGoods.IndexOf(validatedGood);
             if (indexOfGood == -1)
             {
@@ -38,7 +38,7 @@ namespace Warehouse.Core.Receptions
 
         public Task RemoveAsync(IGood good)
         {
-            var indexOfGood = _validatedGoods.IndexOf(new ValidatedGood(good));
+            var indexOfGood = _validatedGoods.IndexOf(new ConfirmedGood(good));
             if (indexOfGood != -1)
             {
                 var decreasedQuantity = _validatedGoods[indexOfGood].Decrease();

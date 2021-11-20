@@ -2,7 +2,7 @@
 
 namespace Warehouse.Core.Receptions
 {
-    public interface IValidation
+    public interface IConfirmation
     {
         IGoods Goods { get; }
 
