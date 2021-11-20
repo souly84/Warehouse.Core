@@ -21,5 +21,10 @@ namespace Warehouse.Core
         {
             return goods.WhereAsync((good) => good.Equals(barcode));
         }
+
+        public static bool Confirmed(this IGood good)
+        {
+            return good.Confirmation.Done();
+        }
     }
 }
