@@ -13,21 +13,23 @@ namespace Warehouse.Core
     {
         private readonly string _id;
         private readonly int _quantity;
+        private readonly string _barcode;
         private IGoodConfirmation _confirmation;
 
-        public MockGood(string id, int quantity)
+        public MockGood(string id, int quantity, string barcode = null)
         {
             _id = id;
             _quantity = quantity;
+            _barcode = barcode;
         }
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, _quantity));
 
         public override bool Equals(object obj)
         {
-            return obj is MockGood good
-                && _id == good._id
-                && _quantity == good._quantity;
+            return object.ReferenceEquals(obj, this)
+                || TheSameMockObject(obj)
+                || TheSameIdOrBarcode(obj);
         }
 
         public override int GetHashCode()
@@ -38,6 +40,19 @@ namespace Warehouse.Core
         public void PrintTo(IMedia media)
         {
             media.Put("Id", _id);
+        }
+
+        private bool TheSameMockObject(object obj)
+        {
+            return obj is MockGood good
+                && _id == good._id
+                && _barcode == good._barcode;
+        }
+
+        private bool TheSameIdOrBarcode(object obj)
+        {
+            return obj is string idOrBarcode
+                && (_id == idOrBarcode || _barcode == idOrBarcode);
         }
     }
 }

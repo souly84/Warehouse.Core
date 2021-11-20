@@ -45,7 +45,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Reception_Confirmation_AddGood()
+        public async Task Reception_Confirmation_AddByGood()
         {
             var goodToConfirm = new MockGood("good1", 4);
             await new MockReception(
@@ -66,7 +66,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Reception_Confirmation_RemoveGood()
+        public async Task Reception_Confirmation_RemoveByGood()
         {
             var goodToConfirm = new MockGood("good1", 4);
             var confirmation = new MockReception(
@@ -75,6 +75,50 @@ namespace Warehouse.Core.Tests
             ).Confirmation();
             await confirmation.AddAsync(goodToConfirm);
             await confirmation.RemoveAsync(goodToConfirm);
+            Assert.EqualJson(
+                @"{
+                    ""Good"":
+                    {
+                        ""Id"": ""good1""
+                    },
+                    ""Total"": ""4"",
+                    ""Confirmed"": ""0""
+                }",
+                goodToConfirm.Confirmation.ToJson().ToString()
+            );
+        }
+
+        [Fact]
+        public async Task Reception_Confirmation_AddByGoodBarcode()
+        {
+            var goodToConfirm = new MockGood("good1", 4, "360600");
+            await new MockReception(
+                goodToConfirm,
+                new MockGood("good2", 8)
+            ).Confirmation().AddAsync("360600");
+            Assert.EqualJson(
+                @"{
+                    ""Good"":
+                    {
+                        ""Id"": ""good1""
+                    },
+                    ""Total"": ""4"",
+                    ""Confirmed"": ""1""
+                }",
+                goodToConfirm.Confirmation.ToJson().ToString()
+            );
+        }
+
+        [Fact]
+        public async Task Reception_Confirmation_RemoveByGoodBarcode()
+        {
+            var goodToConfirm = new MockGood("good1", 4, "360600");
+            var confirmation = new MockReception(
+                goodToConfirm,
+                new MockGood("good2", 8)
+            ).Confirmation();
+            await confirmation.AddAsync(goodToConfirm);
+            await confirmation.RemoveAsync("360600");
             Assert.EqualJson(
                 @"{
                     ""Good"":
