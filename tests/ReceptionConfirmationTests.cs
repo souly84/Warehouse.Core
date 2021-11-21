@@ -135,5 +135,29 @@ namespace Warehouse.Core.Tests
                 goodToConfirm.Confirmation.ToJson().ToString()
             );
         }
+
+        [Fact]
+        public async Task Reception_Confirmation_ExistsByGoodBarcode()
+        {
+            Assert.True(
+                await new MockReception(
+                    new MockGood("good1", 4, "360600"),
+                    new MockGood("good2", 8)
+                ).Confirmation()
+                 .ExistsAsync("360600")
+            );
+        }
+
+        [Fact]
+        public async Task Reception_Confirmation_DoesNotExistByGoodBarcode()
+        {
+            Assert.False(
+                await new MockReception(
+                    new MockGood("good1", 4, "360601"),
+                    new MockGood("good2", 8, "360602")
+                ).Confirmation()
+                 .ExistsAsync("360600")
+            );
+        }
     }
 }
