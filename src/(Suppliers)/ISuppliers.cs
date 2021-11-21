@@ -7,6 +7,6 @@ namespace Warehouse.Core
     {
         Task<IList<ISupplier>> ToListAsync();
 
-        IGoods With(IFilter filter);
+        ISuppliers With(IFilter filter);
     }
 }
