@@ -7,6 +7,11 @@ namespace Warehouse.Core
 {
     public static class GoodsExtensions
     {
+        public static IGoods Cached(this IGoods goods)
+        {
+            return new CachedGoods(goods);
+        }
+
         public static async Task<IEnumerable<IGood>> WhereAsync(
             this IGoods goods,
             Func<IGood, bool> predicate)
