@@ -7,6 +7,7 @@ namespace Warehouse.Core
         ICustomers Customers { get; }
         IUsers Users { get; }
         IWarehouse Warehouse { get; }
+        ISuppliers Suppliers { get; }
         Task<IUser> LoginAsync(string userName, string password);
     }
 }
