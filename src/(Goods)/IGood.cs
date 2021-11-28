@@ -9,7 +9,7 @@ namespace Warehouse.Core
     {
         IGoodConfirmation Confirmation { get; }
 
-        IStorages Storages { get; }
+        IEntities<IStorage> Storages { get; }
     }
 
     public class MockGood : IGood
@@ -28,7 +28,7 @@ namespace Warehouse.Core
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, _quantity));
 
-        public IStorages Storages => throw new NotImplementedException();
+        public IEntities<IStorage> Storages => throw new NotImplementedException();
 
         public override bool Equals(object obj)
         {

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Warehouse.Core
 {
-    public interface IOrders
+    public interface IOrders : IEntities<IOrder>
     {
-        Task<IList<IOrder>> ToListAsync();
-
         Task<IOrder> AddAsync(IOrder newOrder);
     }
 }

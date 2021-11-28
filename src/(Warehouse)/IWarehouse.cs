@@ -2,6 +2,6 @@
 {
     public interface IWarehouse
     {
-        IGoods Goods { get; }
+        IEntities<IGood> Goods { get; }
     }
 }

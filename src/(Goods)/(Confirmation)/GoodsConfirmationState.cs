@@ -5,14 +5,14 @@ namespace Warehouse.Core.Receptions
 {
     public class GoodsConfirmationState : IConfirmationState
     {
-        private readonly IGoods _receptionGoods;
+        private readonly IEntities<IGood> _receptionGoods;
 
         public GoodsConfirmationState(IReception reception)
             : this(reception.Goods)
         {
         }
 
-        public GoodsConfirmationState(IGoods receptionGoods)
+        public GoodsConfirmationState(IEntities<IGood> receptionGoods)
         {
             _receptionGoods = receptionGoods;
         }

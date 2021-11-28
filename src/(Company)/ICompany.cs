@@ -4,10 +4,10 @@ namespace Warehouse.Core
 {
     public interface ICompany
     {
-        ICustomers Customers { get; }
-        IUsers Users { get; }
+        IEntities<ICustomer> Customers { get; }
+        IEntities<IUser> Users { get; }
         IWarehouse Warehouse { get; }
-        ISuppliers Suppliers { get; }
+        IEntities<ISupplier> Suppliers { get; }
         Task<IUser> LoginAsync(string userName, string password);
     }
 }

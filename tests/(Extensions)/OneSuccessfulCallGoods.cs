@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core.Tests.Extensions
 {
-    public class OneSuccessfulCallGoods : IGoods
+    public class OneSuccessfulCallGoods : IEntities<IGood>
     {
         private bool _wasCalled;
         public Task<IList<IGood>> ToListAsync()
@@ -21,7 +21,7 @@ namespace Warehouse.Core.Tests.Extensions
             });
         }
 
-        public IGoods With(IFilter filter)
+        public IEntities<IGood> With(IFilter filter)
         {
             return new OneSuccessfulCallGoods();
         }

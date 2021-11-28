@@ -6,7 +6,7 @@ namespace Warehouse.Core.Warehouse
     {
         string Number { get; }
 
-        IGoods Goods { get; }
+        IEntities<IGood> Goods { get; }
 
         Task IncreaseAsync(IGood good);
 
