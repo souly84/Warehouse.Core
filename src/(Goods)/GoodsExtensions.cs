@@ -18,9 +18,10 @@ namespace Warehouse.Core
             return good.Confirmation.DoneAsync();
         }
 
-        public static void Clear(this IGood good)
+        public static IGood Clear(this IGood good)
         {
             good.Confirmation.Clear();
+            return good;
         }
     }
 }
