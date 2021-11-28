@@ -9,7 +9,6 @@ namespace Warehouse.Core.Receptions
             return new ReceptionConfirmation(reception);
         }
 
-
         public static IConfirmation NeedConfirmation(this IReception reception)
         {
             return reception.Confirmation().NeedConfirmation();
@@ -18,6 +17,13 @@ namespace Warehouse.Core.Receptions
         public static Task<bool> ConfirmedAsync(this IReception reception)
         {
             return reception.Confirmation().DoneAsync();
+        }
+
+        public static async Task ValidateAsync(this IReception reception, IConfirmation confirmation)
+        {
+            await reception.ValidateAsync(
+                await confirmation.ToListAsync()
+            );
         }
     }
 }

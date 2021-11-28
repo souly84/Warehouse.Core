@@ -40,7 +40,7 @@ namespace Warehouse.Core
               .GetResult();
         }
 
-        public static void RunSync(Func<Task> func)
+        public static void RunSync(this Func<Task> func)
         {
             TaskFactory
               .StartNew(func)

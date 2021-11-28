@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Warehouse.Core.Tests
@@ -9,7 +10,10 @@ namespace Warehouse.Core.Tests
         public void TaskSyncRun()
         {
             var taskResult = false;
-            Task.Run(() => taskResult = true).RunSync();
+            Task.Run(() =>
+            {
+                taskResult = true;
+            }).RunSync();
             Assert.True(taskResult);
         }
 
@@ -22,22 +26,26 @@ namespace Warehouse.Core.Tests
         [Fact]
         public void TaskFuncSyncRun()
         {
-            var taskResult = false;
-            Task.Run(async () =>
-            {
-                await Task.Delay(100);
-                taskResult = true;
-            }).RunSync();
-            Assert.True(taskResult);
-        }
-        [Fact]
-        public void TaskFuncWithResultSyncRun()
-        {
-            Assert.True(Task.Run(async  () =>
+            Func<Task<bool>> func = async () =>
             {
                 await Task.Delay(100);
                 return true;
-            }).RunSync());
+            };
+            
+            Assert.True(func.RunSync());
+        }
+
+        [Fact]
+        public void TaskFuncWithResultSyncRun()
+        {
+            var taskResult = false;
+            Func<Task> func = async () =>
+            {
+                await Task.Delay(100);
+                taskResult = true;
+            };
+            func.RunSync();
+            Assert.True(taskResult);
         }
     }
 }
