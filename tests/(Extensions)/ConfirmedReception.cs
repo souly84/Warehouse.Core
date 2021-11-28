@@ -22,7 +22,7 @@ namespace Warehouse.Core.Tests.Extensions
             var confirmation = _origin.Confirmation();
             foreach (var good in await _origin.Goods.ToListAsync())
             {
-                while (!good.Confirmed())
+                while (!await good.ConfirmedAsync())
                 {
                     await confirmation.AddAsync(good);
                 }

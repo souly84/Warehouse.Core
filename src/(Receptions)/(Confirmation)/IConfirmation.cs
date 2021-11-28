@@ -8,6 +8,8 @@ namespace Warehouse.Core.Receptions
     {
         IReception Reception { get; }
 
+        IConfirmationState State { get; }
+
         Task AddAsync(IGood goodToAdd);
 
         Task RemoveAsync(IGood goodToRemove);

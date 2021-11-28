@@ -7,8 +7,18 @@ namespace Warehouse.Core.Receptions
     {
         public static async Task<bool> DoneAsync(this IConfirmation confirmation)
         {
-            var goods = await confirmation.ToListAsync();
-            return goods.All(confirmation => confirmation.Done());
+            var confirmationState = await confirmation.State.ToEnumAsync();
+            return confirmationState == IConfirmationState.ConfirmationState.Confirmed;
+        }
+
+        public static IConfirmation History(this IConfirmation confirmation)
+        {
+            return new ConfirmationHistory(confirmation);
+        }
+
+        public static IConfirmation NeedConfirmation(this IConfirmation confirmation)
+        {
+            return new NotConfirmedOnly(confirmation);
         }
 
         public static async Task<bool> ExistsAsync(this IConfirmation confirmation, string barcode)

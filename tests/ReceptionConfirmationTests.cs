@@ -21,10 +21,10 @@ namespace Warehouse.Core.Tests
                  await reception.ConfirmedAsync()
             );
             Assert.Equal(
-                new ConfirmedGoods(
+                await new ConfirmedGoods(
                     new MockGood("good1", 4),
                     new MockGood("good2", 8)
-                ).ToList(),
+                ).ToListAsync(),
                 reception.ValidatedGoods
             );  
         }
@@ -60,7 +60,8 @@ namespace Warehouse.Core.Tests
                         ""Barcode"": null
                     },
                     ""Total"": ""4"",
-                    ""Confirmed"": ""1""
+                    ""Confirmed"": ""1"",
+                    ""State"": ""Partially""
                 }",
                 goodToConfirm.Confirmation.ToJson().ToString()
             );
@@ -84,7 +85,8 @@ namespace Warehouse.Core.Tests
                         ""Barcode"": null
                     },
                     ""Total"": ""4"",
-                    ""Confirmed"": ""0""
+                    ""Confirmed"": ""0"",
+                    ""State"": ""NotStarted""
                 }",
                 goodToConfirm.Confirmation.ToJson().ToString()
             );
@@ -106,7 +108,8 @@ namespace Warehouse.Core.Tests
                         ""Barcode"": ""360600""
                     },
                     ""Total"": ""4"",
-                    ""Confirmed"": ""1""
+                    ""Confirmed"": ""1"",
+                    ""State"": ""Partially""
                 }",
                 goodToConfirm.Confirmation.ToJson().ToString()
             );
@@ -130,7 +133,8 @@ namespace Warehouse.Core.Tests
                         ""Barcode"": ""360600""
                     },
                     ""Total"": ""4"",
-                    ""Confirmed"": ""0""
+                    ""Confirmed"": ""0"",
+                    ""State"": ""NotStarted""
                 }",
                 goodToConfirm.Confirmation.ToJson().ToString()
             );
@@ -157,6 +161,33 @@ namespace Warehouse.Core.Tests
                     new MockGood("good2", 8, "360602")
                 ).Confirmation()
                  .ExistsAsync("360600")
+            );
+        }
+
+        [Fact]
+        public async Task HistoryShowsFullyConfimedGoodsOnly()
+        {
+            Assert.Contains(
+                (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
+                await new MockReception(
+                    await new MockGood("good1", 4, "360601").FullyConfirmed(),
+                    await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)
+                ).Confirmation()
+                 .History()
+                 .ToListAsync()
+            );
+        }
+
+        [Fact]
+        public async Task NotConfirmedOnly_ShowsNotConfirmedGoodsConfirmations()
+        {
+            Assert.Contains(
+                (await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)).Confirmation,
+                await new MockReception(
+                    await new MockGood("good1", 4, "360601").FullyConfirmed(),
+                    await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)
+                ).NeedConfirmation()
+                 .ToListAsync()
             );
         }
     }

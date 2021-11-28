@@ -14,6 +14,8 @@ namespace Warehouse.Core.Receptions
 
         public IReception Reception { get; }
 
+        public IConfirmationState State => new GoodsConfirmationState(Reception);
+
         public async Task<List<IGoodConfirmation>> ToListAsync()
         {
             var goods = await Reception.Goods.ToListAsync();

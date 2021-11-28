@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Warehouse.Core.Goods;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 
@@ -31,9 +33,20 @@ namespace Warehouse.Core.Tests
         public void ConfirmationDone()
         {
             Assert.True(
-                new MockGood("1", 5)
+               new MockGood("1", 5)
                     .FullyConfirmed()
-                    .Confirmed()
+                    .RunSync()
+                    .ConfirmedAsync()
+                    .RunSync()
+            );
+        }
+
+        [Fact]
+        public async Task EqualToTheSame()
+        {
+            Assert.Equal(
+               (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
+               (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation
             );
         }
     }

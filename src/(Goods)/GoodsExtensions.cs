@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Warehouse.Core.Goods;
 
 namespace Warehouse.Core
 {
@@ -27,9 +28,14 @@ namespace Warehouse.Core
             return goods.WhereAsync((good) => good.Equals(barcode));
         }
 
-        public static bool Confirmed(this IGood good)
+        public static Task<bool> ConfirmedAsync(this IGood good)
         {
-            return good.Confirmation.Done();
+            return good.Confirmation.DoneAsync();
+        }
+
+        public static void Clear(this IGood good)
+        {
+            good.Confirmation.Clear();
         }
     }
 }

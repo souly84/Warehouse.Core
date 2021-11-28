@@ -1,12 +1,15 @@
 ﻿using System;
 using MediaPrint;
 using Warehouse.Core.Goods;
+using Warehouse.Core.Warehouse;
 
 namespace Warehouse.Core
 {
     public interface IGood : IPrintable
     {
         IGoodConfirmation Confirmation { get; }
+
+        IStorages Storages { get; }
     }
 
     public class MockGood : IGood
@@ -24,6 +27,8 @@ namespace Warehouse.Core
         }
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, _quantity));
+
+        public IStorages Storages => throw new NotImplementedException();
 
         public override bool Equals(object obj)
         {
