@@ -1,7 +1,6 @@
 ﻿using System;
 using MediaPrint;
 using Warehouse.Core.Goods;
-using Warehouse.Core.Warehouse;
 
 namespace Warehouse.Core
 {
@@ -10,6 +9,8 @@ namespace Warehouse.Core
         IGoodConfirmation Confirmation { get; }
 
         IEntities<IStorage> Storages { get; }
+
+        IMovement Movement { get; }
     }
 
     public class MockGood : IGood
@@ -29,6 +30,8 @@ namespace Warehouse.Core
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, _quantity));
 
         public IEntities<IStorage> Storages => throw new NotImplementedException();
+
+        public IMovement Movement => new StotageMovement(this);
 
         public override bool Equals(object obj)
         {

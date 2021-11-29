@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 
-namespace Warehouse.Core.Warehouse
+namespace Warehouse.Core
 {
     public interface IStorage
     {
         IEntities<IGood> Goods { get; }
 
-        Task IncreaseAsync(IGood good);
+        Task IncreaseAsync(IGood good, int quantity);
 
-        Task Decrease(IGood good);
+        Task DecreaseAsync(IGood good, int quantity);
     }
 }
