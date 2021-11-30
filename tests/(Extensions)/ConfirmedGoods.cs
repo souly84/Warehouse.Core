@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Warehouse.Core.Goods;
 
 namespace Warehouse.Core.Tests.Extensions
@@ -13,10 +14,14 @@ namespace Warehouse.Core.Tests.Extensions
             this.goods = goods;
         }
 
-        public List<IGoodConfirmation> ToList()
+        public async Task<List<IGoodConfirmation>> ToListAsync()
         {
-            return goods
-                .Select(good => good.FullyConfirmed().Confirmation)
+            var confirmationTasks = goods
+                .Select(good => good.FullyConfirmed())
+                .ToList();
+            await Task.WhenAll(confirmationTasks);
+            return confirmationTasks
+                .Select(task => task.Result.Confirmation)
                 .ToList();
         }
     }

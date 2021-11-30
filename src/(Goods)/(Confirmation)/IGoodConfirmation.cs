@@ -6,11 +6,11 @@ namespace Warehouse.Core.Goods
     {
         IGood Good { get; }
 
+        IConfirmationState State { get; }
+
         int Increase(int quantity);
 
         int Decrease(int quantity);
-
-        bool Done();
 
         void Clear();
     }

@@ -3,6 +3,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MediaPrint" Version="1.0.0.3" />
+    <PackageReference Include="MediaPrint" Version="1.0.0.5" />
   </ItemGroup>
 </Project>

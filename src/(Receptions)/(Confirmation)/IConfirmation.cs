@@ -8,9 +8,11 @@ namespace Warehouse.Core.Receptions
     {
         IReception Reception { get; }
 
-        Task AddAsync(IGood goodToAdd);
+        IConfirmationState State { get; }
 
-        Task RemoveAsync(IGood goodToRemove);
+        Task AddAsync(IGood goodToAdd, int quantity);
+
+        Task RemoveAsync(IGood goodToRemove, int quantity);
 
         Task CommitAsync();
 

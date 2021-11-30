@@ -2,6 +2,6 @@
 {
     public interface ISupplier
     {
-        IReceptions Receptions { get; }
+        IEntities<IReception> Receptions { get; }
     }
 }

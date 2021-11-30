@@ -15,14 +15,14 @@ namespace Warehouse.Core.Tests.Extensions
             _origin = origin;
         }
 
-        public IGoods Goods => _origin.Goods;
+        public IEntities<IGood> Goods => _origin.Goods;
 
         public async Task<T> ConfirmAsync()
         {
             var confirmation = _origin.Confirmation();
             foreach (var good in await _origin.Goods.ToListAsync())
             {
-                while (!good.Confirmed())
+                while (!await good.ConfirmedAsync())
                 {
                     await confirmation.AddAsync(good);
                 }

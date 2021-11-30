@@ -1,35 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Warehouse.Core.Goods;
 
 namespace Warehouse.Core
 {
     public static class GoodsExtensions
     {
-        public static IGoods Cached(this IGoods goods)
-        {
-            return new CachedGoods(goods);
-        }
-
-        public static async Task<IEnumerable<IGood>> WhereAsync(
-            this IGoods goods,
-            Func<IGood, bool> predicate)
-        {
-            var goodsList = await goods.ToListAsync();
-            return goodsList.Where(predicate);
-        }
-
         public static Task<IEnumerable<IGood>> ByBarcodeAsync(
-            this IGoods goods,
+            this IEntities<IGood> goods,
             string barcode)
         {
             return goods.WhereAsync((good) => good.Equals(barcode));
         }
 
-        public static bool Confirmed(this IGood good)
+        public static Task<bool> ConfirmedAsync(this IGood good)
         {
-            return good.Confirmation.Done();
+            return good.Confirmation.DoneAsync();
+        }
+
+        public static IGood Clear(this IGood good)
+        {
+            good.Confirmation.Clear();
+            return good;
+        }
+
+        public static IMovement From(this IGood good, IStorage storage)
+        {
+            return good.Movement.From(storage);
         }
     }
 }

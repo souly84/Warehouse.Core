@@ -6,7 +6,7 @@ namespace Warehouse.Core.Tests
 {
     public class Assert : Xunit.Assert
     {
-        public static async Task EqualAsync(IGoods expected, IGoods actual)
+        public static async Task EqualAsync<T>(IEntities<T> expected, IEntities<T> actual)
         {
             var expectedList = await expected.ToListAsync();
             var actualList = await actual.ToListAsync();
