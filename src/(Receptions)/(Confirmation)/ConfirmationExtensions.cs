@@ -36,6 +36,11 @@ namespace Warehouse.Core.Receptions
             }
         }
 
+        public static Task AddAsync(this IConfirmation confirmation, IGood good)
+        {
+            return confirmation.AddAsync(good, 1);
+        }
+
         public static async Task RemoveAsync(this IConfirmation confirmation, string barcode)
         {
             var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
@@ -43,11 +48,6 @@ namespace Warehouse.Core.Receptions
             {
                 await confirmation.RemoveAsync(good);
             }
-        }
-
-        public static Task AddAsync(this IConfirmation confirmation, IGood good)
-        {
-            return confirmation.AddAsync(good, 1);
         }
 
         public static Task RemoveAsync(this IConfirmation confirmation, IGood good)
