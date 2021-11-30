@@ -23,5 +23,10 @@ namespace Warehouse.Core
             good.Confirmation.Clear();
             return good;
         }
+
+        public static IMovement From(this IGood good, IStorage storage)
+        {
+            return good.Movement.From(storage);
+        }
     }
 }

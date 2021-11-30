@@ -34,7 +34,7 @@ namespace Warehouse.Core
             }
             catch
             {
-                // Rollback
+                // Rollback on exception
                 await _fromStorage.IncreaseAsync(_good, quantity);
                 throw;
             }

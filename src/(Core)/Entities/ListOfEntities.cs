@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Warehouse.Core.Goods
+namespace Warehouse.Core
 {
     public class ListOfEntities<TEntity> : IEntities<TEntity>
     {

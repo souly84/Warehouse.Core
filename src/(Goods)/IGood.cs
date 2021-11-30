@@ -6,6 +6,8 @@ namespace Warehouse.Core
 {
     public interface IGood : IPrintable
     {
+        int Quantity { get; }
+
         IGoodConfirmation Confirmation { get; }
 
         IEntities<IStorage> Storages { get; }
@@ -16,22 +18,27 @@ namespace Warehouse.Core
     public class MockGood : IGood
     {
         private readonly string _id;
-        private readonly int _quantity;
         private readonly string _barcode;
         private IGoodConfirmation _confirmation;
+        private IEntities<IStorage> _storages;
 
-        public MockGood(string id, int quantity, string barcode = null)
+        public MockGood(
+            string id,
+            int quantity,
+            string barcode = null)
         {
             _id = id;
-            _quantity = quantity;
+            Quantity = quantity;
             _barcode = barcode;
         }
 
-        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, _quantity));
+        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
 
-        public IEntities<IStorage> Storages => throw new NotImplementedException();
+        public IEntities<IStorage> Storages => _storages ?? (_storages = new ListOfEntities<IStorage>(new MockStorage(this)));
 
         public IMovement Movement => new StotageMovement(this);
+
+        public int Quantity { get; }
 
         public override bool Equals(object obj)
         {
@@ -49,6 +56,7 @@ namespace Warehouse.Core
         {
             media
                 .Put("Id", _id)
+                .Put("Quantity", Quantity)
                 .Put("Barcode", _barcode);
         }
 

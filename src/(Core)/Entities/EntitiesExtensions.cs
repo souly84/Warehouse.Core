@@ -12,12 +12,19 @@ namespace Warehouse.Core
             return new CachedEntities<T>(entities);
         }
 
+        public static async Task<T> FirstAsync<T>(
+            this IEntities<T> entities)
+        {
+            var entitiesList = await entities.ToListAsync();
+            return entitiesList.First();
+        }
+
         public static async Task<IEnumerable<T>> WhereAsync<T>(
             this IEntities<T> entities,
             Func<T, bool> predicate)
         {
-            var goodsList = await entities.ToListAsync();
-            return goodsList.Where(predicate);
+            var entitiesList = await entities.ToListAsync();
+            return entitiesList.Where(predicate);
         }
     }
 }

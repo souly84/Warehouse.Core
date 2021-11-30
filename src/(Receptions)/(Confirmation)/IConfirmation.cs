@@ -10,9 +10,9 @@ namespace Warehouse.Core.Receptions
 
         IConfirmationState State { get; }
 
-        Task AddAsync(IGood goodToAdd);
+        Task AddAsync(IGood goodToAdd, int quantity);
 
-        Task RemoveAsync(IGood goodToRemove);
+        Task RemoveAsync(IGood goodToRemove, int quantity);
 
         Task CommitAsync();
 

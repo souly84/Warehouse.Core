@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using MediaPrint;
 
 namespace Warehouse.Core
 {
-    public interface IStorage
+    public interface IStorage : IPrintable
     {
         IEntities<IGood> Goods { get; }
 

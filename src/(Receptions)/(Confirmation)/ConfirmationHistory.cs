@@ -17,9 +17,14 @@ namespace Warehouse.Core.Receptions
 
         public IConfirmationState State => _confirmation.State;
 
-        public Task AddAsync(IGood goodToAdd)
+        public Task AddAsync(IGood goodToAdd, int quantity)
         {
-            return _confirmation.AddAsync(goodToAdd);
+            return _confirmation.AddAsync(goodToAdd, quantity);
+        }
+       
+        public Task RemoveAsync(IGood goodToRemove, int quantity)
+        {
+            return _confirmation.RemoveAsync(goodToRemove, quantity);
         }
 
         public Task ClearAsync()
@@ -32,10 +37,6 @@ namespace Warehouse.Core.Receptions
             return _confirmation.CommitAsync();
         }
 
-        public Task RemoveAsync(IGood goodToRemove)
-        {
-            return _confirmation.RemoveAsync(goodToRemove);
-        }
 
         public async Task<List<IGoodConfirmation>> ToListAsync()
         {

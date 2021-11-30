@@ -44,5 +44,15 @@ namespace Warehouse.Core.Receptions
                 await confirmation.RemoveAsync(good);
             }
         }
+
+        public static Task AddAsync(this IConfirmation confirmation, IGood good)
+        {
+            return confirmation.AddAsync(good, 1);
+        }
+
+        public static Task RemoveAsync(this IConfirmation confirmation, IGood good)
+        {
+            return confirmation.RemoveAsync(good, 1);
+        }
     }
 }

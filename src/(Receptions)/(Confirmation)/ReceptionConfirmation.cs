@@ -24,31 +24,31 @@ namespace Warehouse.Core.Receptions
                 .ToList();
         }
 
-        public async Task AddAsync(IGood goodToAdd)
+        public async Task AddAsync(IGood goodToAdd, int quantity)
         {
             var goods = await Reception
                 .Goods
                 .WhereAsync(good => good.Equals(goodToAdd));
             foreach (var good in goods)
             {
-                good.Confirmation.Increase(1);
+                good.Confirmation.Increase(quantity);
             }
         }
 
-        public async Task RemoveAsync(IGood goodToRemove)
+        public async Task RemoveAsync(IGood goodToRemove, int quantity)
         {
             var goods = await Reception
                 .Goods
                 .WhereAsync(good => good.Equals(goodToRemove));
             foreach (var good in goods)
             {
-                good.Confirmation.Decrease(1);
+                good.Confirmation.Decrease(quantity);
             }
         }
 
         public async Task CommitAsync()
         {
-            await Reception.ValidateAsync(await ToListAsync());
+            await Reception.ValidateAsync(this);
         }
 
         public async Task ClearAsync()

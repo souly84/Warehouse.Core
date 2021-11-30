@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediaPrint;
 
 namespace Warehouse.Core.Goods.Storages
 {
@@ -25,6 +26,11 @@ namespace Warehouse.Core.Goods.Storages
         }
 
         public Task IncreaseAsync(IGood good, int quantity)
+        {
+            throw new InvalidOperationException(_errorMessage);
+        }
+
+        public void PrintTo(IMedia media)
         {
             throw new InvalidOperationException(_errorMessage);
         }
