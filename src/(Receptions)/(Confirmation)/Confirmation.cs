@@ -11,7 +11,7 @@ namespace Warehouse.Core.Receptions
     {
         private readonly IConfirmation _confirmation;
 
-        public Confirmation(IConfirmation confirmation)
+        protected Confirmation(IConfirmation confirmation)
         {
             _confirmation = confirmation;
         }
