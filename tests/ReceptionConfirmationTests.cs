@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediaPrint;
+using Warehouse.Core.Goods;
 using Warehouse.Core.Receptions;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
@@ -30,7 +32,28 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Reception_Clear()
+        public async Task Reception_Validation_ForStartedConfirmationsOnly()
+        {
+            var reception = new MockReception(
+                new MockGood("good1", 4),
+                new MockGood("good2", 8),
+                new MockGood("good3", 3)
+            );
+            await reception.Confirmation().AddAsync(new MockGood("good1", 4), 4);
+            await reception.Confirmation().AddAsync(new MockGood("good3", 3), 2);
+            await reception.Confirmation().CommitAsync();
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new MockGood("good1", 4).FullyConfirmed()).Confirmation,
+                    (await new MockGood("good3", 3).PartiallyConfirmed(2)).Confirmation
+                },
+                reception.ValidatedGoods
+            );
+        }
+
+        [Fact]
+        public async Task Reception_ClearConfirmation()
         {
             var reception = await new ConfirmedReception<MockReception>(
                 new MockReception(
@@ -45,7 +68,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Reception_Confirmation_AddByGood()
+        public async Task Reception_Confirmation_ByGood()
         {
             var goodToConfirm = new MockGood("good1", 4);
             await new MockReception(
@@ -95,7 +118,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Reception_Confirmation_AddByGoodBarcode()
+        public async Task Reception_Confirmation_ByGoodBarcode()
         {
             var goodToConfirm = new MockGood("good1", 4, "360600");
             await new MockReception(
@@ -169,6 +192,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        // Souleymen, should show fully confirmed or partially confirmed should be presented also???
         public async Task HistoryShowsFullyConfimedGoodsOnly()
         {
             Assert.Contains(

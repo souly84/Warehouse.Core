@@ -21,8 +21,11 @@ namespace Warehouse.Core.Receptions
 
         public static async Task ValidateAsync(this IReception reception, IConfirmation confirmation)
         {
+            var confirmationList = await confirmation.ToListAsync();
             await reception.ValidateAsync(
-                await confirmation.ToListAsync()
+               await confirmationList.WhereAsync(
+                   async confirmation => (await confirmation.State.ToEnumAsync()) != IConfirmationState.ConfirmationState.NotStarted
+               )
             );
         }
     }
