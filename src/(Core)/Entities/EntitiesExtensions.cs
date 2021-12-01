@@ -19,6 +19,22 @@ namespace Warehouse.Core
             return entitiesList.First();
         }
 
+        public static async Task<T> FirstAsync<T>(
+            this IEntities<T> entities,
+            Func<T, bool> predicate)
+        {
+            var entitiesList = await entities.ToListAsync();
+            return entitiesList.First(predicate);
+        }
+
+        public static async Task<T> FirstAsync<T>(
+            this IEntities<T> entities,
+            Func<T, Task<bool>> predicateAsync)
+        {
+            var entitiesList = await entities.ToListAsync();
+            return await entitiesList.FirstAsync(predicateAsync);
+        }
+
         public static async Task<IEnumerable<T>> WhereAsync<T>(
             this IEntities<T> entities,
             Func<T, bool> predicate)
