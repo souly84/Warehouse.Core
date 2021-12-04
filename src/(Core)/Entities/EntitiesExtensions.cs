@@ -42,5 +42,13 @@ namespace Warehouse.Core
             var entitiesList = await entities.ToListAsync();
             return entitiesList.Where(predicate);
         }
+
+        public static async Task<IEnumerable<TResult>> SelectAsync<T, TResult>(
+            this IEntities<T> entities,
+            Func<T, TResult> entityMap)
+        {
+            var entitiesList = await entities.ToListAsync();
+            return entitiesList.Select(entityMap);
+        }
     }
 }

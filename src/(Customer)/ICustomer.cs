@@ -1,6 +1,8 @@
-﻿namespace Warehouse.Core
+﻿using MediaPrint;
+
+namespace Warehouse.Core
 {
-    public interface ICustomer
+    public interface ICustomer : IPrintable
     {
         IOrders Orders { get; }
     }

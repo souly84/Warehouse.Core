@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using MediaPrint;
 
 namespace Warehouse.Core
 {
-    public interface ICompany
+    public interface ICompany : IPrintable
     {
         IEntities<ICustomer> Customers { get; }
         IEntities<IUser> Users { get; }
