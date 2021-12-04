@@ -25,13 +25,15 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public void FireAndForget()
+        public async Task FireAndForget()
         {
             var taskResult = false;
             Task.Run(() =>
             {
                 taskResult = true;
             }).FireAndForget();
+            Func<bool> waitingForResult = () => taskResult == true;
+            await waitingForResult.WaitForAsync();
             Assert.True(taskResult);
         }
 

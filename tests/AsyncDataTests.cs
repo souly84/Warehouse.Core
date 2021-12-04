@@ -37,11 +37,13 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public void IsLoadingFalseWhenDataLoaded()
+        public async Task IsLoadingFalseWhenDataLoaded()
         {
             var dataTask = new TaskCompletionSource<bool>();
             var asyncData = new AsyncData<bool>(dataTask.Task);
+            var wait = asyncData.WaitWhileLoading();
             dataTask.SetResult(true);
+            await wait.ConfigureAwait(false);
             Assert.False(asyncData.IsLoading);
             Assert.True(asyncData.Value);
         }
