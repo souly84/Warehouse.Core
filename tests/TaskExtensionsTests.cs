@@ -39,14 +39,21 @@ namespace Warehouse.Core.Tests
         public async Task FireAndForgetWithException()
         {
             Exception expectedException = null;
-            Task.Run(() =>
-            {
-                throw new InvalidOperationException("Test Exception");
-            }).FireAndForget((ex) => expectedException = ex);
+            Task
+                .Run(() => throw new InvalidOperationException("Test Exception"))
+                .FireAndForget((ex) => expectedException = ex);
             Func<bool> waitingForResult = () => expectedException != null;
             await waitingForResult.WaitForAsync();
             Assert.NotNull(expectedException);
             Assert.IsType<InvalidOperationException>(expectedException);
+        }
+
+        [Fact]
+        public void FireAndForgetWithExceptionButNoAction()
+        {
+            Task
+                .Run(() => throw new InvalidOperationException("Test Exception"))
+                .FireAndForget();
         }
 
         [Fact]
@@ -59,6 +66,47 @@ namespace Warehouse.Core.Tests
             Assert.Equal(2, count);
         }
 
+        [Fact]
+        public Task ThenWithNullActionThrowsArgumentNullException()
+        {
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                Task
+                    .Run(() => Task.CompletedTask)
+                    .Then((Action)null)
+            );
+        }
+
+        [Fact]
+        public Task ThenWithNullTaskActionThrowsArgumentNullException()
+        {
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                Task
+                    .Run(() => Task.CompletedTask)
+                    .Then((Action<Task>)null)
+            );
+        }
+
+        [Fact]
+        public Task ThenWithNullThrowsArgumentNullException()
+        {
+            int count = 0;
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                ((Task)null).Then(() => count++)
+            );
+        }
+
+        [Fact]
+        public Task ThenWithNullAndActionTaskThrowsArgumentNullException()
+        {
+            int count = 0;
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                ((Task)null).Then(async () =>
+                {
+                    await Task.Delay(50).ConfigureAwait(false);
+                    count++;
+                })
+            );
+        }
 
         [Fact]
         public async Task ThenWithTask()
