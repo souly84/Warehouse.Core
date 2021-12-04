@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace Warehouse.Core.Pugins
+namespace Warehouse.Core.Plugins
 {
     public class AsyncData<T> : IAsyncData<T>
     {

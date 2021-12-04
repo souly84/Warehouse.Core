@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Warehouse.Core.Pugins
+namespace Warehouse.Core.Plugins
 {
     public static class ExceptionExtensions
     {

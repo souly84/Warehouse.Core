@@ -1,4 +1,4 @@
-﻿namespace Warehouse.Core.Pugins
+﻿namespace Warehouse.Core.Plugins
 {
     public interface IPropertyChanged
     {

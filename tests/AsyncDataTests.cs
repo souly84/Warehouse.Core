@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Warehouse.Core.Pugins;
+using Warehouse.Core.Plugins;
 using Xunit;
 
 namespace Warehouse.Core.Tests

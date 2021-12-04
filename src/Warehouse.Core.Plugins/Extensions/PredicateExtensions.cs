@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Warehouse.Core.Pugins
+namespace Warehouse.Core.Plugins
 {
     public static class PredicateExtensions
     {

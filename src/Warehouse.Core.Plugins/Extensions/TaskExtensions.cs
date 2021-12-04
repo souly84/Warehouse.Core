@@ -2,7 +2,7 @@
 {
     public static class TaskExtensions
     {
-        public static readonly TaskFactory TaskFactory = new TaskFactory(
+        private static readonly TaskFactory TaskFactory = new TaskFactory(
             CancellationToken.None,
             TaskCreationOptions.None,
             TaskContinuationOptions.None,

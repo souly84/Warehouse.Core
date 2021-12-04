@@ -6,10 +6,4 @@
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Extensions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
 </Project>

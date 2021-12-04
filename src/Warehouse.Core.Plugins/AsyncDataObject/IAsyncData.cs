@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Warehouse.Core.Pugins
+namespace Warehouse.Core.Plugins
 {
     public interface IAsyncData<out T> : INotifyPropertyChanged
     {
