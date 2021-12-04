@@ -1,19 +1,18 @@
 ﻿using MediaPrint;
+using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core.Goods.Storages
 {
-    public class StorageGood : IGood
+    public class StorageGood : IWarehouseGood
     {
-        private readonly IGood _good;
+        private readonly IWarehouseGood _good;
         private readonly int _storageQuantity;
 
-        public StorageGood(IGood good, int storageQuantity)
+        public StorageGood(IWarehouseGood good, int storageQuantity)
         {
             _good = good;
             _storageQuantity = storageQuantity;
         }
-
-        public IGoodConfirmation Confirmation => _good.Confirmation;
 
         public IEntities<IStorage> Storages => _good.Storages;
 

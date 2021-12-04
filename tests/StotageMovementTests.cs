@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MediaPrint;
+using Warehouse.Core.Warehouse.Goods;
 using Xunit;
 
 namespace Warehouse.Core.Tests
@@ -10,7 +11,7 @@ namespace Warehouse.Core.Tests
         public async Task MoveToIncreasesTheQuantityInTargetStorage()
         {
             var storageToMoveInto = new MockStorage();
-            var good = new MockGood("1", 5);
+            var good = new MockWarehouseGood("1", 5);
             await good
                 .From(await good.Storages.FirstAsync())
                 .MoveToAsync(storageToMoveInto, 4);
@@ -34,7 +35,7 @@ namespace Warehouse.Core.Tests
         public async Task MoveToDecreasesTheQuantityFromStorage()
         {
             
-            var good = new MockGood("1", 5);
+            var good = new MockWarehouseGood("1", 5);
             var storageFrom = await good.Storages.FirstAsync();
             await good
                 .From(storageFrom)

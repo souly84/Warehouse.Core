@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Warehouse.Core.Receptions.Goods;
 using Xunit;
 
 namespace Warehouse.Core.Tests
@@ -9,12 +10,12 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync()
         {
             Assert.Equal(
-                 new MockGood("1", 5),
-                 await new ListOfEntities<IGood>(
-                       new MockGood("1", 5),
-                       new MockGood("2", 5),
-                       new MockGood("3", 5),
-                       new MockGood("4", 5)
+                 new MockReceptionGood("1", 5),
+                 await new ListOfEntities<IReceptionGood>(
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
                  ).FirstAsync()
             );
         }
@@ -23,13 +24,13 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync_WithPredicate()
         {
             Assert.Equal(
-                 new MockGood("3", 5),
-                 await new ListOfEntities<IGood>(
-                       new MockGood("1", 5),
-                       new MockGood("2", 5),
-                       new MockGood("3", 5),
-                       new MockGood("4", 5)
-                 ).FirstAsync(good => good.Equals(new MockGood("3", 5)))
+                 new MockReceptionGood("3", 5),
+                 await new ListOfEntities<IReceptionGood>(
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 ).FirstAsync(good => good.Equals(new MockReceptionGood("3", 5)))
             );
         }
     }

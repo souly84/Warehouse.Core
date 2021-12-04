@@ -2,14 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Warehouse.Core.Goods;
+using Warehouse.Core.Receptions.Goods;
 
 namespace Warehouse.Core.Tests.Extensions
 {
     public class ConfirmedGoods
     {
-        private readonly IGood[] goods;
+        private readonly IReceptionGood[] goods;
 
-        public ConfirmedGoods(params IGood[] goods)
+        public ConfirmedGoods(params IReceptionGood[] goods)
         {
             this.goods = goods;
         }

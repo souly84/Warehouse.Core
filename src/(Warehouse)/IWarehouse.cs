@@ -1,7 +1,9 @@
-﻿namespace Warehouse.Core
+﻿using Warehouse.Core.Warehouse.Goods;
+
+namespace Warehouse.Core
 {
     public interface IWarehouse
     {
-        IEntities<IGood> Goods { get; }
+        IEntities<IWarehouseGood> Goods { get; }
     }
 }

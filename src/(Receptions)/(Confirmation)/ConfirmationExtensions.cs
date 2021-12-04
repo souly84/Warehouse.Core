@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Warehouse.Core.Receptions.Goods;
 
 namespace Warehouse.Core.Receptions
 {
@@ -36,7 +37,7 @@ namespace Warehouse.Core.Receptions
             }
         }
 
-        public static Task AddAsync(this IConfirmation confirmation, IGood good)
+        public static Task AddAsync(this IConfirmation confirmation, IReceptionGood good)
         {
             return confirmation.AddAsync(good, 1);
         }
@@ -50,7 +51,7 @@ namespace Warehouse.Core.Receptions
             }
         }
 
-        public static Task RemoveAsync(this IConfirmation confirmation, IGood good)
+        public static Task RemoveAsync(this IConfirmation confirmation, IReceptionGood good)
         {
             return confirmation.RemoveAsync(good, 1);
         }

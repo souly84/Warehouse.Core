@@ -1,14 +1,15 @@
 ﻿using System.Threading.Tasks;
 using MediaPrint;
+using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core
 {
     public interface IStorage : IPrintable
     {
-        IEntities<IGood> Goods { get; }
+        IEntities<IWarehouseGood> Goods { get; }
 
-        Task IncreaseAsync(IGood good, int quantity);
+        Task IncreaseAsync(IWarehouseGood good, int quantity);
 
-        Task DecreaseAsync(IGood good, int quantity);
+        Task DecreaseAsync(IWarehouseGood good, int quantity);
     }
 }

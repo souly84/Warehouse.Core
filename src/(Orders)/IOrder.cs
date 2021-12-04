@@ -1,8 +1,10 @@
-﻿namespace Warehouse.Core
+﻿using Warehouse.Core.Receptions.Goods;
+
+namespace Warehouse.Core
 {
     public interface IOrder
     {
-        IEntities<IGood> Goods { get; }
+        IEntities<IReceptionGood> Goods { get; }
 
         IEntities<IReception> Receptions { get; }
     }

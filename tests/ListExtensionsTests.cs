@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Warehouse.Core.Receptions.Goods;
 using Xunit;
 
 namespace Warehouse.Core.Tests
@@ -11,17 +12,17 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync()
         {
             Assert.Equal(
-                 new List<IGood>
+                 new List<IReceptionGood>
                  {
-                       new MockGood("3", 5),
-                       new MockGood("4", 7)
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 7)
                  },
-                 await new List<IGood>
+                 await new List<IReceptionGood>
                  {
-                       new MockGood("1", 1),
-                       new MockGood("2", 3),
-                       new MockGood("3", 5),
-                       new MockGood("4", 7)
+                       new MockReceptionGood("1", 1),
+                       new MockReceptionGood("2", 3),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 7)
                  }.WhereAsync(good => Task.FromResult(good.Quantity > 3))
             );
         }
@@ -30,14 +31,14 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync_WithPredicate()
         {
             Assert.Equal(
-                 new MockGood("3", 5),
-                 await new List<IGood>
+                 new MockReceptionGood("3", 5),
+                 await new List<IReceptionGood>
                  {
-                       new MockGood("1", 5),
-                       new MockGood("2", 5),
-                       new MockGood("3", 5),
-                       new MockGood("4", 5)
-                 }.FirstAsync(good => Task.FromResult(good.Equals(new MockGood("3", 5))))
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 }.FirstAsync(good => Task.FromResult(good.Equals(new MockReceptionGood("3", 5))))
             );
         }
     }

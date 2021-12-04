@@ -9,7 +9,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task CachesToListAsync()
         {
-            var cached = new OneSuccessfulCallGoods().Cached();
+            var cached = new OnSuccesfulCallEntities().Cached();
             Assert.NotEmpty(await cached.ToListAsync());
             Assert.NotEmpty(await cached.ToListAsync());
         }

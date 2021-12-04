@@ -1,5 +1,6 @@
 ﻿using System;
 using MediaPrint;
+using Warehouse.Core.Receptions.Goods;
 
 namespace Warehouse.Core.Goods
 {
@@ -8,13 +9,13 @@ namespace Warehouse.Core.Goods
         private int _quantity;
         private readonly int _total;
 
-        public GoodConfirmation(IGood good, int totalQuantity)
+        public GoodConfirmation(IReceptionGood good, int totalQuantity)
         {
             Good = good;
             _total = totalQuantity;
         }
 
-        public IGood Good { get; }
+        public IReceptionGood Good { get; }
 
         public IConfirmationState State => new ConfirmationState(_quantity, _total);
 

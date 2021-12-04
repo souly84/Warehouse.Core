@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MediaPrint;
+using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core.Goods.Storages
 {
@@ -18,14 +19,14 @@ namespace Warehouse.Core.Goods.Storages
             _errorMessage = errorMessage;
         }
 
-        public IEntities<IGood> Goods => throw new InvalidOperationException(_errorMessage);
+        public IEntities<IWarehouseGood> Goods => throw new InvalidOperationException(_errorMessage);
 
-        public Task DecreaseAsync(IGood good, int quantity)
+        public Task DecreaseAsync(IWarehouseGood good, int quantity)
         {
             throw new InvalidOperationException(_errorMessage);
         }
 
-        public Task IncreaseAsync(IGood good, int quantity)
+        public Task IncreaseAsync(IWarehouseGood good, int quantity)
         {
             throw new InvalidOperationException(_errorMessage);
         }
