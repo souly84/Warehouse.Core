@@ -13,13 +13,13 @@ namespace Warehouse.Core
     public class MockReceptionGood : IReceptionGood
     {
         private readonly string _id;
-        private readonly string _barcode;
-        private IGoodConfirmation _confirmation;
+        private readonly string? _barcode;
+        private IGoodConfirmation? _confirmation;
 
         public MockReceptionGood(
             string id,
             int quantity,
-            string barcode = null)
+            string? barcode = null)
         {
             _id = id;
             Quantity = quantity;

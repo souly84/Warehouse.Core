@@ -15,13 +15,13 @@ namespace Warehouse.Core
     public class MockWarehouseGood : IWarehouseGood
     {
         private readonly string _id;
-        private readonly string _barcode;
-        private IEntities<IStorage> _storages;
+        private readonly string? _barcode;
+        private IEntities<IStorage>? _storages;
 
         public MockWarehouseGood(
             string id,
             int quantity,
-            string barcode = null)
+            string? barcode = null)
         {
             _id = id;
             Quantity = quantity;

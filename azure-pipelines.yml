@@ -72,7 +72,7 @@ steps:
 - task: MSBuild@1
   displayName: 'NuGet pack Warehouse.Core'
   inputs:
-    solution: src/Warehouse.Core.csproj
+    solution: src/Warehouse.Core/Warehouse.Core.csproj
     configuration: '$(buildConfiguration)'
     msbuildArguments: '/p:PackageVersion=$(Build.BuildNumber) /t:pack /p:packageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeReferencedProjects=true'
 
