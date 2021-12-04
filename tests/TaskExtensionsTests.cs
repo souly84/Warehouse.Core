@@ -98,6 +98,37 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task ThenWithFuncTask()
+        {
+            int count = 0;
+            await Task
+                .Run(() => count++)
+                .Then(() =>
+                {
+                    count++;
+                    return Task.CompletedTask;
+                });
+            Assert.Equal(2, count);
+        }
+
+        [Fact]
+        public async Task ThenWithTaskGenericResultArgumentAndFunc()
+        {
+            int count = 0;
+            await Task
+                .Run(() =>
+                {
+                    return count + 1;
+                })
+                .Then((int value) =>
+                {
+                    count += value;
+                    return Task.CompletedTask;
+                });
+            Assert.Equal(1, count);
+        }
+
+        [Fact]
         public async Task ThenWithTaskResultArgumentAction()
         {
             int count = 0;
@@ -118,19 +149,19 @@ namespace Warehouse.Core.Tests
         public async Task ThenWithTaskResultArgumentActionAndFunc()
         {
             int count = 0;
-            await Task
-                .Run(() =>
+            Assert.Equal(
+                4,
+                await Task.Run(() =>
                 {
                     count += 2;
                     return count;
-                })
-                .Then(async (int value) =>
+                }).Then(async (int value) =>
                 {
                     count += value;
                     await Task.Delay(50).ConfigureAwait(false);
                     return count;
-                });
-            Assert.Equal(4, count);
+                })
+            );
         }
 
         [Fact]
@@ -213,6 +244,19 @@ namespace Warehouse.Core.Tests
                 .Then(() => count++)
             );
             Assert.Equal(1, count);
+        }
+
+        [Fact]
+        public async Task TaskTimeout_DoesNotThrowTimeoutException_WhenNoTimeoutExceeded()
+        {
+            Assert.Equal(
+                100,
+                await Task.Run(async () =>
+                {
+                    await Task.Delay(100).ConfigureAwait(false);
+                    return 100;
+                }).WithTimeout(1000)
+            );
         }
 
         [Fact]
