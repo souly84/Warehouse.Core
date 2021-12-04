@@ -2,7 +2,7 @@
 {
     public interface IOrder
     {
-        IEntities<IGood> Goods { get; }
+        IEntities<IReceptionGood> Goods { get; }
 
         IEntities<IReception> Receptions { get; }
     }

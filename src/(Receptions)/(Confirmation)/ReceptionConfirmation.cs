@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Warehouse.Core.Goods;
 
-namespace Warehouse.Core.Receptions
+namespace Warehouse.Core
 {
     public class ReceptionConfirmation : IConfirmation
     {
@@ -24,7 +23,7 @@ namespace Warehouse.Core.Receptions
                 .ToList();
         }
 
-        public async Task AddAsync(IGood goodToAdd, int quantity)
+        public async Task AddAsync(IReceptionGood goodToAdd, int quantity)
         {
             var goods = await Reception
                 .Goods
@@ -35,7 +34,7 @@ namespace Warehouse.Core.Receptions
             }
         }
 
-        public async Task RemoveAsync(IGood goodToRemove, int quantity)
+        public async Task RemoveAsync(IReceptionGood goodToRemove, int quantity)
         {
             var goods = await Reception
                 .Goods

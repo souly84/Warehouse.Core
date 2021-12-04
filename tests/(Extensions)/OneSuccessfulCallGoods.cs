@@ -4,26 +4,26 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core.Tests.Extensions
 {
-    public class OneSuccessfulCallGoods : IEntities<IGood>
+    public class OnSuccesfulCallEntities : IEntities<IReceptionGood>
     {
         private bool _wasCalled;
-        public Task<IList<IGood>> ToListAsync()
+        public Task<IList<IReceptionGood>> ToListAsync()
         {
             if (_wasCalled)
             {
                 throw new InvalidOperationException("The method has been called twice");
             }
             _wasCalled = true;
-            return Task.FromResult<IList<IGood>>(new List<IGood>
+            return Task.FromResult<IList<IReceptionGood>>(new List<IReceptionGood>
             {
-                new MockGood("1", 1),
-                new MockGood("2", 1),
+                new MockReceptionGood("1", 1),
+                new MockReceptionGood("2", 1),
             });
         }
 
-        public IEntities<IGood> With(IFilter filter)
+        public IEntities<IReceptionGood> With(IFilter filter)
         {
-            return new OneSuccessfulCallGoods();
+            return new OnSuccesfulCallEntities();
         }
     }
 }

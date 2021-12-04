@@ -21,10 +21,4 @@
   <ItemGroup>
     <ProjectReference Include="..\src\Warehouse.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="%28Extensions%29\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="%28Extensions%29\" />
-  </ItemGroup>
 </Project>

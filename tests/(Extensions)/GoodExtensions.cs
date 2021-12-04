@@ -4,7 +4,7 @@ namespace Warehouse.Core.Tests.Extensions
 {
     public static class GoodExtensions
     {
-        public static async Task<IGood> FullyConfirmed(this IGood good)
+        public static async Task<IReceptionGood> FullyConfirmed(this IReceptionGood good)
         {
             while (!await good.ConfirmedAsync())
             {
@@ -13,7 +13,7 @@ namespace Warehouse.Core.Tests.Extensions
             return good;
         }
 
-        public static async Task<IGood> PartiallyConfirmed(this IGood good, int confirmedQty)
+        public static async Task<IReceptionGood> PartiallyConfirmed(this IReceptionGood good, int confirmedQty)
         {
             if (!await good.ConfirmedAsync())
             {

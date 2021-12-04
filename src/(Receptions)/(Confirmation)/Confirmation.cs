@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Warehouse.Core.Goods;
 
-namespace Warehouse.Core.Receptions
+
+namespace Warehouse.Core
 {
     /// <summary>
     /// This class is needed to reduce code duplication. Otherwise the PR is rejected by Sonar cloud.
@@ -20,12 +20,12 @@ namespace Warehouse.Core.Receptions
 
         public IConfirmationState State => _confirmation.State;
 
-        public Task AddAsync(IGood goodToAdd, int quantity)
+        public Task AddAsync(IReceptionGood goodToAdd, int quantity)
         {
             return _confirmation.AddAsync(goodToAdd, quantity);
         }
 
-        public Task RemoveAsync(IGood goodToRemove, int quantity)
+        public Task RemoveAsync(IReceptionGood goodToRemove, int quantity)
         {
             return _confirmation.RemoveAsync(goodToRemove, quantity);
         }

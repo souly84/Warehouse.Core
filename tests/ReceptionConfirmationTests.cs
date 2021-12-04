@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediaPrint;
-using Warehouse.Core.Goods;
-using Warehouse.Core.Receptions;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 
@@ -15,8 +13,8 @@ namespace Warehouse.Core.Tests
         {
             var reception = await new ConfirmedReception<MockReception>(
                 new MockReception(
-                    new MockGood("good1", 4),
-                    new MockGood("good2", 8)
+                    new MockReceptionGood("good1", 4),
+                    new MockReceptionGood("good2", 8)
                 )
             ).ConfirmAsync();
             Assert.True(
@@ -24,8 +22,8 @@ namespace Warehouse.Core.Tests
             );
             Assert.Equal(
                 await new ConfirmedGoods(
-                    new MockGood("good1", 4),
-                    new MockGood("good2", 8)
+                    new MockReceptionGood("good1", 4),
+                    new MockReceptionGood("good2", 8)
                 ).ToListAsync(),
                 reception.ValidatedGoods
             );  
@@ -35,18 +33,18 @@ namespace Warehouse.Core.Tests
         public async Task Reception_Validation_ForStartedConfirmationsOnly()
         {
             var reception = new MockReception(
-                new MockGood("good1", 4),
-                new MockGood("good2", 8),
-                new MockGood("good3", 3)
+                new MockReceptionGood("good1", 4),
+                new MockReceptionGood("good2", 8),
+                new MockReceptionGood("good3", 3)
             );
-            await reception.Confirmation().AddAsync(new MockGood("good1", 4), 4);
-            await reception.Confirmation().AddAsync(new MockGood("good3", 3), 2);
+            await reception.Confirmation().AddAsync(new MockReceptionGood("good1", 4), 4);
+            await reception.Confirmation().AddAsync(new MockReceptionGood("good3", 3), 2);
             await reception.Confirmation().CommitAsync();
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {
-                    (await new MockGood("good1", 4).FullyConfirmed()).Confirmation,
-                    (await new MockGood("good3", 3).PartiallyConfirmed(2)).Confirmation
+                    (await new MockReceptionGood("good1", 4).FullyConfirmed()).Confirmation,
+                    (await new MockReceptionGood("good3", 3).PartiallyConfirmed(2)).Confirmation
                 },
                 reception.ValidatedGoods
             );
@@ -57,8 +55,8 @@ namespace Warehouse.Core.Tests
         {
             var reception = await new ConfirmedReception<MockReception>(
                 new MockReception(
-                    new MockGood("good1", 4),
-                    new MockGood("good2", 8)
+                    new MockReceptionGood("good1", 4),
+                    new MockReceptionGood("good2", 8)
                 )
             ).ConfirmAsync();
             await reception.Confirmation().ClearAsync();
@@ -70,10 +68,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task Reception_Confirmation_ByGood()
         {
-            var goodToConfirm = new MockGood("good1", 4);
+            var goodToConfirm = new MockReceptionGood("good1", 4);
             await new MockReception(
                 goodToConfirm,
-                new MockGood("good2", 8)
+                new MockReceptionGood("good2", 8)
             ).Confirmation().AddAsync(goodToConfirm);
             Assert.EqualJson(
                 @"{
@@ -94,10 +92,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task Reception_Confirmation_RemoveByGood()
         {
-            var goodToConfirm = new MockGood("good1", 4);
+            var goodToConfirm = new MockReceptionGood("good1", 4);
             var confirmation = new MockReception(
                 goodToConfirm,
-                new MockGood("good2", 8)
+                new MockReceptionGood("good2", 8)
             ).Confirmation();
             await confirmation.AddAsync(goodToConfirm);
             await confirmation.RemoveAsync(goodToConfirm);
@@ -120,10 +118,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task Reception_Confirmation_ByGoodBarcode()
         {
-            var goodToConfirm = new MockGood("good1", 4, "360600");
+            var goodToConfirm = new MockReceptionGood("good1", 4, "360600");
             await new MockReception(
                 goodToConfirm,
-                new MockGood("good2", 8)
+                new MockReceptionGood("good2", 8)
             ).Confirmation().AddAsync("360600");
             Assert.EqualJson(
                 @"{
@@ -144,10 +142,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task Reception_Confirmation_RemoveByGoodBarcode()
         {
-            var goodToConfirm = new MockGood("good1", 4, "360600");
+            var goodToConfirm = new MockReceptionGood("good1", 4, "360600");
             var confirmation = new MockReception(
                 goodToConfirm,
-                new MockGood("good2", 8)
+                new MockReceptionGood("good2", 8)
             ).Confirmation();
             await confirmation.AddAsync(goodToConfirm);
             await confirmation.RemoveAsync("360600");
@@ -172,8 +170,8 @@ namespace Warehouse.Core.Tests
         {
             Assert.True(
                 await new MockReception(
-                    new MockGood("good1", 4, "360600"),
-                    new MockGood("good2", 8)
+                    new MockReceptionGood("good1", 4, "360600"),
+                    new MockReceptionGood("good2", 8)
                 ).Confirmation()
                  .ExistsAsync("360600")
             );
@@ -184,8 +182,8 @@ namespace Warehouse.Core.Tests
         {
             Assert.False(
                 await new MockReception(
-                    new MockGood("good1", 4, "360601"),
-                    new MockGood("good2", 8, "360602")
+                    new MockReceptionGood("good1", 4, "360601"),
+                    new MockReceptionGood("good2", 8, "360602")
                 ).Confirmation()
                  .ExistsAsync("360600")
             );
@@ -196,10 +194,10 @@ namespace Warehouse.Core.Tests
         public async Task HistoryShowsFullyConfimedGoodsOnly()
         {
             Assert.Contains(
-                (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
+                (await new MockReceptionGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
                 await new MockReception(
-                    await new MockGood("good1", 4, "360601").FullyConfirmed(),
-                    await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)
+                    await new MockReceptionGood("good1", 4, "360601").FullyConfirmed(),
+                    await new MockReceptionGood("good2", 8, "360602").PartiallyConfirmed(4)
                 ).Confirmation()
                  .History()
                  .ToListAsync()
@@ -210,10 +208,10 @@ namespace Warehouse.Core.Tests
         public async Task NotConfirmedOnly_ShowsNotConfirmedGoodsConfirmations()
         {
             Assert.Contains(
-                (await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)).Confirmation,
+                (await new MockReceptionGood("good2", 8, "360602").PartiallyConfirmed(4)).Confirmation,
                 await new MockReception(
-                    await new MockGood("good1", 4, "360601").FullyConfirmed(),
-                    await new MockGood("good2", 8, "360602").PartiallyConfirmed(4)
+                    await new MockReceptionGood("good1", 4, "360601").FullyConfirmed(),
+                    await new MockReceptionGood("good2", 8, "360602").PartiallyConfirmed(4)
                 ).NeedConfirmation()
                  .ToListAsync()
             );

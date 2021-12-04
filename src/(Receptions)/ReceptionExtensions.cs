@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Warehouse.Core.Receptions
+namespace Warehouse.Core
 {
     public static class ReceptionExtensions
     {

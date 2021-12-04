@@ -1,20 +1,19 @@
 ﻿using System.Threading.Tasks;
-using Warehouse.Core.Goods;
 using Warehouse.Core.Goods.Storages;
 
 namespace Warehouse.Core
 {
-    public class StotageMovement : IMovement
+    public class StockMovement : IMovement
     {
-        private readonly IGood _good;
+        private readonly IWarehouseGood _good;
         private readonly IStorage _fromStorage;
 
-        public StotageMovement(IGood good)
+        public StockMovement(IWarehouseGood good)
             : this(good, new IncorrectStorage())
         {
         }
 
-        public StotageMovement(IGood good, IStorage fromStorage)
+        public StockMovement(IWarehouseGood good, IStorage fromStorage)
         {
             _good = good;
             _fromStorage = fromStorage;
@@ -22,7 +21,7 @@ namespace Warehouse.Core
 
         public IMovement From(IStorage storage)
         {
-            return new StotageMovement(_good, storage);
+            return new StockMovement(_good, storage);
         }
 
         public async Task MoveToAsync(IStorage storage, int quantity)

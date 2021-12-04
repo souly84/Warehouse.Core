@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Warehouse.Core.Goods;
 
-namespace Warehouse.Core.Receptions
+namespace Warehouse.Core
 {
     public class NotConfirmedOnly : Confirmation
     {

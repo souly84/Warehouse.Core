@@ -1,10 +1,10 @@
 ﻿using MediaPrint;
 
-namespace Warehouse.Core.Goods
+namespace Warehouse.Core
 {
     public interface IGoodConfirmation : IPrintable
     {
-        IGood Good { get; }
+        IReceptionGood Good { get; }
 
         IConfirmationState State { get; }
 

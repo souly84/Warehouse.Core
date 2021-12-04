@@ -1,28 +1,22 @@
 ﻿using System;
 using MediaPrint;
-using Warehouse.Core.Goods;
 
 namespace Warehouse.Core
 {
-    public interface IGood : IPrintable
+    public interface IReceptionGood : IPrintable
     {
         int Quantity { get; }
 
         IGoodConfirmation Confirmation { get; }
-
-        IEntities<IStorage> Storages { get; }
-
-        IMovement Movement { get; }
     }
 
-    public class MockGood : IGood
+    public class MockReceptionGood : IReceptionGood
     {
         private readonly string _id;
         private readonly string _barcode;
         private IGoodConfirmation _confirmation;
-        private IEntities<IStorage> _storages;
 
-        public MockGood(
+        public MockReceptionGood(
             string id,
             int quantity,
             string barcode = null)
@@ -33,10 +27,6 @@ namespace Warehouse.Core
         }
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
-
-        public IEntities<IStorage> Storages => _storages ?? (_storages = new ListOfEntities<IStorage>(new MockStorage(this)));
-
-        public IMovement Movement => new StotageMovement(this);
 
         public int Quantity { get; }
 
@@ -62,7 +52,7 @@ namespace Warehouse.Core
 
         private bool TheSameMockObject(object obj)
         {
-            return obj is MockGood good
+            return obj is MockReceptionGood good
                 && _id == good._id
                 && _barcode == good._barcode;
         }

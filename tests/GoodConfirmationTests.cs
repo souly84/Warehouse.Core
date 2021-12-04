@@ -12,7 +12,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                new MockGood("1", 5).Confirmation.Decrease(1);
+                new MockReceptionGood("1", 5).Confirmation.Decrease(1);
             });
         }
 
@@ -21,7 +21,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var good = new MockGood("1", 5);
+                var good = new MockReceptionGood("1", 5);
                 good.Confirmation.Increase(4);
                 good.Confirmation.Increase(1);
                 good.Confirmation.Increase(1);
@@ -31,7 +31,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationDone()
         {
-            var confirmedGood = await new MockGood("1", 5).FullyConfirmed();
+            var confirmedGood = await new MockReceptionGood("1", 5).FullyConfirmed();
             Assert.True(
                await confirmedGood.ConfirmedAsync()
             );
@@ -40,7 +40,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationClear()
         {
-            var confirmedGood = await new MockGood("1", 5).FullyConfirmed();
+            var confirmedGood = await new MockReceptionGood("1", 5).FullyConfirmed();
             var notConfirmed = confirmedGood.Clear();
             Assert.False(
                 await notConfirmed.ConfirmedAsync()
@@ -51,8 +51,8 @@ namespace Warehouse.Core.Tests
         public async Task EqualToTheSame()
         {
             Assert.Equal(
-               (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
-               (await new MockGood("good1", 4, "360601").FullyConfirmed()).Confirmation
+               (await new MockReceptionGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
+               (await new MockReceptionGood("good1", 4, "360601").FullyConfirmed()).Confirmation
             );
         }
     }

@@ -1,16 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediaPrint;
 using Xunit;
 
 namespace Warehouse.Core.Tests
 {
-    public class StotageMovementTests
+    public class StockMovementTests
     {
         [Fact]
         public async Task MoveToIncreasesTheQuantityInTargetStorage()
         {
             var storageToMoveInto = new MockStorage();
-            var good = new MockGood("1", 5);
+            var good = new MockWarehouseGood("1", 5);
             await good
                 .From(await good.Storages.FirstAsync())
                 .MoveToAsync(storageToMoveInto, 4);
@@ -34,7 +35,7 @@ namespace Warehouse.Core.Tests
         public async Task MoveToDecreasesTheQuantityFromStorage()
         {
             
-            var good = new MockGood("1", 5);
+            var good = new MockWarehouseGood("1", 5);
             var storageFrom = await good.Storages.FirstAsync();
             await good
                 .From(storageFrom)
@@ -52,6 +53,16 @@ namespace Warehouse.Core.Tests
                   ]
                 }",
                 storageFrom.ToJson().ToString()
+            );
+        }
+
+        [Fact]
+        public Task StockMoveRaiseOperationExceptionWhenNoFromStorageBeingTargeted()
+        {
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                new MockWarehouseGood("1", 5)
+                    .Movement
+                    .MoveToAsync(new MockStorage(), 4)
             );
         }
     }

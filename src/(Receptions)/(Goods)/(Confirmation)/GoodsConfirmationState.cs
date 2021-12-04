@@ -1,18 +1,18 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-namespace Warehouse.Core.Receptions
+namespace Warehouse.Core
 {
     public class GoodsConfirmationState : IConfirmationState
     {
-        private readonly IEntities<IGood> _receptionGoods;
+        private readonly IEntities<IReceptionGood> _receptionGoods;
 
         public GoodsConfirmationState(IReception reception)
             : this(reception.Goods)
         {
         }
 
-        public GoodsConfirmationState(IEntities<IGood> receptionGoods)
+        public GoodsConfirmationState(IEntities<IReceptionGood> receptionGoods)
         {
             _receptionGoods = receptionGoods;
         }
