@@ -47,5 +47,29 @@ namespace Warehouse.Core.Tests
             func.RunSync();
             Assert.True(taskResult);
         }
+
+        [Fact]
+        public Task TaskTimeout_DoesNotThrowUnhandledException_EvenWhenAnExceptionOccurs()
+        {
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                Assert.DoesNotThrowUnobservedTaskException(() => Task.Run<object>(async () =>
+                {
+                    await Task.Delay(100).ConfigureAwait(false);
+                    throw new InvalidOperationException("Test exception");
+                }).WithTimeout(1000)
+            ));
+        }
+
+        [Fact]
+        public Task TaskTimeout_ThrowsTaskCancelledException_WhenTimeoutExceeded()
+        {
+            return Assert.ThrowsAsync<TaskCanceledException>(() =>
+                Assert.DoesNotThrowUnobservedTaskException(() => Task.Run<object>(async () =>
+                {
+                    await Task.Delay(2000).ConfigureAwait(false);
+                    throw new InvalidOperationException("Test exception");
+                }).WithTimeout(1000)
+            ));
+        }
     }
 }
