@@ -12,10 +12,12 @@ namespace Warehouse.Core.Tests
         public async Task Reception_FullConfirmation()
         {
             var reception = await new ConfirmedReception<MockReception>(
-                new MockReception(
-                    new MockReceptionGood("good1", 4),
-                    new MockReceptionGood("good2", 8)
+                (MockReception) await new MockSupplier(
+                    new MockReception(
+                        new MockReceptionGood("good1", 4),
+                        new MockReceptionGood("good2", 8)
                 )
+            ).Receptions.FirstAsync()
             ).ConfirmAsync();
             Assert.True(
                  await reception.ConfirmedAsync()

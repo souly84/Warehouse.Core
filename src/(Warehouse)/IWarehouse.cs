@@ -1,6 +1,8 @@
-﻿namespace Warehouse.Core
+﻿using MediaPrint;
+
+namespace Warehouse.Core
 {
-    public interface IWarehouse
+    public interface IWarehouse : IPrintable
     {
         IEntities<IWarehouseGood> Goods { get; }
     }
