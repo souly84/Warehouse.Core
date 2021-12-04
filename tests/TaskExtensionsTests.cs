@@ -51,11 +51,13 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        // The main goal for this test is to check that FireAndForget catches the exception
         public void FireAndForgetWithExceptionButNoAction()
         {
             Task
                 .Run(() => throw new InvalidOperationException("Test Exception"))
                 .FireAndForget();
+            Assert.True(true);
         }
 
         [Fact]
@@ -66,6 +68,69 @@ namespace Warehouse.Core.Tests
                 .Run(() => count++)
                 .Then(() => count++);
             Assert.Equal(2, count);
+        }
+
+        [Fact]
+        public async Task ThenWithTaskArgumentAction()
+        {
+            int count = 0;
+            await Task
+                .Run(() => count++)
+                .Then((Task taskResult) =>
+                {
+                    count++;
+                });
+            Assert.Equal(2, count);
+        }
+
+        [Fact]
+        public async Task ThenWithTaskArgumentAndFunc()
+        {
+            int count = 0;
+            await Task
+                .Run(() => count++)
+                .Then((Task taskResult) =>
+                {
+                    count++;
+                    return Task.CompletedTask;
+                });
+            Assert.Equal(2, count);
+        }
+
+        [Fact]
+        public async Task ThenWithTaskResultArgumentAction()
+        {
+            int count = 0;
+            await Task
+                .Run(() =>
+                {
+                    count += 2;
+                    return count;
+                })
+                .Then((int value) =>
+                {
+                    count += value;
+                });
+            Assert.Equal(4, count);
+        }
+
+        [Fact]
+        public async Task ThenWithTaskResultArgumentActionAndFunc()
+        {
+            int count = 0;
+            await Task
+                .Run(() =>
+                {
+                    count += 2;
+                    return count;
+                })
+                .Then(async (int value) =>
+                {
+                    count += value;
+                    await Task.Delay(50).ConfigureAwait(false);
+                    return count;
+                });
+            Assert.Equal(4, count);
         }
 
         [Fact]
@@ -94,6 +159,15 @@ namespace Warehouse.Core.Tests
             int count = 0;
             return Assert.ThrowsAsync<ArgumentNullException>(() =>
                 ((Task)null).Then(() => count++)
+            );
+        }
+
+        [Fact]
+        public Task ThenWithNullGenericThrowsArgumentNullException()
+        {
+            int count = 0;
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                ((Task<int>)null).Then(() => count++)
             );
         }
 
