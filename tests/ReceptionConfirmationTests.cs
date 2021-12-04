@@ -16,8 +16,8 @@ namespace Warehouse.Core.Tests
                     new MockReception(
                         new MockReceptionGood("good1", 4),
                         new MockReceptionGood("good2", 8)
-                )
-            ).Receptions.FirstAsync()
+                    )
+                ).Receptions.FirstAsync()
             ).ConfirmAsync();
             Assert.True(
                  await reception.ConfirmedAsync()
@@ -56,10 +56,9 @@ namespace Warehouse.Core.Tests
         public async Task Reception_ClearConfirmation()
         {
             var reception = await new ConfirmedReception<MockReception>(
-                new MockReception(
-                    new MockReceptionGood("good1", 4),
-                    new MockReceptionGood("good2", 8)
-                )
+                (MockReception)await new MockSupplier()
+                    .Receptions
+                    .FirstAsync()
             ).ConfirmAsync();
             await reception.Confirmation().ClearAsync();
             Assert.False(
