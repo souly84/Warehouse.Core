@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -25,6 +26,40 @@ namespace Warehouse.Core.Tests
             }
 
             Xunit.Assert.Equal(expected, actual, JToken.EqualityComparer);
+        }
+
+        public static async Task DoesNotThrowUnobservedTaskException(Func<Task> method)
+        {
+            Exception unobservedTaskException = null;
+            EventHandler<UnobservedTaskExceptionEventArgs> proc = (sender, args) =>
+            {
+                unobservedTaskException = args.Exception;
+                args.SetObserved();
+            };
+
+            try
+            {
+                TaskScheduler.UnobservedTaskException += proc;
+                await method().ConfigureAwait(false);
+            }
+            finally
+            {
+                await WaitForGCCollectAsync().ConfigureAwait(false);
+                TaskScheduler.UnobservedTaskException -= proc;
+            }
+
+            Xunit.Assert.Null(unobservedTaskException);
+        }
+
+        private static async Task WaitForGCCollectAsync()
+        {
+            // we do it several times not to miss TaskScheduler.UnobservedTaskException call if unhandled exception occured
+            for (var i = 0; i < 5; i++)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                await Task.Delay(1000).ConfigureAwait(false);
+            }
         }
     }
 }
