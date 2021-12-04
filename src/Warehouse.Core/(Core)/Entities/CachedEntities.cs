@@ -6,7 +6,7 @@ namespace Warehouse.Core
     public class CachedEntities<T> : IEntities<T>
     {
         private readonly IEntities<T> _origin;
-        private IList<T> _cache;
+        private IList<T>? _cache;
 
         public CachedEntities(IEntities<T> origin)
         {

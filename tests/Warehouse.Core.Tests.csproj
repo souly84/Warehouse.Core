@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Warehouse.Core.csproj" />
+    <ProjectReference Include="..\src\Warehouse.Core\Warehouse.Core.csproj" />
+    <ProjectReference Include="..\src\Warehouse.Core.Plugins\Warehouse.Core.Plugins.csproj" />
   </ItemGroup>
 </Project>
