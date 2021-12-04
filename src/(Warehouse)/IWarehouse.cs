@@ -1,6 +1,4 @@
-﻿using Warehouse.Core.Warehouse.Goods;
-
-namespace Warehouse.Core
+﻿namespace Warehouse.Core
 {
     public interface IWarehouse
     {

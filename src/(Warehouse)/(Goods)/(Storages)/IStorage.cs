@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using MediaPrint;
-using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core
 {

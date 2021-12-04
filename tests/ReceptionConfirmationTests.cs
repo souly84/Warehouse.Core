@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediaPrint;
-using Warehouse.Core.Goods;
-using Warehouse.Core.Receptions;
-using Warehouse.Core.Receptions.Goods;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 

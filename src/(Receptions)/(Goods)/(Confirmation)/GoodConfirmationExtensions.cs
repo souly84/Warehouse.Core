@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Warehouse.Core.Goods
+namespace Warehouse.Core
 {
     public static class GoodConfirmationExtensions
     {

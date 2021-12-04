@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediaPrint;
 using Warehouse.Core.Goods.Storages;
-using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core
 {

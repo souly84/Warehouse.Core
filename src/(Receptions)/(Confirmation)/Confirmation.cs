@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Warehouse.Core.Goods;
-using Warehouse.Core.Receptions.Goods;
 
-namespace Warehouse.Core.Receptions
+
+namespace Warehouse.Core
 {
     /// <summary>
     /// This class is needed to reduce code duplication. Otherwise the PR is rejected by Sonar cloud.

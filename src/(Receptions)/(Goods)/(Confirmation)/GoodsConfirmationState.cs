@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Warehouse.Core.Receptions.Goods;
 
-namespace Warehouse.Core.Receptions
+namespace Warehouse.Core
 {
     public class GoodsConfirmationState : IConfirmationState
     {

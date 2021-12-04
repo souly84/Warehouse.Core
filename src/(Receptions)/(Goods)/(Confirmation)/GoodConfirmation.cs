@@ -1,8 +1,7 @@
 ﻿using System;
 using MediaPrint;
-using Warehouse.Core.Receptions.Goods;
 
-namespace Warehouse.Core.Goods
+namespace Warehouse.Core
 {
     public class GoodConfirmation : IGoodConfirmation
     {

@@ -1,8 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Warehouse.Core.Goods;
 using Warehouse.Core.Goods.Storages;
-using Warehouse.Core.Receptions.Goods;
-using Warehouse.Core.Warehouse.Goods;
 
 namespace Warehouse.Core
 {

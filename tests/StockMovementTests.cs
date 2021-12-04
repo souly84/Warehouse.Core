@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediaPrint;
-using Warehouse.Core.Warehouse.Goods;
 using Xunit;
 
 namespace Warehouse.Core.Tests
 {
-    public class StotageMovementTests
+    public class StockMovementTests
     {
         [Fact]
         public async Task MoveToIncreasesTheQuantityInTargetStorage()
@@ -53,6 +53,16 @@ namespace Warehouse.Core.Tests
                   ]
                 }",
                 storageFrom.ToJson().ToString()
+            );
+        }
+
+        [Fact]
+        public Task StockMoveRaiseOperationExceptionWhenNoFromStorageBeingTargeted()
+        {
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                new MockWarehouseGood("1", 5)
+                    .Movement
+                    .MoveToAsync(new MockStorage(), 4)
             );
         }
     }

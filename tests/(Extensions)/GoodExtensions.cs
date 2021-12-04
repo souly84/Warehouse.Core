@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Warehouse.Core.Receptions.Goods;
 
 namespace Warehouse.Core.Tests.Extensions
 {

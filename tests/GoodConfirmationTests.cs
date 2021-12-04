@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Warehouse.Core.Receptions.Goods;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 

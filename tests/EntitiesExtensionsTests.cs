@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Warehouse.Core.Receptions.Goods;
 using Xunit;
 
 namespace Warehouse.Core.Tests

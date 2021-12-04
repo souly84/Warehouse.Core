@@ -1,8 +1,7 @@
 ﻿using System;
 using MediaPrint;
-using Warehouse.Core.Goods;
 
-namespace Warehouse.Core.Receptions.Goods
+namespace Warehouse.Core
 {
     public interface IReceptionGood : IPrintable
     {

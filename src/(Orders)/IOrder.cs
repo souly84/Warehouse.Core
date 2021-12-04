@@ -1,6 +1,4 @@
-﻿using Warehouse.Core.Receptions.Goods;
-
-namespace Warehouse.Core
+﻿namespace Warehouse.Core
 {
     public interface IOrder
     {

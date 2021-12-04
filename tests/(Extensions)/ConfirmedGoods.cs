@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Warehouse.Core.Goods;
-using Warehouse.Core.Receptions.Goods;
 
 namespace Warehouse.Core.Tests.Extensions
 {
