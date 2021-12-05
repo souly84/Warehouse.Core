@@ -84,12 +84,12 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task ThenWithTaskArgumentAndFunc()
+        public async Task ThenWithFuncTask()
         {
             int count = 0;
             await Task
                 .Run(() => count++)
-                .Then((Task taskResult) =>
+                .Then(() =>
                 {
                     count++;
                     return Task.CompletedTask;
@@ -98,12 +98,12 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task ThenWithFuncTask()
+        public async Task ThenWithTaskArgumentAndFunc()
         {
             int count = 0;
             await Task
                 .Run(() => count++)
-                .Then(() =>
+                .Then((Task taskResult) =>
                 {
                     count++;
                     return Task.CompletedTask;
@@ -181,6 +181,16 @@ namespace Warehouse.Core.Tests
                 Task
                     .Run(() => Task.CompletedTask)
                     .Then((Action<Task>)null)
+            );
+        }
+
+        [Fact]
+        public Task ThenWithNullFuncTaskThrowsArgumentNullException()
+        {
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                Task
+                    .Run(() => Task.CompletedTask)
+                    .Then((Func<Task>)null)
             );
         }
 
