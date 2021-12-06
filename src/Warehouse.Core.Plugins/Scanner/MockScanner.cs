@@ -23,6 +23,10 @@ namespace Warehouse.Core.Plugins
             }
         }
 
+        public int BeepSuccessCount { get; private set; }
+
+        public int BeepFailureCount { get; private set; }
+
         public void Scan(IScanningResult result)
         {
             OnScan?.Invoke(this, result);
@@ -30,16 +34,17 @@ namespace Warehouse.Core.Plugins
 
         public void BeepFailure()
         {
-            // Nothing to do
+            BeepFailureCount++;
         }
 
         public void BeepSuccess()
         {
-            // Nothing to do
+            BeepSuccessCount++;
         }
 
         public Task OpenAsync()
         {
+            State = ScannerState.Opened;
             return Task.CompletedTask;
         }
 
@@ -51,7 +56,16 @@ namespace Warehouse.Core.Plugins
 
         public Task EnableAsync(bool enabled)
         {
-            State = ScannerState.Enabled;
+            if (enabled)
+            {
+                this.CheckIfOpened();
+                State = ScannerState.Enabled;
+            }
+            else if (State != ScannerState.Enabled)
+            {
+                State = ScannerState.Opened;
+            }
+            
             return Task.CompletedTask;
         }
 
