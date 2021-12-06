@@ -61,7 +61,7 @@ namespace Warehouse.Core.Plugins
                 this.CheckIfOpened();
                 State = ScannerState.Enabled;
             }
-            else if (State != ScannerState.Enabled)
+            else if (State == ScannerState.Enabled)
             {
                 State = ScannerState.Opened;
             }

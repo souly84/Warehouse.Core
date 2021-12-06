@@ -86,6 +86,41 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task Disabled()
+        {
+            var scanner = new MockScanner();
+            await scanner.OpenAsync();
+            await scanner.EnableAsync(true);
+            await scanner.EnableAsync(false);
+            Assert.Equal(
+                ScannerState.Opened,
+                scanner.State
+            );
+        }
+
+        [Fact]
+        public void BeepSuccess()
+        {
+            var scanner = new MockScanner();
+            scanner.BeepSuccess();
+            Assert.Equal(
+                1,
+                scanner.BeepSuccessCount
+            );
+        }
+
+        [Fact]
+        public void BeepFailure()
+        {
+            var scanner = new MockScanner();
+            scanner.BeepFailure();
+            Assert.Equal(
+                1,
+                scanner.BeepFailureCount
+            );
+        }
+
+        [Fact]
         public Task ThrowInvalidOperationException_OnEnableButNotOpened()
         {
             return Assert.ThrowsAsync<InvalidOperationException>(
