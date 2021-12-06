@@ -23,15 +23,13 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task NotifyOnEnableStateChanged()
+        public Task NotifyOnEnableStateChanged()
         {
-            string expected = null;
             var scanner = new MockScanner();
-            scanner.PropertyChanged += (sender, args) => expected = args.PropertyName;
-            await scanner.EnableAsync(true);
-            Assert.Equal(
-                nameof(MockScanner.IsEnabled),
-                expected
+            return Assert.PropertyChangedAsync(
+                scanner,
+                nameof(MockScanner.State),
+                () => scanner.EnableAsync(true)
             );
         }
     }

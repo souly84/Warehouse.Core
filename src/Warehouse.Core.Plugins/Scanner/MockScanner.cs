@@ -7,18 +7,18 @@ namespace Warehouse.Core.Plugins
 {
     public class MockScanner : INotifyPropertyChanged, IScanner
     {
-        private bool _isEnabled;
+        private ScannerState _state= ScannerState.Closed;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public event EventHandler<IScanningResult>? OnScan;
 
-        public bool IsEnabled
+        public ScannerState State
         {
-            get => _isEnabled;
+            get => _state;
             private set
             {
-                _isEnabled = value;
+                _state = value;
                 OnPropertyChanged();
             }
         }
@@ -45,13 +45,13 @@ namespace Warehouse.Core.Plugins
 
         public Task CloseAsync()
         {
-            IsEnabled = false;
+            State = ScannerState.Closed;
             return Task.CompletedTask;
         }
 
         public Task EnableAsync(bool enabled)
         {
-            IsEnabled = enabled;
+            State = ScannerState.Enabled;
             return Task.CompletedTask;
         }
 

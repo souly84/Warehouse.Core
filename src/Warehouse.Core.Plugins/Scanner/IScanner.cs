@@ -7,7 +7,7 @@ namespace Warehouse.Core.Plugins
     {
         event EventHandler<IScanningResult> OnScan;
 
-        bool IsEnabled { get; }
+        ScannerState State { get; }
 
         Task OpenAsync();
 
