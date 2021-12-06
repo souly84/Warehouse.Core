@@ -185,6 +185,16 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public Task ThenWithNullFuncTaskThrowsArgumentNullException()
+        {
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                Task
+                    .Run(() => Task.CompletedTask)
+                    .Then((Func<Task>)null)
+            );
+        }
+
+        [Fact]
         public Task ThenWithNullThrowsArgumentNullException()
         {
             int count = 0;
