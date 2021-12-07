@@ -86,6 +86,19 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task EnableMultipleTimes()
+        {
+            var scanner = new MockScanner();
+            await scanner.OpenAsync();
+            await scanner.EnableAsync(true);
+            await scanner.EnableAsync(true);
+            Assert.Equal(
+                ScannerState.Enabled,
+                scanner.State
+            );
+        }
+
+        [Fact]
         public async Task Disabled()
         {
             var scanner = new MockScanner();
