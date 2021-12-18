@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MediaPrint;
-using Warehouse.Core.Goods.Storages;
 
 namespace Warehouse.Core
 {
     public class MockStorage : IStorage
     {
-        private readonly string _locationEan;
+        private readonly string _storageEan;
         private readonly Dictionary<IWarehouseGood, int> _goods;
 
         public MockStorage(params IWarehouseGood[] goods) : this("1234567889", goods)
@@ -20,9 +19,9 @@ namespace Warehouse.Core
         {
         }
 
-        public MockStorage(string locationEan, Dictionary<IWarehouseGood, int> goods)
+        public MockStorage(string storageEan, Dictionary<IWarehouseGood, int> goods)
         {
-            _locationEan = locationEan;
+            _storageEan = storageEan;
             _goods = goods;
         }
 
@@ -59,6 +58,18 @@ namespace Warehouse.Core
             return Task.CompletedTask;
         }
 
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj)
+                || (obj is string ean && ean == _storageEan)
+                || (obj is MockStorage storage && storage._storageEan == _storageEan);
+        }
+
+        public override int GetHashCode()
+        {
+            return _storageEan.GetHashCode();
+        }
+
         private static Dictionary<IWarehouseGood, int> ToDictionary(IEnumerable<IWarehouseGood> goods)
         {
             var goodsInStore = new Dictionary<IWarehouseGood, int>();
@@ -75,13 +86,6 @@ namespace Warehouse.Core
             return _goods.Keys.Select(
                 good => new MockWarehouseGood(good.ToDictionary().Value<string>("Id"), _goods[good])
             );
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj)
-                || (obj is string ean && ean == _locationEan)
-                || (obj is MockStorage storage && storage._locationEan == _locationEan);
         }
     }
 }
