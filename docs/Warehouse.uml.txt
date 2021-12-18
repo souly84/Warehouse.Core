@@ -1,0 +1,55 @@
+@startuml
+
+interface       ICompany
+{
+  +LoginAsync()
+}
+interface       ICustomer
+interface       IUser
+interface       IWarehouse
+interface       ISupplier
+interface       IReception
+{
+  +ValidateAsync()
+}
+interface       IReceptionGood
+{
+  int Quantity
+}
+interface       IGoodConfirmation
+{
+  IReceptionGood Good
+  IConfirmationState State
+  
+  +int Increase()
+  +int Decrease()
+  +void Clear()
+}
+
+interface     IWarehouseGood
+{
+  int Quantity
+}
+
+interface     IStorage
+interface     IMovement
+interface     IConfirmationState
+
+ICompany "1" *-- "many" ICustomer : contains
+ICompany "1" *-- "many" IUser : contains
+ICompany "1" *-- "many" ISupplier : contains
+ICompany *-- IWarehouse
+
+ISupplier "1" *-- "many" IReception : contains
+
+IReception "1" *-- "many" IReceptionGood : contains
+
+IReceptionGood *-- IGoodConfirmation
+
+IGoodConfirmation *-- IConfirmationState
+
+IWarehouse "1" *-- "many" IWarehouseGood : contains
+IWarehouseGood "1" *-- "many" IStorage : contains
+IWarehouseGood *-- IMovement
+
+@enduml

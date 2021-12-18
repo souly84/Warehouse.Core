@@ -7,7 +7,7 @@ namespace Warehouse.Core
     {
         int Quantity { get;}
 
-        IEntities<IStorage> Storages { get; }
+        IStorages Storages { get; }
 
         IMovement Movement { get; }
     }
@@ -16,7 +16,7 @@ namespace Warehouse.Core
     {
         private readonly string _id;
         private readonly string? _barcode;
-        private IEntities<IStorage>? _storages;
+        private IStorages? _storages;
 
         public MockWarehouseGood(
             string id,
@@ -29,7 +29,11 @@ namespace Warehouse.Core
         }
 
 
-        public IEntities<IStorage> Storages => _storages ?? (_storages = new ListOfEntities<IStorage>(new MockStorage(this)));
+        public IStorages Storages => _storages ?? (_storages = new MockStorages(
+            new ListOfEntities<IStorage>(new MockStorage()),
+            new ListOfEntities<IStorage>(new MockStorage()),
+            new ListOfEntities<IStorage>(new MockStorage(this))
+        ));
 
         public IMovement Movement => new StockMovement(this);
 

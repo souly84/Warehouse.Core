@@ -22,8 +22,7 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": null,
-                        ""Quantity"": ""5"",
-                        ""StorageQty"": ""4""
+                        ""Quantity"": ""4""
                     }
                   ]
                 }",
@@ -36,7 +35,7 @@ namespace Warehouse.Core.Tests
         {
             
             var good = new MockWarehouseGood("1", 5);
-            var storageFrom = await good.Storages.FirstAsync();
+            var storageFrom = await good.Storages.Reserve.FirstAsync();
             await good
                 .From(storageFrom)
                 .MoveToAsync(new MockStorage(), 4);
@@ -47,8 +46,7 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": null,
-                        ""Quantity"": ""5"",
-                        ""StorageQty"": ""1""
+                        ""Quantity"": ""1""
                     }
                   ]
                 }",
