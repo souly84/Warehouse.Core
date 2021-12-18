@@ -14,7 +14,6 @@ namespace Warehouse.Core
             _unkownGoods = unkownGoods;
         }
 
-
         public async Task<IList<IReceptionGood>> ToListAsync()
         {
             var result = new List<IReceptionGood>(_unkownGoods);

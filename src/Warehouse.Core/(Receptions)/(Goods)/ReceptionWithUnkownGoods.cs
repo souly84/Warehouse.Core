@@ -10,7 +10,8 @@ namespace Warehouse.Core
         private readonly int _defaultMaxQuantity;
         private IList<IReceptionGood> _unknownGoods = new List<IReceptionGood>();
 
-        public ReceptionWithUnkownGoods(IReception reception) : this(reception, 1000)
+        public ReceptionWithUnkownGoods(IReception reception)
+            : this(reception, 1000)
         {
         }
 
