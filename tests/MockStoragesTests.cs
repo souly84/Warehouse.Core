@@ -57,8 +57,5 @@ namespace Warehouse.Core.Tests
                 ).ByBarcodeAsync("543212")
             );
         }
-
-
-
     }
 }
