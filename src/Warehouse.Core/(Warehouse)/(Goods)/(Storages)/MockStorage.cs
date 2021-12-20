@@ -25,13 +25,13 @@ namespace Warehouse.Core
             _goods = goods;
         }
 
-       
-
         public IEntities<IWarehouseGood> Goods => new ListOfEntities<IWarehouseGood>(StorageGoods());
 
         public void PrintTo(IMedia media)
         {
-            media.Put("Goods", StorageGoods());
+            media
+                .Put("Ean", _storageEan)
+                .Put("Goods", StorageGoods());
         }
 
         public Task DecreaseAsync(IWarehouseGood good, int quantity)

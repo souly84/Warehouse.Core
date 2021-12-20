@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Warehouse.Core
@@ -8,22 +9,34 @@ namespace Warehouse.Core
         IEntities<IStorage> PutAway { get; }
         IEntities<IStorage> Race { get; }
         IEntities<IStorage> Reserve { get; }
+
+        Task<IStorage> ByBarcodeAsync(string ean);
     }
 
     public class MockStorages : IStorages
     {
-        public MockStorages() : this(
-            new ListOfEntities<IStorage>(),
-            new ListOfEntities<IStorage>(),
-            new ListOfEntities<IStorage>())
+        private readonly IEntities<IStorage> _remote;
+
+        public MockStorages()
+            : this(
+                new ListOfEntities<IStorage>(),
+                new ListOfEntities<IStorage>(),
+                new ListOfEntities<IStorage>(),
+                new ListOfEntities<IStorage>()
+              )
         {
         }
 
-        public MockStorages(IEntities<IStorage> putAway, IEntities<IStorage> race, IEntities<IStorage> reserve)
+        public MockStorages(
+            IEntities<IStorage> putAway,
+            IEntities<IStorage> race,
+            IEntities<IStorage> reserve,
+            IEntities<IStorage> remote)
         {
             PutAway = putAway;
             Race = race;
             Reserve = reserve;
+            _remote = remote;
         }
 
         public IEntities<IStorage> PutAway { get; }
@@ -31,6 +44,12 @@ namespace Warehouse.Core
         public IEntities<IStorage> Race { get; }
 
         public IEntities<IStorage> Reserve { get; }
+
+        public async Task<IStorage> ByBarcodeAsync(string ean)
+        {
+            var storages = await _remote.ToListAsync();
+            return storages.First(s => s.Equals(ean));
+        }
 
         public async Task<IList<IStorage>> ToListAsync()
         {
@@ -43,7 +62,12 @@ namespace Warehouse.Core
 
         public IEntities<IStorage> With(IFilter filter)
         {
-            return new MockStorages(PutAway.With(filter), Race.With(filter), Reserve.With(filter));
+            return new MockStorages(
+                PutAway.With(filter),
+                Race.With(filter),
+                Reserve.With(filter),
+                _remote.With(filter)
+            );
         }
     }
 }
