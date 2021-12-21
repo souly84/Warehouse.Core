@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Warehouse.Core
@@ -25,7 +24,7 @@ namespace Warehouse.Core
 
         public IEntities<TEntity> With(IFilter filter)
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }

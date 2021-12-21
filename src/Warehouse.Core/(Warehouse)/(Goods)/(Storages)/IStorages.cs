@@ -48,7 +48,7 @@ namespace Warehouse.Core
         public async Task<IStorage> ByBarcodeAsync(string ean)
         {
             var storages = await _remote.ToListAsync();
-            return storages.First(s => s.Equals(ean));
+            return storages.FirstOrDefault(s => s.Equals(ean));
         }
 
         public async Task<IList<IStorage>> ToListAsync()
