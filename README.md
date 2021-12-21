@@ -9,7 +9,7 @@ The repository contains domain entities and contracts for Warehouse business are
 
 # Models Diagram
 
-![Alt text](/docs/Warehouse.svg?raw=true "Classes dependencies diagram")
+![Alt text](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
 
 # Status
 
