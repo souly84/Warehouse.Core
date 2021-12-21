@@ -18,11 +18,12 @@ namespace Warehouse.Core.Tests
 
             Assert.EqualJson(
                 @"{
-                    ""Goods"": [
+                  ""Ean"": ""1234567889"",
+                  ""Goods"": [
                     {
-                        ""Id"": ""1"",
-                        ""Barcode"": null,
-                        ""Quantity"": ""4""
+                                ""Id"": ""1"",
+                      ""Quantity"": ""4"",
+                      ""Barcode"": null
                     }
                   ]
                 }",
@@ -33,7 +34,6 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task MoveToDecreasesTheQuantityFromStorage()
         {
-            
             var good = new MockWarehouseGood("1", 5);
             var storageFrom = await good.Storages.Reserve.FirstAsync();
             await good
@@ -42,11 +42,12 @@ namespace Warehouse.Core.Tests
 
             Assert.EqualJson(
                 @"{
-                    ""Goods"": [
+                  ""Ean"": ""1234567889"",
+                  ""Goods"": [
                     {
-                        ""Id"": ""1"",
-                        ""Barcode"": null,
-                        ""Quantity"": ""1""
+                                ""Id"": ""1"",
+                      ""Quantity"": ""1"",
+                      ""Barcode"": null
                     }
                   ]
                 }",

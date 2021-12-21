@@ -6,4 +6,12 @@ namespace Warehouse.Core
     {
         Dictionary<string, object> ToParams();
     }
+
+    public class EmptyFilter : IFilter
+    {
+        public Dictionary<string, object> ToParams()
+        {
+            return new Dictionary<string, object>();
+        }
+    }
 }
