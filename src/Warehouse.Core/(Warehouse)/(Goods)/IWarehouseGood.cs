@@ -32,8 +32,7 @@ namespace Warehouse.Core
         public IStorages Storages => _storages ?? (_storages = new MockStorages(
             new ListOfEntities<IStorage>(new MockStorage()),
             new ListOfEntities<IStorage>(new MockStorage()),
-            new ListOfEntities<IStorage>(new MockStorage(this)),
-            new ListOfEntities<IStorage>(new MockStorage())
+            new ListOfEntities<IStorage>(new MockStorage(this))
         ));
 
         public IMovement Movement => new StockMovement(this);

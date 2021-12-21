@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core
 {
-    public class InLocalFirstStorages : IStorages
+    public class WareouseIncludedStorages : IStorages
     {
         private readonly IStorages _origin;
 
-        public InLocalFirstStorages(IStorages origin)
+        public WareouseIncludedStorages(IStorages origin)
         {
             _origin = origin;
         }
@@ -48,7 +48,7 @@ namespace Warehouse.Core
 
         public IEntities<IStorage> With(IFilter filter)
         {
-            return new InLocalFirstStorages(
+            return new WareouseIncludedStorages(
                 (IStorages)_origin.With(filter)
             );
         }

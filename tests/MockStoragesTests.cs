@@ -14,10 +14,8 @@ namespace Warehouse.Core.Tests
                 await new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage("4567890")),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .ByBarcodeAsync("4567890")
+                ).ByBarcodeAsync("4567890")
             );
         }
 
@@ -29,10 +27,8 @@ namespace Warehouse.Core.Tests
                 await new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage("4567890")),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .ByBarcodeAsync("4567890")
+                ).ByBarcodeAsync("4567890")
             );
         }
 
@@ -44,25 +40,26 @@ namespace Warehouse.Core.Tests
                 await new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage("4567890")),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .ByBarcodeAsync("4567890")
+                    new ListOfEntities<IStorage>(new MockStorage("4567890"))
+                ).ByBarcodeAsync("4567890")
             );
         }
 
         [Fact]
-        public async Task ByBarcodeInRemote()
+        public async Task ByBarcodeInWarehouse()
         {
             Assert.Equal(
                 new MockStorage("4567890"),
                 await new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage("4567890"))
-                ).InLocalFirst()
-                 .ByBarcodeAsync("4567890")
+                    new ListOfEntities<IStorage>(new MockStorage())
+                ).ByBarcodeAsync(
+                    new MockWarehouse(
+                        new ListOfEntities<IWarehouseGood>(),
+                        new ListOfEntities<IStorage>(new MockStorage("112121212"), new MockStorage("4567890"))
+                    ),
+                    "4567890")
             );
         }
 
@@ -74,10 +71,14 @@ namespace Warehouse.Core.Tests
                  new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage("4567890")),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .ByBarcodeAsync("543212")
+                    new ListOfEntities<IStorage>(new MockStorage("4567890"))
+                ).ByBarcodeAsync(
+                    new MockWarehouse(
+                        new ListOfEntities<IWarehouseGood>(),
+                        new ListOfEntities<IStorage>(new MockStorage("112121212"), new MockStorage("4567890"))
+                    ),
+                    "543212"
+                )
             );
         }
 
@@ -89,25 +90,21 @@ namespace Warehouse.Core.Tests
                 (await new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage("4567890")),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .ToListAsync())
+                    new ListOfEntities<IStorage>(new MockStorage("4567890"))
+                ).ToListAsync())
                  .Count
             );
         }
 
         [Fact]
-        public void InLocalFirst_WithFilter()
+        public void WithFilter()
         {
-            Assert.IsType<InLocalFirstStorages>(
+            Assert.IsType<MockStorages>(
                new MockStorages(
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
                     new ListOfEntities<IStorage>(new MockStorage(), new MockStorage()),
-                    new ListOfEntities<IStorage>(new MockStorage("4567890")),
-                    new ListOfEntities<IStorage>(new MockStorage(), new MockStorage())
-                ).InLocalFirst()
-                 .With(new EmptyFilter())
+                    new ListOfEntities<IStorage>(new MockStorage("4567890"))
+                ).With(new EmptyFilter())
             );
         }
     }
