@@ -2,38 +2,103 @@
 
 interface       ICompany
 {
-  +LoginAsync()
+  IEntities<ICustomer> Customers
+  IEntities<IUser> Users
+  IWarehouse Warehouse
+  IEntities<ISupplier> Suppliers
+  +LoginAsync(userName: string , password:string) : Task<IUser>
 }
+
+interface       IEntities
+{
+  +ToListAsync() : Task<IList<TEntity>> 
+  +With(filter : IFilter) : IEntities<TEntity> 
+}
+
 interface       ICustomer
 interface       IUser
 interface       IWarehouse
+{
+  IEntities<IWarehouseGood> Goods
+
+  +ByBarcodeAsync(ean: string) : Task<IStorage>
+}
 interface       ISupplier
+{
+  IEntities<IReception> Receptions
+}
 interface       IReception
 {
-  +ValidateAsync()
+  IEntities<IReceptionGood> Goods
+
+  +ValidateAsync(goodsToValidate: IList<IGoodConfirmation>) : Task
+  +Confirmation() : IConfirmation
 }
+
+interface     IConfirmation
+{
+  IReception Reception
+  IConfirmationState State
+
+  +AddAsync(goodToAdd : IReceptionGood , quantity : int ) : Task
+  +RemoveAsync(goodToRemove: IReceptionGood , quantity: int): Task
+  +CommitAsync() : Task
+  +ToListAsync(): Task<List<IGoodConfirmation>> 
+  +ClearAsync(): Task
+}
+
 interface       IReceptionGood
 {
   int Quantity
+  IGoodConfirmation Confirmation
+  
+  +ConfirmedAsync() : Task<bool> 
+  +Clear() : IReceptionGood
 }
 interface       IGoodConfirmation
 {
   IReceptionGood Good
   IConfirmationState State
   
-  +int Increase()
-  +int Decrease()
+  +int Increase(quantity :int)
+  +int Decrease(quantity :int)
   +void Clear()
 }
 
 interface     IWarehouseGood
 {
   int Quantity
+  IStorages Storages
+  IMovement Movement
+  
+  From(storage :IStorage) : IMovement
 }
 
+interface     IStorages
+{
+  IEntities<IStorage> PutAway
+  IEntities<IStorage> Race
+  IEntities<IStorage> Reserve
+  
+  +ByBarcodeAsync(ean: string) : Task<IStorage>
+  +ByBarcodeAsync(warehouse : IWarehouse, ean: string) : Task<IStorage> 
+}
 interface     IStorage
+{
+  IEntities<IWarehouseGood> Goods
+
+  +IncreaseAsync()
+  +DecreaseAsync()
+}
 interface     IMovement
+{
+  +MoveToAsync(storage: IStorage , quantity: int) : Task
+  +From(storage: IStorage)
+}
 interface     IConfirmationState
+{
+  +ToEnumAsync() : Task<ConfirmationState>
+}
 
 ICompany "1" *-- "many" ICustomer : contains
 ICompany "1" *-- "many" IUser : contains
@@ -43,13 +108,23 @@ ICompany *-- IWarehouse
 ISupplier "1" *-- "many" IReception : contains
 
 IReception "1" *-- "many" IReceptionGood : contains
-
+IReception *-- IConfirmation
 IReceptionGood *-- IGoodConfirmation
 
+IConfirmation *-- IReception
+IConfirmation *-- IConfirmationState
+IConfirmation "1" *-- "many" IGoodConfirmation : contains
+
+
 IGoodConfirmation *-- IConfirmationState
+IGoodConfirmation *-- IReceptionGood
 
 IWarehouse "1" *-- "many" IWarehouseGood : contains
-IWarehouseGood "1" *-- "many" IStorage : contains
+IWarehouse "1" *-- "many" IStorage : contains
+IWarehouseGood *-- IStorages
 IWarehouseGood *-- IMovement
-
+IStorages "1" *-- "many" IStorage : contains
+IStorage *-- IWarehouseGood
 @enduml
+
+
