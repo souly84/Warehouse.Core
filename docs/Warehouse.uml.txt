@@ -113,7 +113,7 @@ IReceptionGood *-- IGoodConfirmation
 
 IConfirmation *-- IReception
 IConfirmation *-- IConfirmationState
-IConfirmation "1" *-- "many" IGoodConfirmation : contains
+IConfirmation "1" *-- "many" IReceptionGood : contains
 
 
 IGoodConfirmation *-- IConfirmationState
