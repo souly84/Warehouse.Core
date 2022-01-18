@@ -5,48 +5,54 @@ namespace Warehouse.Core
 {
     public class GoodConfirmation : IGoodConfirmation
     {
-        private int _quantity;
+        private int _confirmedQuantity;
         private readonly int _total;
 
         public GoodConfirmation(IReceptionGood good, int totalQuantity)
+            : this(good, totalQuantity, 0)
+        {
+        }
+
+        public GoodConfirmation(IReceptionGood good, int totalQuantity, int confirmedQuantity)
         {
             Good = good;
             _total = totalQuantity;
+            _confirmedQuantity = confirmedQuantity;
         }
 
         public IReceptionGood Good { get; }
 
-        public IConfirmationState State => new ConfirmationState(_quantity, _total);
+        public IConfirmationState State => new ConfirmationState(_confirmedQuantity, _total);
 
         public int Increase(int quantity)
         {
-            if (_quantity + quantity > _total)
+            if (_confirmedQuantity + quantity > _total)
             {
                 throw new InvalidOperationException(
                     $"Good confirmation can not be increased " +
-                    $"(total:{_total}, actual:{_quantity}, to increase on: {quantity})"
+                    $"(total:{_total}, actual:{_confirmedQuantity}, to increase on: {quantity})"
                  );
             }
-            _quantity += quantity;
-            return _quantity;
+            _confirmedQuantity += quantity;
+            return _confirmedQuantity;
         }
 
         public int Decrease(int quantity)
         {
-            if (_quantity < quantity)
+            if (_confirmedQuantity < quantity)
             {
                 throw new InvalidOperationException(
                     $"Good confirmation can not be decreased " +
-                    $"(actual:{_quantity}, to decrease on: {quantity})"
+                    $"(actual:{_confirmedQuantity}, to decrease on: {quantity})"
                 );
             }
-            _quantity -= quantity;
-            return _quantity;
+            _confirmedQuantity -= quantity;
+            return _confirmedQuantity;
         }
 
         public void Clear()
         {
-            _quantity = 0;
+            _confirmedQuantity = 0;
         }
 
         public override bool Equals(object obj)
@@ -70,7 +76,7 @@ namespace Warehouse.Core
             media
                 .Put("Good", Good)
                 .Put("Total", _total)
-                .Put("Confirmed", _quantity)
+                .Put("Confirmed", _confirmedQuantity)
                 .Put("State", State);
         }
 
