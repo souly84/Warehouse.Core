@@ -28,7 +28,7 @@ namespace Warehouse.Core
             return _reception.ValidateAsync(goodsToValidate);
         }
 
-        public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData)
+        public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
             var good = _unknownGoods.FirstOrDefault(x => x.Equals(barcodeData));
             if (good != null)
@@ -38,6 +38,10 @@ namespace Warehouse.Core
             var goods = await _reception.Goods.ByBarcodeAsync(barcodeData);
             if (goods.Any())
             {
+                if (ignoreConfirmed)
+                {
+                    return await goods.FirstAsync(async x => ! await x.ConfirmedAsync());
+                }
                 return goods.First();
             }
             good = new MockReceptionGood("", _defaultMaxQuantity, barcodeData);
