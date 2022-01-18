@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+using Warehouse.Core.Tests.Extensions;
 using Xunit;
 
 namespace Warehouse.Core.Tests
@@ -20,6 +21,22 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task SkippingAlreadyConfirmed()
+        {
+            var good = await new ReceptionWithUnkownGoods(
+                new MockReception(
+                    new MockReceptionGood("good1", 4, "1111"),
+                    await new MockReceptionGood("good2", 1, "2222").FullyConfirmed(),
+                    new MockReceptionGood("good3", 1, "2222"),
+                    new MockReceptionGood("good4", 3, "3333")
+                )
+            ).ByBarcodeAsync("2222", true);
+            Assert.False(
+                await good.ConfirmedAsync()
+            );
+        }
+
+        [Fact]
         public async Task CreatesNewGood_WhenNotFoundByBarcodeNumber()
         {
             Assert.Equal(
@@ -30,6 +47,22 @@ namespace Warehouse.Core.Tests
                         new MockReceptionGood("good2", 8)
                     )
                 ).ByBarcodeAsync("3606001")
+            );
+        }
+
+        [Fact]
+        public async Task NotSkippingAlreadyConfirmed()
+        {
+            var good = await new ReceptionWithUnkownGoods(
+                new MockReception(
+                    new MockReceptionGood("good1", 4, "1111"),
+                    await new MockReceptionGood("good2", 1, "2222").FullyConfirmed(),
+                    new MockReceptionGood("good3", 1, "2222"),
+                    new MockReceptionGood("good4", 3, "3333")
+                )
+            ).ByBarcodeAsync("2222");
+            Assert.True(
+                await good.ConfirmedAsync()
             );
         }
 
