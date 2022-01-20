@@ -17,9 +17,7 @@ namespace Warehouse.Core
         public override bool Equals(object obj)
         {
             return object.ReferenceEquals(this, obj)
-                || (obj is ConfirmationState state
-                && _confirmedQty == state._confirmedQty
-                && _totalQty == state._totalQty);
+                || (obj is ConfirmationState state && ToEnum() == state.ToEnum());
         }
 
         public override int GetHashCode()
@@ -29,22 +27,27 @@ namespace Warehouse.Core
 
         public Task<IConfirmationState.ConfirmationState> ToEnumAsync()
         {
-            if (_confirmedQty == _totalQty)
-            {
-                return Task.FromResult(IConfirmationState.ConfirmationState.Confirmed);
-            }
-
-            if (_confirmedQty > 0 && _confirmedQty < _totalQty)
-            {
-                return Task.FromResult(IConfirmationState.ConfirmationState.Partially);
-            }
-
-            return Task.FromResult(IConfirmationState.ConfirmationState.NotStarted);
+            return Task.FromResult(ToEnum());
         }
 
         public override string ToString()
         {
-            return ToEnumAsync().RunSync().ToString();
+            return ToEnum().ToString();
+        }
+
+        private IConfirmationState.ConfirmationState ToEnum()
+        {
+            if (_confirmedQty == _totalQty)
+            {
+                return IConfirmationState.ConfirmationState.Confirmed;
+            }
+
+            if (_confirmedQty > 0 && _confirmedQty < _totalQty)
+            {
+                return IConfirmationState.ConfirmationState.Partially;
+            }
+
+            return IConfirmationState.ConfirmationState.NotStarted;
         }
     }
 }

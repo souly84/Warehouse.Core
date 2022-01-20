@@ -20,7 +20,9 @@ namespace Warehouse.Core
 
         public override bool Equals(object? obj)
         {
-            return _good.Equals(obj);
+            return object.ReferenceEquals(this, obj)
+                || (obj is ExtraConfirmedReceptionGood extraConfirmedReceptionGood && _good.Equals(extraConfirmedReceptionGood._good))
+                || _good.Equals(obj);
         }
 
         public override int GetHashCode()

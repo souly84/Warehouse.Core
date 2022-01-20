@@ -6,16 +6,16 @@ namespace Warehouse.Core
 {
     public class ReceptionWithExtraConfirmedGoods : IReception
     {
-        private readonly IReception _reception;
+        private readonly ReceptionWithUnkownGoods _reception;
         private readonly int _defaultMaxQuantity;
         private readonly IList<IReceptionGood> _extraConfirmedGoods = new List<IReceptionGood>();
 
-        public ReceptionWithExtraConfirmedGoods(IReception reception)
+        public ReceptionWithExtraConfirmedGoods(ReceptionWithUnkownGoods reception)
             : this(reception, 1000)
         {
         }
 
-        public ReceptionWithExtraConfirmedGoods(IReception reception, int defaultMaxQuantity)
+        public ReceptionWithExtraConfirmedGoods(ReceptionWithUnkownGoods reception, int defaultMaxQuantity)
         {
             _reception = reception;
             _defaultMaxQuantity = defaultMaxQuantity;
@@ -28,7 +28,7 @@ namespace Warehouse.Core
             return _reception.ValidateAsync(goodsToValidate);
         }
 
-        public async Task<IReceptionGood?> ByBarcodeAsync(string barcodeData)
+        public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData)
         {
             var good = _extraConfirmedGoods.FirstOrDefault(x => x.Equals(barcodeData));
             if (good != null)
@@ -36,16 +36,19 @@ namespace Warehouse.Core
                 return good;
             }
             var goods = await _reception.Goods.ByBarcodeAsync(barcodeData);
-            if (goods.Any())
+            if (await IsExtraGoodAsync(goods))
             {
-                if (await goods.AllAsync(async x => await x.ConfirmedAsync()))
-                {
-                    var extraGood = new ExtraConfirmedReceptionGood(goods.First(), _defaultMaxQuantity);
-                    _extraConfirmedGoods.Add(extraGood);
-                    return extraGood;
-                }
+                var extraGood = new ExtraConfirmedReceptionGood(goods.First(), _defaultMaxQuantity);
+                _extraConfirmedGoods.Add(extraGood);
+                return extraGood;
             }
-            return null;
+            return await _reception.ByBarcodeAsync(barcodeData, true);
+        }
+
+        private async Task<bool> IsExtraGoodAsync(IEnumerable<IReceptionGood> goods)
+        {
+            return goods.Any()
+                && await goods.AllAsync(async x => await x.ConfirmedAsync());
         }
     }
 }
