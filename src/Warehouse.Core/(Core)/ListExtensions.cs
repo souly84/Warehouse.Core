@@ -34,5 +34,19 @@ namespace Warehouse.Core
             }
             throw new InvalidOperationException("No items found");
         }
+
+        public static async Task<bool> AllAsync<T>(
+            this IEnumerable<T> list,
+            Func<T, Task<bool>> predicateAsync)
+        {
+            foreach (var item in list)
+            {
+                if (!await predicateAsync(item))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
