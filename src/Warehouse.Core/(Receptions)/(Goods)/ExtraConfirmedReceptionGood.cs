@@ -8,6 +8,11 @@ namespace Warehouse.Core
         private readonly int _defaultMaxQuantity;
         private IGoodConfirmation? _confirmation;
 
+        public ExtraConfirmedReceptionGood(IReceptionGood good)
+            : this(good, 1000)
+        {
+        }
+
         public ExtraConfirmedReceptionGood(IReceptionGood good, int defaultMaxQuantity)
         {
             _good = good;
