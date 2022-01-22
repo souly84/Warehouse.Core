@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Warehouse.Core
@@ -47,6 +48,15 @@ namespace Warehouse.Core
                 }
             }
             return true;
+        }
+
+        public static bool AtLeastOne<T>(
+            this IList<T> list,
+            IList<T> listWithItems)
+        {
+            return listWithItems.Any(
+                item => list.Contains(item)
+            );
         }
     }
 }

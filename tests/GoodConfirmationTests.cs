@@ -63,8 +63,8 @@ namespace Warehouse.Core.Tests
         public async Task EqualToTheSame()
         {
             Assert.Equal(
-               (await new MockReceptionGood("good1", 4, "360601").FullyConfirmed()).Confirmation,
-               (await new MockReceptionGood("good1", 4, "360601").FullyConfirmed()).Confirmation
+               (await new MockReceptionGood("1", 4, "360601").FullyConfirmed()).Confirmation,
+               (await new MockReceptionGood("1", 4, "360601").FullyConfirmed()).Confirmation
             );
         }
     }

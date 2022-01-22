@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core
 {
+    /// <summary>
+    /// This entity is used when not expected good was scanned during reception validation operation.
+    /// </summary>
     public class ReceptionWithUnkownGoods : IReception
     {
         private readonly IReception _reception;

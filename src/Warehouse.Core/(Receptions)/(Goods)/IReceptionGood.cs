@@ -1,5 +1,4 @@
-﻿using System;
-using MediaPrint;
+﻿using MediaPrint;
 
 namespace Warehouse.Core
 {
@@ -39,7 +38,7 @@ namespace Warehouse.Core
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id);
+            return _id.GetHashCode();
         }
 
         public void PrintTo(IMedia media)
@@ -60,7 +59,7 @@ namespace Warehouse.Core
         private bool TheSameIdOrBarcode(object obj)
         {
             return obj is string idOrBarcode
-                && (_id == idOrBarcode || _barcode == idOrBarcode);
+                && (_id.ToString() == idOrBarcode || _barcode == idOrBarcode);
         }
     }
 }
