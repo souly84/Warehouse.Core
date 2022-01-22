@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using MediaPrint;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 
@@ -37,6 +38,26 @@ namespace Warehouse.Core.Tests
                         )
                     )
                 ).ByBarcodeAsync("360600")
+            );
+        }
+
+        [Fact]
+        public async Task CombinesExtraConfirmedGoodQuantity_WithOriginal()
+        {
+            var reception = new ReceptionWithExtraConfirmedGoods(
+                new ReceptionWithUnkownGoods(
+                    new MockReception(
+                        await new MockReceptionGood("good1", 1, "360600").FullyConfirmed(),
+                        await new MockReceptionGood("good2", 1, "360600").FullyConfirmed(),
+                        new MockReceptionGood("good3", 8)
+                    )
+                )
+            );
+            var good = await reception.ByBarcodeAsync("360600");
+            good.Confirmation.Increase(3);
+            Assert.Equal(
+                5,
+                good.Confirmation.ToDictionary().Value<int>("Confirmed")
             );
         }
 

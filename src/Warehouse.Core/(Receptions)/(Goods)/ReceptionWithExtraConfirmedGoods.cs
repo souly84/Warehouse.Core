@@ -36,16 +36,16 @@ namespace Warehouse.Core
                 return good;
             }
             var goods = await _reception.Goods.ByBarcodeAsync(barcodeData);
-            if (await IsExtraGoodAsync(goods))
+            if (await NeedExtraGoodAsync(goods))
             {
-                var extraGood = new ExtraConfirmedReceptionGood(goods.First(), _defaultMaxQuantity);
+                var extraGood = new ExtraConfirmedReceptionGood(goods.ToList(), _defaultMaxQuantity);
                 _extraConfirmedGoods.Add(extraGood);
                 return extraGood;
             }
             return await _reception.ByBarcodeAsync(barcodeData, true);
         }
 
-        private async Task<bool> IsExtraGoodAsync(IEnumerable<IReceptionGood> goods)
+        private async Task<bool> NeedExtraGoodAsync(IEnumerable<IReceptionGood> goods)
         {
             return goods.Any()
                 && await goods.AllAsync(async x => await x.ConfirmedAsync());

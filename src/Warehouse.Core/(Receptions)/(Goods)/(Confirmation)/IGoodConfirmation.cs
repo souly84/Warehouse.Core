@@ -4,6 +4,8 @@ namespace Warehouse.Core
 {
     public interface IGoodConfirmation : IPrintable
     {
+        int ConfirmedQuantity { get; }
+
         IReceptionGood Good { get; }
 
         IConfirmationState State { get; }
