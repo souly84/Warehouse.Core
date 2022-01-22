@@ -6,6 +6,10 @@ namespace Warehouse.Core
     {
         int Quantity { get; }
 
+        bool IsUnknown { get; }
+
+        bool IsExtraConfirmed { get; }
+
         IGoodConfirmation Confirmation { get; }
     }
 
@@ -18,16 +22,23 @@ namespace Warehouse.Core
         public MockReceptionGood(
             string id,
             int quantity,
-            string? barcode = null)
+            string? barcode = null,
+            bool isUnknown = false,
+            bool isExtraConfirmed = false)
         {
             _id = id;
             Quantity = quantity;
             _barcode = barcode;
+            IsExtraConfirmed = isExtraConfirmed;
         }
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
 
         public int Quantity { get; }
+
+        public bool IsUnknown { get; }
+
+        public bool IsExtraConfirmed { get; }
 
         public override bool Equals(object obj)
         {
@@ -46,6 +57,8 @@ namespace Warehouse.Core
             media
                 .Put("Id", _id)
                 .Put("Quantity", Quantity)
+                .Put("IsUnknown", IsUnknown)
+                .Put("IsExtraConfirmed", IsExtraConfirmed)
                 .Put("Barcode", _barcode);
         }
 
@@ -53,7 +66,9 @@ namespace Warehouse.Core
         {
             return obj is MockReceptionGood good
                 && _id == good._id
-                && _barcode == good._barcode;
+                && _barcode == good._barcode
+                && IsUnknown == good.IsUnknown
+                && IsExtraConfirmed == good.IsExtraConfirmed;
         }
 
         private bool TheSameIdOrBarcode(object obj)

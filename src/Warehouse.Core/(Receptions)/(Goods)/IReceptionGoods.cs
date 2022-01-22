@@ -5,7 +5,7 @@ namespace Warehouse.Core
 {
     public interface IReceptionGoods : IEntities<IReceptionGood>
     {
-        IReceptionGood UnkownGood(string _barcode);
+        IReceptionGood UnkownGood(string barcode);
     }
 
     public class MockReceptionGoods : IReceptionGoods
@@ -29,7 +29,7 @@ namespace Warehouse.Core
 
         public IReceptionGood UnkownGood(string barcode)
         {
-            return new MockReceptionGood("", 1000, barcode);
+            return new MockReceptionGood("", 1000, barcode, isUnknown: true);
         }
 
         public IEntities<IReceptionGood> With(IFilter filter)

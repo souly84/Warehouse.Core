@@ -80,6 +80,8 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": null,
+                        ""IsUnknown"": false,
+                        ""IsExtraConfirmed"": false,
                         ""Quantity"": ""4""
                     },
                     ""Total"": ""4"",
@@ -106,6 +108,8 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": null,
+                        ""IsUnknown"": false,
+                        ""IsExtraConfirmed"": false,
                         ""Quantity"": ""4""
                     },
                     ""Total"": ""4"",
@@ -130,6 +134,8 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": ""360600"",
+                        ""IsUnknown"": false,
+                        ""IsExtraConfirmed"": false,
                         ""Quantity"": ""4""
                     },
                     ""Total"": ""4"",
@@ -156,6 +162,8 @@ namespace Warehouse.Core.Tests
                     {
                         ""Id"": ""1"",
                         ""Barcode"": ""360600"",
+                        ""IsUnknown"": false,
+                        ""IsExtraConfirmed"": false,
                         ""Quantity"": ""4""
                     },
                     ""Total"": ""4"",
