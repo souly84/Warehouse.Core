@@ -57,7 +57,7 @@ namespace Warehouse.Core.Tests
             good.Confirmation.Increase(3);
             Assert.Equal(
                 5,
-                good.Confirmation.ToDictionary().Value<int>("Confirmed")
+                good.Confirmation.ConfirmedQuantity
             );
         }
 
