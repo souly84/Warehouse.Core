@@ -10,8 +10,8 @@ namespace Warehouse.Core.Tests
         public async Task CachesToListAsync()
         {
             var cached = new OnSuccesfulCallEntities<IReceptionGood>(
-                new MockReceptionGood("1", 1),
-                new MockReceptionGood("2", 1)
+                new MockReceptionGood(1, 1),
+                new MockReceptionGood(2, 1)
             ).Cached();
             Assert.NotEmpty(await cached.ToListAsync());
             Assert.NotEmpty(await cached.ToListAsync());

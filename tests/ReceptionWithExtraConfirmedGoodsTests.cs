@@ -11,12 +11,12 @@ namespace Warehouse.Core.Tests
         public async Task ReturnsExisitingByBarcodeNumber()
         {
             Assert.Equal(
-                new MockReceptionGood("good1", 4, "360600"),
+                new MockReceptionGood(1, 4, "360600"),
                 await new ReceptionWithExtraConfirmedGoods(
                     new ReceptionWithUnkownGoods(
                         new MockReception(
-                            new MockReceptionGood("good1", 4, "360600"),
-                            new MockReceptionGood("good2", 8)
+                            new MockReceptionGood(1, 4, "360600"),
+                            new MockReceptionGood(2, 8)
                         )
                     )
                 ).ByBarcodeAsync("360600")
@@ -28,13 +28,13 @@ namespace Warehouse.Core.Tests
         {
             Assert.Equal(
                 new ExtraConfirmedReceptionGood(
-                    new MockReceptionGood("good1", 1, "360600")
+                    new MockReceptionGood(1, 1, "360600")
                 ),
                 await new ReceptionWithExtraConfirmedGoods(
                     new ReceptionWithUnkownGoods(
                         new MockReception(
-                            await new MockReceptionGood("good1", 1, "360600").FullyConfirmed(),
-                            new MockReceptionGood("good2", 8)
+                            await new MockReceptionGood(1, 1, "360600").FullyConfirmed(),
+                            new MockReceptionGood(2, 8)
                         )
                     )
                 ).ByBarcodeAsync("360600")
@@ -47,9 +47,9 @@ namespace Warehouse.Core.Tests
             var reception = new ReceptionWithExtraConfirmedGoods(
                 new ReceptionWithUnkownGoods(
                     new MockReception(
-                        await new MockReceptionGood("good1", 1, "360600").FullyConfirmed(),
-                        await new MockReceptionGood("good2", 1, "360600").FullyConfirmed(),
-                        new MockReceptionGood("good3", 8)
+                        await new MockReceptionGood(1, 1, "360600").FullyConfirmed(),
+                        await new MockReceptionGood(2, 1, "360600").FullyConfirmed(),
+                        new MockReceptionGood(3, 8)
                     )
                 )
             );
@@ -65,12 +65,12 @@ namespace Warehouse.Core.Tests
         public async Task CreatesNewGood_WhenNotFoundByBarcodeNumber()
         {
             Assert.Equal(
-                new MockReceptionGood("", 1000, "3606001"),
+                new MockReceptionGood(0, 1000, "3606001"),
                 await new ReceptionWithExtraConfirmedGoods(
                    new ReceptionWithUnkownGoods(
                         new MockReception(
-                            new MockReceptionGood("good1", 4, "360600"),
-                            new MockReceptionGood("good2", 8)
+                            new MockReceptionGood(1, 4, "360600"),
+                            new MockReceptionGood(2, 8)
                         )
                     )
                 ).ByBarcodeAsync("3606001")
@@ -83,8 +83,8 @@ namespace Warehouse.Core.Tests
             var reception = new ReceptionWithExtraConfirmedGoods(
                 new ReceptionWithUnkownGoods(
                     new MockReception(
-                        await new MockReceptionGood("good1", 1, "360600").FullyConfirmed(),
-                        new MockReceptionGood("good2", 8)
+                        await new MockReceptionGood(1, 1, "360600").FullyConfirmed(),
+                        new MockReceptionGood(2, 8)
                     )
                 )
             );

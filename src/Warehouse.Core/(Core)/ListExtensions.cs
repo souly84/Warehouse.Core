@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Warehouse.Core
@@ -53,14 +54,9 @@ namespace Warehouse.Core
             this IList<T> list,
             IList<T> listWithItems)
         {
-            foreach (var item in listWithItems)
-            {
-                if (list.Contains(item))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return listWithItems.Any(
+                item => list.Contains(item)
+            );
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using MediaPrint;
+﻿using MediaPrint;
 
 namespace Warehouse.Core
 {
@@ -12,12 +11,12 @@ namespace Warehouse.Core
 
     public class MockReceptionGood : IReceptionGood
     {
-        private readonly string _id;
+        private readonly int _id;
         private readonly string? _barcode;
         private IGoodConfirmation? _confirmation;
 
         public MockReceptionGood(
-            string id,
+            int id,
             int quantity,
             string? barcode = null)
         {
@@ -39,7 +38,7 @@ namespace Warehouse.Core
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id);
+            return _id;
         }
 
         public void PrintTo(IMedia media)
@@ -60,7 +59,7 @@ namespace Warehouse.Core
         private bool TheSameIdOrBarcode(object obj)
         {
             return obj is string idOrBarcode
-                && (_id == idOrBarcode || _barcode == idOrBarcode);
+                && (_id.ToString() == idOrBarcode || _barcode == idOrBarcode);
         }
     }
 }
