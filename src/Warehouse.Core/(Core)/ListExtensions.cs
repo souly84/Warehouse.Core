@@ -48,5 +48,19 @@ namespace Warehouse.Core
             }
             return true;
         }
+
+        public static bool AtLeastOne<T>(
+            this IList<T> list,
+            IList<T> listWithItems)
+        {
+            foreach (var item in listWithItems)
+            {
+                if (list.Contains(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
