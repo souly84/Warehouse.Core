@@ -47,7 +47,7 @@ namespace Warehouse.Core
                 }
                 return goods.First();
             }
-            good = new MockReceptionGood("", _defaultMaxQuantity, barcodeData);
+            good = _reception.Goods.UnkownGood(barcodeData);
             _unknownGoods.Add(good);
             return good;
         }

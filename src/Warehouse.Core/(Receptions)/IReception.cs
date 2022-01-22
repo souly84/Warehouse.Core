@@ -5,7 +5,7 @@ namespace Warehouse.Core
 {
     public interface IReception
     {
-        IEntities<IReceptionGood> Goods { get; }
+        IReceptionGoods Goods { get; }
 
         Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate);
     }
@@ -17,12 +17,16 @@ namespace Warehouse.Core
         {
         }
 
-        public MockReception(IEntities<IReceptionGood> goods)
+        public MockReception(IEntities<IReceptionGood> goods) : this(new MockReceptionGoods(goods))
+        {
+        }
+
+        public MockReception(IReceptionGoods goods)
         {
             Goods = goods;
         }
 
-        public IEntities<IReceptionGood> Goods { get; }
+        public IReceptionGoods Goods { get; }
 
         public List<IGoodConfirmation> ValidatedGoods { get; } = new List<IGoodConfirmation>();
 
