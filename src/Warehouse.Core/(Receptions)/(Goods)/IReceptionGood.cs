@@ -11,12 +11,12 @@ namespace Warehouse.Core
 
     public class MockReceptionGood : IReceptionGood
     {
-        private readonly int _id;
+        private readonly string _id;
         private readonly string? _barcode;
         private IGoodConfirmation? _confirmation;
 
         public MockReceptionGood(
-            int id,
+            string id,
             int quantity,
             string? barcode = null)
         {
@@ -38,7 +38,7 @@ namespace Warehouse.Core
 
         public override int GetHashCode()
         {
-            return _id;
+            return _id.GetHashCode();
         }
 
         public void PrintTo(IMedia media)

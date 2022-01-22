@@ -10,12 +10,13 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 9,
                 new ExtraConfirmedReceptionGood(
-                    new MockReceptionGood(1, 2, "1111"),
-                    new MockReceptionGood(2, 3, "2222"),
-                    new MockReceptionGood(3, 4, "333")
+                    new MockReceptionGood("1", 2, "1111"),
+                    new MockReceptionGood("2", 3, "2222"),
+                    new MockReceptionGood("3", 4, "333")
                 ).Quantity
             );
         }
+
         // The main goal to test that GetHashCode does not throw Exception
         [Fact]
         public void HashCode()
@@ -23,9 +24,9 @@ namespace Warehouse.Core.Tests
             Assert.NotEqual(
                 0,
                 new ExtraConfirmedReceptionGood(
-                    new MockReceptionGood(1, 2, "1111"),
-                    new MockReceptionGood(2, 3, "2222"),
-                    new MockReceptionGood(3, 4, "333")
+                    new MockReceptionGood("1", 2, "1111"),
+                    new MockReceptionGood("2", 3, "2222"),
+                    new MockReceptionGood("3", 4, "333")
                 ).GetHashCode()
             );
         }

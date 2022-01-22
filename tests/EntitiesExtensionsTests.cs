@@ -11,12 +11,12 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync()
         {
             Assert.Equal(
-                 new MockReceptionGood(1, 5),
+                 new MockReceptionGood("1", 5),
                  await new ListOfEntities<IReceptionGood>(
-                       new MockReceptionGood(1, 5),
-                       new MockReceptionGood(2, 5),
-                       new MockReceptionGood(3, 5),
-                       new MockReceptionGood(4, 5)
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
                  ).FirstAsync()
             );
         }
@@ -25,13 +25,13 @@ namespace Warehouse.Core.Tests
         public async Task FirstAsync_WithPredicate()
         {
             Assert.Equal(
-                 new MockReceptionGood(3, 5),
+                 new MockReceptionGood("3", 5),
                  await new ListOfEntities<IReceptionGood>(
-                       new MockReceptionGood(1, 5),
-                       new MockReceptionGood(2, 5),
-                       new MockReceptionGood(3, 5),
-                       new MockReceptionGood(4, 5)
-                 ).FirstAsync(good => good.Equals(new MockReceptionGood(3, 5)))
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 ).FirstAsync(good => good.Equals(new MockReceptionGood("3", 5)))
             );
         }
 
@@ -39,13 +39,13 @@ namespace Warehouse.Core.Tests
         public async Task FirstOrDefaultAsync_ReturnFirstWhenFound()
         {
             Assert.Equal(
-                 new MockReceptionGood(1, 5),
+                 new MockReceptionGood("1", 5),
                  await new ListOfEntities<IReceptionGood>(
-                       new MockReceptionGood(1, 5),
-                       new MockReceptionGood(2, 5),
-                       new MockReceptionGood(3, 5),
-                       new MockReceptionGood(4, 5)
-                 ).FirstOrDefaultAsync((good) => good.Equals(new MockReceptionGood(1, 5)))
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 ).FirstOrDefaultAsync((good) => good.Equals(new MockReceptionGood("1", 5)))
             );
         }
 
@@ -54,11 +54,11 @@ namespace Warehouse.Core.Tests
         {
             Assert.Null(
                  await new ListOfEntities<IReceptionGood>(
-                       new MockReceptionGood(1, 5),
-                       new MockReceptionGood(2, 5),
-                       new MockReceptionGood(3, 5),
-                       new MockReceptionGood(4, 5)
-                 ).FirstOrDefaultAsync((good) => good.Equals(new MockReceptionGood(222, 5)))
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 ).FirstOrDefaultAsync((good) => good.Equals(new MockReceptionGood("222", 5)))
             );
         }
 
@@ -68,7 +68,7 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 new List<IWarehouseGood> { new MockWarehouseGood("1", 5) },
                 await new ListOfEntities<IReceptionGood>(
-                    new MockReceptionGood(1, 5)
+                    new MockReceptionGood("1", 5)
                 ).SelectAsync(x =>
                     new MockWarehouseGood(x.ToDictionary().Value<string>("id"), x.Quantity)
                 )
