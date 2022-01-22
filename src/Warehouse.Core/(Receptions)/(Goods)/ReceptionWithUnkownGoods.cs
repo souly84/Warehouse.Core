@@ -10,21 +10,14 @@ namespace Warehouse.Core
     public class ReceptionWithUnkownGoods : IReception
     {
         private readonly IReception _reception;
-        private readonly int _defaultMaxQuantity;
         private readonly IList<IReceptionGood> _unknownGoods = new List<IReceptionGood>();
 
         public ReceptionWithUnkownGoods(IReception reception)
-            : this(reception, 1000)
-        {
-        }
-
-        public ReceptionWithUnkownGoods(IReception reception, int defaultMaxQuantity)
         {
             _reception = reception;
-            _defaultMaxQuantity = defaultMaxQuantity;
         }
 
-        public IEntities<IReceptionGood> Goods => new ComposedGoods(_reception.Goods, _unknownGoods);
+        public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _unknownGoods);
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
@@ -47,7 +40,7 @@ namespace Warehouse.Core
                 }
                 return goods.First();
             }
-            good = new MockReceptionGood("", _defaultMaxQuantity, barcodeData);
+            good = _reception.Goods.UnkownGood(barcodeData);
             _unknownGoods.Add(good);
             return good;
         }

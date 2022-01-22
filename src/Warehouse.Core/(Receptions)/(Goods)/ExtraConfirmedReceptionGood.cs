@@ -38,6 +38,10 @@ namespace Warehouse.Core
             GoodsConfirmed())
         );
 
+        public bool IsUnknown => false;
+
+        public bool IsExtraConfirmed => true;
+
         public override bool Equals(object? obj)
         {
             return object.ReferenceEquals(this, obj)

@@ -78,6 +78,24 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task ExtraConfirmedGood_IsPartOfReceptionGoods()
+        {
+            var reception = new ReceptionWithExtraConfirmedGoods(
+                new ReceptionWithUnkownGoods(
+                    new MockReception(
+                        await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
+                        new MockReceptionGood("2", 8)
+                    )
+                )
+            );
+            await reception.ByBarcodeAsync("360600");
+            Assert.Contains(
+                new ExtraConfirmedReceptionGood(new MockReceptionGood("1", 1, "360600")),
+                await reception.Goods.ToListAsync()
+            );
+        }
+
+        [Fact]
         public async Task ReturnsTheSameExtraConfirmedGood_WhenConfirmedGoodBarcodeScanned()
         {
             var reception = new ReceptionWithExtraConfirmedGoods(

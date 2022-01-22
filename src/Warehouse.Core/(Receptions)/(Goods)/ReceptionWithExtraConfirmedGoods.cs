@@ -21,7 +21,7 @@ namespace Warehouse.Core
             _defaultMaxQuantity = defaultMaxQuantity;
         }
 
-        public IEntities<IReceptionGood> Goods => new ComposedGoods(_reception.Goods, _extraConfirmedGoods);
+        public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _extraConfirmedGoods);
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
