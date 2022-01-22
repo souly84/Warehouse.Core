@@ -13,7 +13,7 @@ namespace Warehouse.Core.Tests.Extensions
             _origin = origin;
         }
 
-        public IEntities<IReceptionGood> Goods => _origin.Goods;
+        public IReceptionGoods Goods => _origin.Goods;
 
         public async Task<T> ConfirmAsync()
         {
