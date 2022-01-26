@@ -21,13 +21,14 @@ namespace Warehouse.Core
         public MockWarehouseGood(
             string id,
             int quantity,
-            string? barcode = null)
+            string? barcode = null,
+            IStorages? storages = null)
         {
             _id = id;
             Quantity = quantity;
             _barcode = barcode;
+            _storages = storages;
         }
-
 
         public IStorages Storages => _storages ?? (_storages = new MockStorages(
             new ListOfEntities<IStorage>(new MockStorage()),
@@ -38,6 +39,16 @@ namespace Warehouse.Core
         public IMovement Movement => new StockMovement(this);
 
         public int Quantity { get; }
+
+        public IWarehouseGood With(IStorages storages)
+        {
+            return new MockWarehouseGood(
+                _id,
+                Quantity,
+                _barcode,
+                storages
+            );
+        }
 
         public override bool Equals(object obj)
         {
