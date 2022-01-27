@@ -9,7 +9,15 @@ namespace Warehouse.Core
 
     public class MockSupplier : ISupplier
     {
-        public MockSupplier() : this(
+        private readonly string _supplierName;
+
+        public MockSupplier()
+            : this("MockSupplier")
+        {
+        }
+
+        public MockSupplier(string supplierName) : this(
+            supplierName,
             new MockReception(
                 new MockReceptionGood("1", 2, "123456789"),
                 new MockReceptionGood("2", 2, "123456780"),
@@ -20,13 +28,19 @@ namespace Warehouse.Core
         {
         }
 
-        public MockSupplier(params IReception [] receptions)
-            : this(new ListOfEntities<IReception>(receptions))
+        public MockSupplier(params IReception[] receptions)
+            : this("MockSupplier", receptions)
         {
         }
 
-        public MockSupplier(IEntities<IReception> receptions)
+        public MockSupplier(string supplierName, params IReception [] receptions)
+            : this(supplierName, new ListOfEntities<IReception>(receptions))
         {
+        }
+
+        public MockSupplier(string supplierName, IEntities<IReception> receptions)
+        {
+            _supplierName = supplierName;
             Receptions = receptions;
         }
 
@@ -35,7 +49,7 @@ namespace Warehouse.Core
         public void PrintTo(IMedia media)
         {
             media
-                .Put("name", "MockSupplier")
+                .Put("name", _supplierName)
                 .Put("receptions", Receptions);
         }
     }
