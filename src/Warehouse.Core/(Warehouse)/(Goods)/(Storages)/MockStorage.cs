@@ -10,7 +10,8 @@ namespace Warehouse.Core
         private readonly string _storageEan;
         private readonly Dictionary<IWarehouseGood, int> _goods;
 
-        public MockStorage(params IWarehouseGood[] goods) : this("1234567889", goods)
+        public MockStorage(params IWarehouseGood[] goods)
+            : this("1234567889", goods)
         {
         }
 
@@ -58,6 +59,15 @@ namespace Warehouse.Core
             return Task.CompletedTask;
         }
 
+        public Task<int> QuantityForAsync(IWarehouseGood good)
+        {
+            if (_goods.ContainsKey(good))
+            {
+                return Task.FromResult(_goods[good]);
+            }
+            return Task.FromResult(0);
+        }
+
         public override bool Equals(object obj)
         {
             return ReferenceEquals(this, obj)
@@ -84,7 +94,11 @@ namespace Warehouse.Core
         private IEnumerable<IWarehouseGood> StorageGoods()
         {
             return _goods.Keys.Select(
-                good => new MockWarehouseGood(good.ToDictionary().Value<string>("Id"), _goods[good])
+                good => new MockWarehouseGood(
+                    good.ToDictionary().Value<string>("Id"),
+                    _goods[good],
+                    good.ToDictionary().Value<string>("Barcode")
+                )
             );
         }
     }

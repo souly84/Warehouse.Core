@@ -20,6 +20,28 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task GoodQuantityByWarehouseGood()
+        {
+            Assert.Equal(
+                2,
+                await new MockStorage(
+                    new MockWarehouseGood("1", 2, "1111")
+                ).QuantityForAsync(new MockWarehouseGood("1", 2, "1111"))
+            );
+        }
+
+        [Fact]
+        public async Task GoodQuantityByBarcode()
+        {
+            Assert.Equal(
+                2,
+                await new MockStorage(
+                    new MockWarehouseGood("1", 2, "1111")
+                ).QuantityForAsync("1111")
+            );
+        }
+
+        [Fact]
         public async Task ByBarcodeInRace()
         {
             Assert.Equal(

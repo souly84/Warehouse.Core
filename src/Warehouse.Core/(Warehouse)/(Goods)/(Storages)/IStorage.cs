@@ -7,6 +7,8 @@ namespace Warehouse.Core
     {
         IEntities<IWarehouseGood> Goods { get; }
 
+        Task<int> QuantityForAsync(IWarehouseGood good);
+
         Task IncreaseAsync(IWarehouseGood good, int quantity);
 
         Task DecreaseAsync(IWarehouseGood good, int quantity);
