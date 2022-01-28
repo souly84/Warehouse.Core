@@ -6,7 +6,7 @@ namespace Warehouse.Core.Goods.Storages
 {
     public class IncorrectStorage : IStorage
     {
-        private readonly string _errorMessage;
+        private readonly Exception _exception;
 
         public IncorrectStorage()
             : this("This storage is incorrect, the real one should be initialized first.")
@@ -14,25 +14,35 @@ namespace Warehouse.Core.Goods.Storages
         }
 
         public IncorrectStorage(string errorMessage)
+            : this(new InvalidOperationException(errorMessage))
         {
-            _errorMessage = errorMessage;
         }
 
-        public IEntities<IWarehouseGood> Goods => throw new InvalidOperationException(_errorMessage);
+        public IncorrectStorage(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public IEntities<IWarehouseGood> Goods => throw _exception;
 
         public Task DecreaseAsync(IWarehouseGood good, int quantity)
         {
-            throw new InvalidOperationException(_errorMessage);
+            throw _exception;
         }
 
         public Task IncreaseAsync(IWarehouseGood good, int quantity)
         {
-            throw new InvalidOperationException(_errorMessage);
+            throw _exception;
         }
 
         public void PrintTo(IMedia media)
         {
-            throw new InvalidOperationException(_errorMessage);
+            // Nothing to do here
+        }
+
+        public Task<int> QuantityForAsync(IWarehouseGood good)
+        {
+            throw _exception;
         }
     }
 }

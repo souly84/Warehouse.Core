@@ -5,6 +5,9 @@ namespace Warehouse.Core
 {
     public interface IWarehouseGood : IPrintable
     {
+        /// <summary>
+        /// Good total quantity in all storages
+        /// </summary>
         int Quantity { get;}
 
         IStorages Storages { get; }

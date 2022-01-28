@@ -5,11 +5,16 @@ namespace Warehouse.Core
 {
     public static class GoodsExtensions
     {
-        public static Task<IEnumerable<IReceptionGood>> ByBarcodeAsync(
+        public static IEntities<IWarehouseGood> For(this IEntities<IWarehouseGood> goods, string ean)
+        {
+            return goods.With(new EanGoodsFilter(ean));
+        }
+        
+        public static Task<IList<IReceptionGood>> ByBarcodeAsync(
             this IEntities<IReceptionGood> goods,
             string barcode)
         {
-            return goods.WhereAsync((good) => good.Equals(barcode));
+            return goods.With(new EanGoodsFilter(barcode)).ToListAsync();
         }
 
         public static Task<bool> ConfirmedAsync(this IReceptionGood good)
