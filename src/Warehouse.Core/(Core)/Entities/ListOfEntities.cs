@@ -27,34 +27,16 @@ namespace Warehouse.Core
 
         public Task<IList<TEntity>> ToListAsync()
         {
-            return Task.FromResult(FilteredList());
+            return Task.FromResult<IList<TEntity>>(
+                _entities
+                    .Where(entity => _filter.Matches(entity))
+                    .ToList()
+            );
         }
 
         public IEntities<TEntity> With(IFilter filter)
         {
             return new ListOfEntities<TEntity>(_entities, filter);
-        }
-
-        private IList<TEntity> FilteredList()
-        {
-            var filterParams = _filter.ToParams();
-            var filteredEntites = new List<TEntity>();
-            if (filterParams.Any())
-            {
-                foreach (var entity in _entities)
-                {
-                    if (_filter.Matches(entity))
-                    {
-                        filteredEntites.Add(entity);
-                    }
-                }
-            }
-            else
-            {
-                filteredEntites.AddRange(_entities);
-            }
-            
-            return filteredEntites;
         }
     }
 }
