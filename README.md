@@ -23,7 +23,7 @@ Warehouse.Core is currently extended with the particular plugins that implement 
 
 ## Warehouse
 
-![Warehouse UML diagram](/docs/Warehouse.uml.svg?raw=true "Classes dependencies diagram")
+![Warehouse UML diagram](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
 
 ## Supplier
 
