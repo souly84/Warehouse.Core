@@ -39,7 +39,10 @@ The diagram below shows all the entities that warehouse interface provides acces
 
 The diagram below shows all the entities that supplier interface provides access to:
 
-- The main responsibility is to give access to collection of receptions that need to be validated by warehouse employee.
+- The main responsibility is to give an access to collection of receptions that need to be validated by warehouse employee during delivery validation process.
+- Usually warehouse employee uses barcode scanner to confirm  goods that are part of the reception. Once all the goods were confirmed a validation request is sent to the server for processing the reception.
+- During the reception confirmation process some unexpected good can be part of reception delivery. The application should be able to handle such case properly. [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
+- During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
 
 ![Supplier UML diagram](/docs/Supplier.uml.svg?raw=true "Classes dependencies diagram")
 
