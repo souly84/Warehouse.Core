@@ -19,13 +19,21 @@ Warehouse.Core is currently extended with the particular plugins that implement 
 
 ## Company
 
+The diagram below shows all the entities that company interface provides access to. At the moment only 2 entities were described in details:
+- Warehouse
+- Supplier
+
 ![Company UML diagram](/docs/Company.uml.svg?raw=true "Classes dependencies diagram")
 
 ## Warehouse
 
+The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give access to collection of goods in the storage.
+
 ![Warehouse UML diagram](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
 
 ## Supplier
+
+The diagram below shows all the entities that supplier interface provides access to. The main responsibility is to give access to collection of receptions that need to be validated to warehouse employee.
 
 ![Supplier UML diagram](/docs/Supplier.uml.svg?raw=true "Classes dependencies diagram")
 
