@@ -28,10 +28,10 @@ The diagram below shows all the entities that company interface provides access 
 
 ## Warehouse
 
-The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give access to collection of goods in the storage. There are a couple of major features that warehouse employee is pricessing:
+The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give access to collection of goods in the storage. There are a couple of major features that warehouse employee is processing:
 
-- Order goods preparation for delivery.
-- Goods movement inside the warehouse between storages.
+- Order goods preparation for delivery (collecting goods and move then to PutAway storage).
+- Goods movement inside the warehouse between the storages.
 
 ![Warehouse UML diagram](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
 
