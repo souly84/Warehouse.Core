@@ -17,9 +17,17 @@ Warehouse.Core is currently extended with the particular plugins that implement 
 | [Oddo.SDK](https://github.com/souly84/Odoo.Warehouse.SDK) | [![Odoo.Warehouse.SDK package in Warehouse feed in Azure Artifacts](https://souleymen.feeds.visualstudio.com/5e7ba3a8-de58-4498-aed2-a23e91696074/_apis/public/Packaging/Feeds/6754a99f-fc1f-4540-be65-d313fae61071/Packages/c19438d5-fdc4-45b8-9c95-c60edf85c208/Badge)](https://souleymen.visualstudio.com/Warehouse/_packaging?_a=package&feed=6754a99f-fc1f-4540-be65-d313fae61071&package=c19438d5-fdc4-45b8-9c95-c60edf85c208&preferRelease=true) |
 | [Warehouse.Mobile](https://github.com/souly84/Warehouse.Mobile) | None
 
-## Models Diagram
+## Company
 
-![Alt text](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
+![Company UML diagram](/docs/Company.uml.svg?raw=true "Classes dependencies diagram")
+
+## Warehouse
+
+![Warehouse UML diagram](/docs/Warehouse.uml.svg?raw=true "Classes dependencies diagram")
+
+## Supplier
+
+![Supplier UML diagram](/docs/Supplier.uml.svg?raw=true "Classes dependencies diagram")
 
 ## Status
 
