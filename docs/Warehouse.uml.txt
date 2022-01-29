@@ -87,8 +87,10 @@ interface     IStorage
 {
   IEntities<IWarehouseGood> Goods
 
-  +IncreaseAsync()
-  +DecreaseAsync()
+  +IncreaseAsync(good: IWarehouseGood, quantity: int)
+  +DecreaseAsync(good: IWarehouseGood, quantity: int)
+  +QuantityForAsync(goodBarcode : string) : Task<int>
+  +QuantityForAsync(good: IWarehouseGood) : Task<int>
 }
 interface     IMovement
 {
@@ -126,5 +128,3 @@ IWarehouseGood *-- IMovement
 IStorages "1" *-- "many" IStorage : contains
 IStorage *-- IWarehouseGood
 @enduml
-
-
