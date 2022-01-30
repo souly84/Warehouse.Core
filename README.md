@@ -32,7 +32,7 @@ The main goal is to provide some kind of root node to access the SDK features. T
 
 The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give an access to collection of goods in the storage. There are a couple of major features that warehouse employee is processing:
 
-- Order goods preparation for delivery (collecting goods and move then to PutAway storage the day before delivery).
+- Order's preparation for the delivery (collecting goods and move then to PutAway storage the day before the delivery date).
 - Goods movement inside the warehouse between the storages.
 - Assigning the location to the goods that were validated during the reception validation process.
 
