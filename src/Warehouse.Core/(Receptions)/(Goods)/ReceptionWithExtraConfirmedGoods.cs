@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaPrint;
 
 namespace Warehouse.Core
 {
@@ -25,7 +26,9 @@ namespace Warehouse.Core
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
-            return _reception.ValidateAsync(goodsToValidate);
+            return _reception.ValidateAsync(
+                WithoutExtraConfirmedDuplicates(goodsToValidate)
+            );
         }
 
         public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData)
@@ -43,6 +46,31 @@ namespace Warehouse.Core
                 return extraGood;
             }
             return await _reception.ByBarcodeAsync(barcodeData, true);
+        }
+
+        private IList<IGoodConfirmation> WithoutExtraConfirmedDuplicates(IList<IGoodConfirmation> goodsToValidate)
+        {
+            var extraConfirmedIdList = new List<string>();
+            var noDuplicates = new List<IGoodConfirmation>();
+            foreach (var confirmation in goodsToValidate)
+            {
+                if (confirmation.ConfirmedQuantity > 0)
+                {
+                    var goodData = confirmation.Good.ToDictionary();
+                    var id = goodData.Value<string>("Id");
+                    if (extraConfirmedIdList.Contains(id))
+                    {
+                        continue; // skip because its already been added as Extra confirmed good
+                    }
+                    if (confirmation.Good.IsExtraConfirmed)
+                    {
+                        extraConfirmedIdList.Add(id);
+                    }
+
+                    noDuplicates.Add(confirmation);
+                }
+            }
+            return noDuplicates;
         }
 
         private async Task<bool> NeedExtraGoodAsync(IEnumerable<IReceptionGood> goods)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
@@ -80,6 +81,31 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 3,
                 (await reception.Goods.ToListAsync()).Count
+            );
+        }
+
+        [Fact]
+        public async Task ValidatesConfirmedGoods()
+        {
+            var reception = new MockReception(
+                new MockReceptionGood("1", 4, "360600"),
+                new MockReceptionGood("2", 8)
+            );
+            await new ReceptionWithUnkownGoods(reception)
+                .ConfirmAsync(
+                    "360600",
+                    "360600",
+                    "360600",
+                    "360600",
+                    "UnknownBarcode"
+                );
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new MockReceptionGood("", 1000, "UnknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
+                    (await new MockReceptionGood("1", 4, "360600").FullyConfirmed()).Confirmation,
+                },
+                reception.ValidatedGoods
             );
         }
     }
