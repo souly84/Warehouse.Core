@@ -46,18 +46,28 @@ The diagram below shows all the entities that warehouse interface provides acces
 - Race storage
 - Reserve storage
 
-Each storage contains the collecrtion of goods that were assigned to it.
+Each storage contains the collection of goods that were assigned to it. The storage is associated with unique identifier that printed out as a barcode and can be scanned by warehouse employee.
+
+## Warehouse good
+
+The warehouse good is a good entity that describes all the features that can be done with the good in the warehouse. There are 2 major features:
+
+- The collection of locations allows to find all the warehouse storages where the particular good is located into.
+- The movement operation allows to move the good between 2 locations in the warehouse.
 
 ## Supplier
 
 The diagram below shows all the entities that supplier interface provides access to:
 
 - The main responsibility is to give an access to collection of receptions that need to be validated by warehouse employee during delivery validation process.
-- Usually warehouse employee uses barcode scanner to confirm  goods that are part of the reception. Once all the goods were confirmed a validation request is sent to the server to finish the reception processing.
-- During the reception confirmation process there is unexpected good can be part of reception delivery. The application should be able to handle such case properly. To do so [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
-- During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
 
 ![Supplier UML diagram](/docs/Supplier.uml.svg?raw=true "Classes dependencies diagram")
+
+## Reception
+
+- Usually warehouse employee uses barcode scanner to confirm  goods that are part of the vendor's delivery. Once all the goods were confirmed a validation request is sent to the server to finish the reception processing.
+- During the reception confirmation process there is unexpected good can be part of reception delivery. The application should be able to handle such case properly. To do so [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
+- During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
 
 ## Status
 
