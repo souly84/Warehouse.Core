@@ -50,21 +50,19 @@ namespace Warehouse.Core
 
         private IList<IGoodConfirmation> WithoutExtraConfirmedDuplicates(IList<IGoodConfirmation> goodsToValidate)
         {
-            var extraConfirmedIdList = new List<string>();
+            var extraConfirmedGoods = new List<IReceptionGood>();
             var noDuplicates = new List<IGoodConfirmation>();
             foreach (var confirmation in goodsToValidate)
             {
                 if (confirmation.ConfirmedQuantity > 0)
                 {
-                    var goodData = confirmation.Good.ToDictionary();
-                    var id = goodData.Value<string>("Id");
-                    if (extraConfirmedIdList.Contains(id))
+                    if (extraConfirmedGoods.Contains(confirmation.Good))
                     {
                         continue; // skip because its already been added as Extra confirmed good
                     }
                     if (confirmation.Good.IsExtraConfirmed)
                     {
-                        extraConfirmedIdList.Add(id);
+                        extraConfirmedGoods.Add(confirmation.Good);
                     }
 
                     noDuplicates.Add(confirmation);
