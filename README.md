@@ -24,24 +24,37 @@ The diagram below shows all the entities that company interface provides access 
 - Warehouse
 - Supplier
 
+The main goal is to provide some kind of root node to access the SDK features. The developers should implement [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/(Company)/ICompany.cs) contract and as a result it forces the developers to implement all the dependencies that are important for SDK to work properly.
+
 ![Company UML diagram](/docs/Company.uml.svg?raw=true "Classes dependencies diagram")
 
 ## Warehouse
 
-The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give access to collection of goods in the storage. There are a couple of major features that warehouse employee is processing:
+The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give an access to collection of goods in the storage. There are a couple of major features that warehouse employee is processing:
 
-- Order goods preparation for delivery (collecting goods and move then to PutAway storage).
+- Order goods preparation for delivery (collecting goods and move then to PutAway storage the day before delivery).
 - Goods movement inside the warehouse between the storages.
+- Assigning the location to the goods that were validated during the reception validation process.
 
 ![Warehouse UML diagram](/docs/warehouse.uml.svg?raw=true "Classes dependencies diagram")
+
+## Storage
+
+ The warehouse is a sequence of locations (the shelfs marked with unique identifiers). There are different storage types usually used in the warehouse:
+
+- Put away storage
+- Race storage
+- Reserve storage
+
+Each storage contains the collecrtion of goods that were assigned to it.
 
 ## Supplier
 
 The diagram below shows all the entities that supplier interface provides access to:
 
 - The main responsibility is to give an access to collection of receptions that need to be validated by warehouse employee during delivery validation process.
-- Usually warehouse employee uses barcode scanner to confirm  goods that are part of the reception. Once all the goods were confirmed a validation request is sent to the server for processing the reception.
-- During the reception confirmation process some unexpected good can be part of reception delivery. The application should be able to handle such case properly. [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
+- Usually warehouse employee uses barcode scanner to confirm  goods that are part of the reception. Once all the goods were confirmed a validation request is sent to the server to finish the reception processing.
+- During the reception confirmation process there is unexpected good can be part of reception delivery. The application should be able to handle such case properly. To do so [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
 - During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
 
 ![Supplier UML diagram](/docs/Supplier.uml.svg?raw=true "Classes dependencies diagram")
