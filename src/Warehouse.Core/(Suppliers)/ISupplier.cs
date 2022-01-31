@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediaPrint;
 
@@ -67,21 +68,13 @@ namespace Warehouse.Core
         {
             media
                 .Put("name", _supplierName)
-                .Put("receptions", Receptions);
+                .Put("receptions", Receptions.ToListAsync().RunSync());
         }
 
         private bool OneOfReceptionsDate(DateTime dateTime)
         {
             var receptions = Receptions.ToListAsync().RunSync();
-            foreach (var reception in receptions)
-            {
-                if (reception.Equals(dateTime))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return receptions.Any(reception => reception.Equals(dateTime));
         }
     }
 }

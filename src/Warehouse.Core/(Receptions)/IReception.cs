@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediaPrint;
 
 namespace Warehouse.Core
 {
@@ -11,7 +12,7 @@ namespace Warehouse.Core
         Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate);
     }
 
-    public class MockReception : IReception
+    public class MockReception : IReception, IPrintable
     {
         private readonly DateTime _receptionDate;
 
@@ -50,6 +51,13 @@ namespace Warehouse.Core
         public override int GetHashCode()
         {
             return HashCode.Combine(_receptionDate, Goods);
+        }
+
+        public void PrintTo(IMedia media)
+        {
+            media
+                .Put("ReceptionDate", _receptionDate)
+                .Put("Goods", Goods.ToListAsync().RunSync());
         }
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
