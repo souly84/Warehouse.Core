@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using MediaPrint;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Warehouse.Core.Tests.Extensions;
 using Xunit;
 
@@ -110,6 +110,34 @@ namespace Warehouse.Core.Tests
             Assert.Same(
                 await reception.ByBarcodeAsync("360600"),
                 await reception.ByBarcodeAsync("360600")
+            );
+        }
+
+        [Fact]
+        public async Task ValidatesConfirmedGoods()
+        {
+            var reception = new MockReception(
+                new MockReceptionGood("1", 2, "360600"),
+                new MockReceptionGood("2", 8, "360601")
+            );
+            await new ReceptionWithExtraConfirmedGoods(
+                new ReceptionWithUnkownGoods(reception)
+            ).ConfirmAsync(
+                "360600",
+                "360600",
+                "360600",
+                "360600",
+                "360601"
+            );
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new ExtraConfirmedReceptionGood(
+                        new MockReceptionGood("1", 2, "360600")
+                    ).PartiallyConfirmed(4)).Confirmation,
+                    (await new MockReceptionGood("2", 8, "360601").PartiallyConfirmed(1)).Confirmation,
+                },
+                reception.ValidatedGoods
             );
         }
     }
