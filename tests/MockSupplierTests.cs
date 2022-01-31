@@ -43,9 +43,8 @@ namespace Warehouse.Core.Tests
             var suppleir = new MockSupplier(
                 new MockReception(DateTime.Now.AddDays(-2))
             );
-            Assert.Equal(
-                suppleir,
-                suppleir
+            Assert.True(
+                suppleir.Equals(suppleir)
             );
         }
 

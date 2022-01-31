@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 
 namespace Warehouse.Core.Tests
 {
@@ -18,9 +17,8 @@ namespace Warehouse.Core.Tests
         public void EqualsTheSame()
         {
             var reception = new MockReception(new MockReceptionGood("1", 1));
-            Assert.Equal(
-                reception,
-                reception
+            Assert.True(
+                reception.Equals(reception)
             );
         }
     }
