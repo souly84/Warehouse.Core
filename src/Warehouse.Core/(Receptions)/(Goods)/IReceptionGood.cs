@@ -29,6 +29,7 @@ namespace Warehouse.Core
             _id = id;
             Quantity = quantity;
             _barcode = barcode;
+            IsUnknown = isUnknown;
             IsExtraConfirmed = isExtraConfirmed;
         }
 
@@ -42,7 +43,7 @@ namespace Warehouse.Core
 
         public override bool Equals(object obj)
         {
-            return object.ReferenceEquals(obj, this)
+            return ReferenceEquals(this, obj)
                 || TheSameMockObject(obj)
                 || TheSameIdOrBarcode(obj);
         }

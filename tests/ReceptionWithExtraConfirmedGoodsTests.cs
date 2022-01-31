@@ -65,7 +65,7 @@ namespace Warehouse.Core.Tests
         public async Task CreatesNewGood_WhenNotFoundByBarcodeNumber()
         {
             Assert.Equal(
-                new MockReceptionGood("", 1000, "3606001"),
+                new MockReceptionGood("", 1000, "3606001", isUnknown: true),
                 await new ReceptionWithExtraConfirmedGoods(
                    new ReceptionWithUnkownGoods(
                         new MockReception(
