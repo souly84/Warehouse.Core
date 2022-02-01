@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -22,6 +23,20 @@ namespace Warehouse.Core.Tests
                        new MockReceptionGood("3", 5),
                        new MockReceptionGood("4", 7)
                  }.WhereAsync(good => Task.FromResult(good.Quantity > 3))
+            );
+        }
+
+        [Fact]
+        public Task ItemNotFoundException()
+        {
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                 new List<IReceptionGood>
+                 {
+                       new MockReceptionGood("1", 1),
+                       new MockReceptionGood("2", 3),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 7)
+                 }.FirstAsync(a => Task.FromResult(a.Equals("NotExistingId")))
             );
         }
 

@@ -40,5 +40,13 @@ namespace Warehouse.Core.Tests
                 ).Storages.ToListAsync()
             );
         }
+
+        [Fact]
+        public void NotEqualToRandomObject()
+        {
+            Assert.False(
+                new MockWarehouseGood("1", 2).Equals(new object())
+            );
+        }
     }
 }
