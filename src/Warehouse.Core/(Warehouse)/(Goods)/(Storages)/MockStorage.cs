@@ -98,6 +98,12 @@ namespace Warehouse.Core
                     good.ToDictionary().Value<string>("Id"),
                     _goods[good],
                     good.ToDictionary().Value<string>("Barcode")
+                ).With(
+                    new MockStorages(
+                        new ListOfEntities<IStorage>(),
+                        new ListOfEntities<IStorage>(this),
+                        new ListOfEntities<IStorage>()
+                    )
                 )
             );
         }

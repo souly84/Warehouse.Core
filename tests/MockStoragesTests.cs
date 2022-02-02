@@ -89,10 +89,11 @@ namespace Warehouse.Core.Tests
                     new ListOfEntities<IStorage>(new MockStorage())
                 ).ByBarcodeAsync(
                     new MockWarehouse(
-                        new ListOfEntities<IWarehouseGood>(),
-                        new ListOfEntities<IStorage>(new MockStorage("112121212"), new MockStorage("4567890"))
+                        new MockStorage("112121212"),
+                        new MockStorage("4567890")
                     ),
-                    "4567890")
+                    "4567890"
+                )
             );
         }
 
@@ -107,8 +108,7 @@ namespace Warehouse.Core.Tests
                     new ListOfEntities<IStorage>(new MockStorage("4567890"))
                 ).ByBarcodeAsync(
                     new MockWarehouse(
-                        new ListOfEntities<IWarehouseGood>(),
-                        new ListOfEntities<IStorage>(new MockStorage("112121212"), new MockStorage("4567890"))
+                        new MockStorage("112121212"), new MockStorage("4567890")
                     ),
                     "543212"
                 )
