@@ -21,7 +21,10 @@ namespace Warehouse.Core
             _defaultMaxQuantity = defaultMaxQuantity;
         }
 
-        public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _extraConfirmedGoods);
+        public IReceptionGoods Goods => new ReceptionExtraGoods(
+            _reception.Goods,
+            _extraConfirmedGoods
+        );
 
         public string Id => _reception.Id;
 

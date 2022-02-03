@@ -3,33 +3,35 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core
 {
-    public class ExtraReceptionGoods : IReceptionGoods
+    public class ReceptionExtraGoods : IReceptionGoods
     {
-        private readonly IReception _reception;
+        private readonly IReceptionGoods _goods;
         private readonly IList<IReceptionGood> _extraGoods;
 
-        public ExtraReceptionGoods(IReception reception, IList<IReceptionGood> extraGoods)
+        public ReceptionExtraGoods(IReceptionGoods goods, IList<IReceptionGood> extraGoods)
         {
-            _reception = reception;
+            _goods = goods;
             _extraGoods = extraGoods;
         }
 
         public async Task<IList<IReceptionGood>> ToListAsync()
         {
             var result = new List<IReceptionGood>(_extraGoods);
-            result.AddRange(await _reception.Goods.ToListAsync());
+            result.AddRange(await _goods.ToListAsync());
             return result;
         }
 
         public IReceptionGood UnkownGood(string barcode)
         {
-            return _reception.Goods.UnkownGood(barcode);
+            return _goods.UnkownGood(barcode);
         }
 
         public IEntities<IReceptionGood> With(IFilter filter)
         {
-            // we can loose the original entity here, its should not be working
-            return _reception.Goods.With(filter);
+            return new ReceptionExtraGoods(
+                (IReceptionGoods)_goods.With(filter),
+                _extraGoods
+            );
         }
     }
 }

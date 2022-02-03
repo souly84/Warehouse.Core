@@ -17,7 +17,10 @@ namespace Warehouse.Core
             _reception = reception;
         }
 
-        public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _unknownGoods);
+        public IReceptionGoods Goods => new ReceptionExtraGoods(
+            _reception.Goods,
+            _unknownGoods
+        );
 
         public string Id => _reception.Id;
 
