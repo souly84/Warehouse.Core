@@ -19,6 +19,8 @@ namespace Warehouse.Core
 
         public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _unknownGoods);
 
+        public string Id => _reception.Id;
+
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
             return _reception.ValidateAsync(goodsToValidate);

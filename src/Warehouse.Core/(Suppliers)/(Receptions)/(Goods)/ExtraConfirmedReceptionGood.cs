@@ -42,6 +42,8 @@ namespace Warehouse.Core
 
         public bool IsExtraConfirmed => true;
 
+        public string Id => _goods.First().Id;
+
         public override bool Equals(object? obj)
         {
             return object.ReferenceEquals(this, obj)

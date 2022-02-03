@@ -15,6 +15,7 @@ namespace Warehouse.Core.Tests
                 await new ReceptionWithExtraConfirmedGoods(
                     new ReceptionWithUnkownGoods(
                         new MockReception(
+                            "1",
                             new MockReceptionGood("1", 4, "360600"),
                             new MockReceptionGood("2", 8)
                         )
@@ -33,6 +34,7 @@ namespace Warehouse.Core.Tests
                 await new ReceptionWithExtraConfirmedGoods(
                     new ReceptionWithUnkownGoods(
                         new MockReception(
+                            "1",
                             await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
                             new MockReceptionGood("2", 8)
                         )
@@ -47,6 +49,7 @@ namespace Warehouse.Core.Tests
             var reception = new ReceptionWithExtraConfirmedGoods(
                 new ReceptionWithUnkownGoods(
                     new MockReception(
+                        "1",
                         await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
                         await new MockReceptionGood("2", 1, "360600").FullyConfirmed(),
                         new MockReceptionGood("3", 8)
@@ -69,6 +72,7 @@ namespace Warehouse.Core.Tests
                 await new ReceptionWithExtraConfirmedGoods(
                    new ReceptionWithUnkownGoods(
                         new MockReception(
+                            "1",
                             new MockReceptionGood("1", 4, "360600"),
                             new MockReceptionGood("2", 8)
                         )
@@ -83,6 +87,7 @@ namespace Warehouse.Core.Tests
             var reception = new ReceptionWithExtraConfirmedGoods(
                 new ReceptionWithUnkownGoods(
                     new MockReception(
+                        "1",
                         await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
                         new MockReceptionGood("2", 8)
                     )
@@ -101,6 +106,7 @@ namespace Warehouse.Core.Tests
             var reception = new ReceptionWithExtraConfirmedGoods(
                 new ReceptionWithUnkownGoods(
                     new MockReception(
+                        "1",
                         await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
                         new MockReceptionGood("2", 8)
                     )
@@ -117,6 +123,7 @@ namespace Warehouse.Core.Tests
         public async Task ValidatesConfirmedGoods()
         {
             var reception = new MockReception(
+                "1",
                 new MockReceptionGood("1", 2, "360600"),
                 new MockReceptionGood("2", 8, "360601")
             );

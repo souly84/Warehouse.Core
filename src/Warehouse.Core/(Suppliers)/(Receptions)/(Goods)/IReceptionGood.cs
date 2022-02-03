@@ -4,6 +4,8 @@ namespace Warehouse.Core
 {
     public interface IReceptionGood : IPrintable
     {
+        string Id { get; }
+        
         int Quantity { get; }
 
         bool IsUnknown { get; }
@@ -32,6 +34,8 @@ namespace Warehouse.Core
             IsUnknown = isUnknown;
             IsExtraConfirmed = isExtraConfirmed;
         }
+
+        public string Id => _id;
 
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
 

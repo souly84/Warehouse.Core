@@ -15,6 +15,8 @@ namespace Warehouse.Core.Tests.Extensions
 
         public IReceptionGoods Goods => _origin.Goods;
 
+        public string Id => _origin.Id;
+
         public async Task<T> ConfirmAsync()
         {
             var confirmation = _origin.Confirmation();

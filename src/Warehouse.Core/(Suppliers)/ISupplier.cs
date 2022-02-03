@@ -24,6 +24,7 @@ namespace Warehouse.Core
             this(
                 supplierName,
                 new MockReception(
+                    "1",
                     new MockReceptionGood("1", 2, "123456789"),
                     new MockReceptionGood("2", 2, "123456780"),
                     new MockReceptionGood("3", 2, "123456781"),
