@@ -49,6 +49,7 @@ namespace Warehouse.Core
         {
             return ReferenceEquals(this, obj)
                 || TheSameMockObject(obj)
+                || TheSameGoodObject(obj)
                 || TheSameIdOrBarcode(obj);
         }
 
@@ -74,6 +75,11 @@ namespace Warehouse.Core
                 && _barcode == good._barcode
                 && IsUnknown == good.IsUnknown
                 && IsExtraConfirmed == good.IsExtraConfirmed;
+        }
+
+        private bool TheSameGoodObject(object obj)
+        {
+            return obj is IReceptionGood good && _id == good.Id;
         }
 
         private bool TheSameIdOrBarcode(object obj)

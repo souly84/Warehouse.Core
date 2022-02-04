@@ -85,7 +85,8 @@ namespace Warehouse.Core
         {
             return obj is IGoodConfirmation goodConfirmation
                 && goodConfirmation.Good.Equals(Good)
-                && goodConfirmation.State.Equals(State);
+                && goodConfirmation.State.Equals(State)
+                && goodConfirmation.ConfirmedQuantity == ConfirmedQuantity;
         }
     }
 }

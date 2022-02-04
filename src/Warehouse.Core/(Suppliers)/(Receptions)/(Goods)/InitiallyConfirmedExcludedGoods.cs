@@ -9,7 +9,6 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
     {
         private readonly IReceptionGoods _goods;
         private List<IReceptionGood>? _initiallyConfirmedGoods;
-        private List<IReceptionGood> _updatedGoods = new List<IReceptionGood>();
 
         public InitiallyConfirmedExcludedGoods(IReceptionGoods goods)
         {
@@ -40,40 +39,6 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
                 .ToList();
         }
 
-        //public Task AddAsync(IReceptionGood goodToAdd, int quantity)
-        //{
-        //    RefreshUpdatedGoodsCollection(goodToAdd);
-        //    return _confirmation.AddAsync(goodToAdd, quantity);
-        //}
-
-        //public Task RemoveAsync(IReceptionGood goodToRemove, int quantity)
-        //{
-        //    RefreshUpdatedGoodsCollection(goodToRemove);
-        //    return _confirmation.RemoveAsync(goodToRemove, quantity);
-        //}
-
-        //public Task ClearAsync()
-        //{
-        //    _updatedGoods.Clear();
-        //    return _confirmation.ClearAsync();
-        //}
-
-        //public async Task CommitAsync()
-        //{
-        //    await _confirmation.CommitAsync();
-        //    _updatedGoods.Clear();
-        //    _initiallyConfirmedGoods = null;
-        //}
-
-        //public async Task<List<IGoodConfirmation>> ToListAsync()
-        //{
-        //    await SetInitiallyConfirmedGoods();
-        //    var goodConfirmations = await _confirmation.ToListAsync();
-        //    return goodConfirmations
-        //        .Where(a => !IgnoredGood(a.Good))
-        //        .ToList();
-        //}
-
         private async Task SetInitiallyConfirmedGoodsAsync(IList<IReceptionGood> goods)
         {
             if (_initiallyConfirmedGoods == null)
@@ -90,16 +55,18 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
             _ = _initiallyConfirmedGoods ?? throw new InvalidOperationException(
                 "Initially confirmed goods collection should be initialized"
             );
-            return _initiallyConfirmedGoods.Contains(good)
-                && !_updatedGoods.Contains(good);
-        }
+            var confirmedGood = _initiallyConfirmedGoods.FirstOrDefault(g => g.Equals(good));
+            if (confirmedGood != null)
+            {
+                if (good.IsExtraConfirmed)
+                {
+                    good.Confirmation.Decrease(confirmedGood.Confirmation.ConfirmedQuantity);
+                    return false;
+                }
+                return true;
+            }
 
-        //private void RefreshUpdatedGoodsCollection(IReceptionGood goodToUpdate)
-        //{
-        //    if (!_updatedGoods.Contains(goodToUpdate))
-        //    {
-        //        _updatedGoods.Add(goodToUpdate);
-        //    }
-        //}
+            return false;
+        }
     }
 }
