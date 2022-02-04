@@ -19,6 +19,21 @@ namespace Warehouse.Core
             return reception.Confirmation().DoneAsync();
         }
 
+        public static ReceptionWithExtraConfirmedGoods WithExtraConfirmed(this IReception reception)
+        {
+            return new ReceptionWithExtraConfirmedGoods(reception.WithUnknown());
+        }
+
+        public static IReception ExcludeInitiallyConfirmed(this IReception reception)
+        {
+            return new ReceptionWithInitiallyConfirmedExcludedGoods(reception);
+        }
+
+        public static ReceptionWithUnkownGoods WithUnknown(this IReception reception)
+        {
+            return new ReceptionWithUnkownGoods(reception);
+        }
+
         public static async Task ValidateAsync(this IReception reception, IConfirmation confirmation)
         {
             var confirmationList = await confirmation.ToListAsync();

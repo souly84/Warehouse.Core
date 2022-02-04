@@ -12,15 +12,12 @@ namespace Warehouse.Core.Tests
         {
             Assert.Equal(
                 new MockReceptionGood("1", 4, "360600"),
-                await new ReceptionWithExtraConfirmedGoods(
-                    new ReceptionWithUnkownGoods(
-                        new MockReception(
-                            "1",
-                            new MockReceptionGood("1", 4, "360600"),
-                            new MockReceptionGood("2", 8)
-                        )
-                    )
-                ).ByBarcodeAsync("360600")
+                await new MockReception(
+                    "1",
+                    new MockReceptionGood("1", 4, "360600"),
+                    new MockReceptionGood("2", 8)
+                ).WithExtraConfirmed()
+                 .ByBarcodeAsync("360600")
             );
         }
 
@@ -31,32 +28,25 @@ namespace Warehouse.Core.Tests
                 new ExtraConfirmedReceptionGood(
                     new MockReceptionGood("1", 1, "360600")
                 ),
-                await new ReceptionWithExtraConfirmedGoods(
-                    new ReceptionWithUnkownGoods(
-                        new MockReception(
-                            "1",
-                            await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
-                            new MockReceptionGood("2", 8)
-                        )
-                    )
-                ).ByBarcodeAsync("360600")
+                await new MockReception(
+                    "1",
+                    await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
+                    new MockReceptionGood("2", 8)
+                ).WithExtraConfirmed()
+                 .ByBarcodeAsync("360600")
             );
         }
 
         [Fact]
         public async Task CombinesExtraConfirmedGoodQuantity_WithOriginal()
         {
-            var reception = new ReceptionWithExtraConfirmedGoods(
-                new ReceptionWithUnkownGoods(
-                    new MockReception(
-                        "1",
-                        await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
-                        await new MockReceptionGood("2", 1, "360600").FullyConfirmed(),
-                        new MockReceptionGood("3", 8)
-                    )
-                )
-            );
-            var good = await reception.ByBarcodeAsync("360600");
+            var good = await new MockReception(
+                "1",
+                await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
+                await new MockReceptionGood("2", 1, "360600").FullyConfirmed(),
+                new MockReceptionGood("3", 8)
+            ).WithExtraConfirmed()
+             .ByBarcodeAsync("360600");
             good.Confirmation.Increase(3);
             Assert.Equal(
                 5,
@@ -69,30 +59,23 @@ namespace Warehouse.Core.Tests
         {
             Assert.Equal(
                 new MockReceptionGood("", 1000, "3606001", isUnknown: true),
-                await new ReceptionWithExtraConfirmedGoods(
-                   new ReceptionWithUnkownGoods(
-                        new MockReception(
-                            "1",
-                            new MockReceptionGood("1", 4, "360600"),
-                            new MockReceptionGood("2", 8)
-                        )
-                    )
-                ).ByBarcodeAsync("3606001")
+                await new MockReception(
+                    "1",
+                    new MockReceptionGood("1", 4, "360600"),
+                    new MockReceptionGood("2", 8)
+                ).WithExtraConfirmed()
+                 .ByBarcodeAsync("3606001")
             );
         }
 
         [Fact]
         public async Task ExtraConfirmedGood_IsPartOfReceptionGoods()
         {
-            var reception = new ReceptionWithExtraConfirmedGoods(
-                new ReceptionWithUnkownGoods(
-                    new MockReception(
-                        "1",
-                        await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
-                        new MockReceptionGood("2", 8)
-                    )
-                )
-            );
+            var reception = new MockReception(
+                "1",
+                await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
+                new MockReceptionGood("2", 8)
+            ).WithExtraConfirmed();
             await reception.ByBarcodeAsync("360600");
             Assert.Contains(
                 new ExtraConfirmedReceptionGood(new MockReceptionGood("1", 1, "360600")),
@@ -103,16 +86,11 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ReturnsTheSameExtraConfirmedGood_WhenConfirmedGoodBarcodeScanned()
         {
-            var reception = new ReceptionWithExtraConfirmedGoods(
-                new ReceptionWithUnkownGoods(
-                    new MockReception(
-                        "1",
-                        await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
-                        new MockReceptionGood("2", 8)
-                    )
-                )
-            );
-
+            var reception = new MockReception(
+                "1",
+                await new MockReceptionGood("1", 1, "360600").FullyConfirmed(),
+                new MockReceptionGood("2", 8)
+            ).WithExtraConfirmed();
             Assert.Same(
                 await reception.ByBarcodeAsync("360600"),
                 await reception.ByBarcodeAsync("360600")
@@ -127,15 +105,15 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("1", 2, "360600"),
                 new MockReceptionGood("2", 8, "360601")
             );
-            await new ReceptionWithExtraConfirmedGoods(
-                new ReceptionWithUnkownGoods(reception)
-            ).ConfirmAsync(
-                "360600",
-                "360600",
-                "360600",
-                "360600",
-                "360601"
-            );
+            await reception
+                .WithExtraConfirmed()
+                .ConfirmAsync(
+                    "360600",
+                    "360600",
+                    "360600",
+                    "360600",
+                    "360601"
+                );
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {

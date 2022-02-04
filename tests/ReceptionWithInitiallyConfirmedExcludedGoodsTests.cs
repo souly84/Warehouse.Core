@@ -19,7 +19,7 @@ namespace Warehouse.Core.Tests
                 await new MockReceptionGood("4", 3).FullyConfirmed()
             );
 
-            var excludedConfirmedGoodsReception = new ReceptionWithInitiallyConfirmedExcludedGoods(reception);
+            var excludedConfirmedGoodsReception = reception.ExcludeInitiallyConfirmed();
             await excludedConfirmedGoodsReception.Confirmation().AddAsync(new MockReceptionGood("1", 4), 4);
             await excludedConfirmedGoodsReception.Confirmation().AddAsync(new MockReceptionGood("3", 3), 2);
             await excludedConfirmedGoodsReception.Confirmation().CommitAsync();
@@ -42,16 +42,13 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("2", 8, "360601"),
                 await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
             );
-            await new ReceptionWithExtraConfirmedGoods(
-                new ReceptionWithUnkownGoods(
-                    new ReceptionWithInitiallyConfirmedExcludedGoods(
-                        reception
-                    )
-                )
-            ).ConfirmAsync(
-                "360601",
-                "360602"
-            );
+            await reception
+                .ExcludeInitiallyConfirmed()
+                .WithExtraConfirmed()
+                .ConfirmAsync(
+                    "360601",
+                    "360602"
+                );
 
             Assert.Equal(
                 new List<IGoodConfirmation>
