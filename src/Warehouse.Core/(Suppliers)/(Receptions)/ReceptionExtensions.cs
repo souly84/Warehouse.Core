@@ -9,9 +9,9 @@ namespace Warehouse.Core
             return new ReceptionConfirmation(reception);
         }
 
-        public static IConfirmation NeedConfirmation(this IReception reception)
+        public static IConfirmation NotConfirmedOnly(this IReception reception)
         {
-            return reception.Confirmation().NeedConfirmation();
+            return reception.Confirmation().NotConfirmedOnly();
         }
 
         public static Task<bool> ConfirmedAsync(this IReception reception)

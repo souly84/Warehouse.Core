@@ -15,16 +15,19 @@ namespace Warehouse.Core
             _store = store;
         }
 
+        private string ReceptionKey => $"Repcetion_{_reception.Id}";
+
         public IReceptionGoods Goods => new StatefulReceptionGoods(
             _reception,
-            new JObjectAsKeyStore(_store, $"Repcetion_{_reception.Id}")
+            new JObjectAsKeyStore(_store, ReceptionKey)
         );
 
         public string Id => _reception.Id;
 
-        public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
+        public async Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
-            return _reception.ValidateAsync(goodsToValidate);
+            await _reception.ValidateAsync(goodsToValidate);
+            _store.Remove(ReceptionKey);
         }
     }
 }

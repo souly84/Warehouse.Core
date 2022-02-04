@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Core
 {
-    public class ReceptionExtraGoods : IReceptionGoods
+    public class CombinedReceptionGoods : IReceptionGoods
     {
         private readonly IReceptionGoods _goods;
         private readonly IList<IReceptionGood> _extraGoods;
 
-        public ReceptionExtraGoods(IReceptionGoods goods, IList<IReceptionGood> extraGoods)
+        public CombinedReceptionGoods(IReceptionGoods goods, IList<IReceptionGood> extraGoods)
         {
             _goods = goods;
             _extraGoods = extraGoods;
@@ -28,7 +28,7 @@ namespace Warehouse.Core
 
         public IEntities<IReceptionGood> With(IFilter filter)
         {
-            return new ReceptionExtraGoods(
+            return new CombinedReceptionGoods(
                 (IReceptionGoods)_goods.With(filter),
                 _extraGoods
             );

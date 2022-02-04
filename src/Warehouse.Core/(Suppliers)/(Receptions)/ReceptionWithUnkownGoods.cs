@@ -17,7 +17,7 @@ namespace Warehouse.Core
             _reception = reception;
         }
 
-        public IReceptionGoods Goods => new ReceptionExtraGoods(
+        public IReceptionGoods Goods => new CombinedReceptionGoods(
             _reception.Goods,
             _unknownGoods
         );
@@ -41,7 +41,7 @@ namespace Warehouse.Core
             {
                 if (ignoreConfirmed)
                 {
-                    return await goods.FirstAsync(async x => ! await x.ConfirmedAsync());
+                    return await goods.FirstAsync(async x => !await x.ConfirmedAsync());
                 }
                 return goods.First();
             }

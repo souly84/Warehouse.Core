@@ -16,7 +16,7 @@ namespace Warehouse.Core
             return new ConfirmationHistory(confirmation);
         }
 
-        public static IConfirmation NeedConfirmation(this IConfirmation confirmation)
+        public static IConfirmation NotConfirmedOnly(this IConfirmation confirmation)
         {
             return new NotConfirmedOnly(confirmation);
         }
