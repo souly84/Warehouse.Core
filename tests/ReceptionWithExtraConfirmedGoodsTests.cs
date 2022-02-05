@@ -18,6 +18,7 @@ namespace Warehouse.Core.Tests
                     new MockReceptionGood("2", 8)
                 ).WithExtraConfirmed()
                  .ByBarcodeAsync("360600")
+                 .FirstAsync()
             );
         }
 
@@ -34,6 +35,7 @@ namespace Warehouse.Core.Tests
                     new MockReceptionGood("2", 8)
                 ).WithExtraConfirmed()
                  .ByBarcodeAsync("360600")
+                 .FirstAsync()
             );
         }
 
@@ -46,7 +48,8 @@ namespace Warehouse.Core.Tests
                 await new MockReceptionGood("2", 1, "360600").FullyConfirmed(),
                 new MockReceptionGood("3", 8)
             ).WithExtraConfirmed()
-             .ByBarcodeAsync("360600");
+             .ByBarcodeAsync("360600")
+             .FirstAsync();
             good.Confirmation.Increase(3);
             Assert.Equal(
                 5,
@@ -65,6 +68,7 @@ namespace Warehouse.Core.Tests
                     new MockReceptionGood("2", 8)
                 ).WithExtraConfirmed()
                  .ByBarcodeAsync("3606001")
+                 .FirstAsync()
             );
         }
 
@@ -92,8 +96,8 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("2", 8)
             ).WithExtraConfirmed();
             Assert.Same(
-                await reception.ByBarcodeAsync("360600"),
-                await reception.ByBarcodeAsync("360600")
+                await reception.ByBarcodeAsync("360600").FirstAsync(),
+                await reception.ByBarcodeAsync("360600").FirstAsync()
             );
         }
 

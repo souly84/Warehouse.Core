@@ -35,20 +35,26 @@ namespace Warehouse.Core
             var statefulGoods = new List<IReceptionGood>();
             foreach (var key in _goodsState.Keys)
             {
-                var good = goods.FirstOrDefault(g => g.Id == key);
-                if (good == null)
+                var goodsByKey = goods.Where(g => g.Id == key);
+                if (!goodsByKey.Any())
                 {
-                    good = await _reception.ByBarcodeAsync(key);
-                    goods.Insert(0, good);
+                    goodsByKey = await _reception.ByBarcodeAsync(key);
+                    foreach (var goodByKey in goodsByKey)
+                    {
+                        goods.Add(goodByKey);
+                    }
                 }
                 var value = Convert.ToInt32(_goodsState.Get(key));
-                if (value > 0)
+                foreach (var goodByKey in goodsByKey)
                 {
-                    good.Confirmation.Increase(value);
-                }
-                else
-                {
-                    good.Confirmation.Increase(Math.Abs(value));
+                    if (value > 0)
+                    {
+                        goodByKey.Confirmation.Increase(value);
+                    }
+                    else
+                    {
+                        goodByKey.Confirmation.Increase(Math.Abs(value));
+                    }
                 }
             }
 

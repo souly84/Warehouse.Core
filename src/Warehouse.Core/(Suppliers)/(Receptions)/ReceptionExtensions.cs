@@ -24,9 +24,9 @@ namespace Warehouse.Core
             return new ReceptionWithExtraConfirmedGoods(reception.WithUnknown());
         }
 
-        public static IReception ExcludeInitiallyConfirmed(this IReception reception)
+        public static IReception WithoutInitiallyConfirmed(this IReception reception)
         {
-            return new ReceptionWithInitiallyConfirmedExcludedGoods(reception);
+            return new ReceptionWithoutInitiallyConfirmedGoods(reception);
         }
 
         public static ReceptionWithUnkownGoods WithUnknown(this IReception reception)

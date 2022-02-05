@@ -12,9 +12,15 @@ namespace Warehouse.Core
         
         public static Task<IList<IReceptionGood>> ByBarcodeAsync(
             this IEntities<IReceptionGood> goods,
-            string barcode)
+            string barcode,
+            bool ignoreConfirmed = false)
         {
-            return goods.With(new EanGoodsFilter(barcode)).ToListAsync();
+            var filteredGoodsTask = goods.With(new EanGoodsFilter(barcode)).ToListAsync();
+            if (!ignoreConfirmed)
+            {
+                return filteredGoodsTask;
+            }
+            return filteredGoodsTask.WhereAsync(async good => !await good.ConfirmedAsync());
         }
 
         public static Task<bool> ConfirmedAsync(this IReceptionGood good)

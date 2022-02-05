@@ -5,10 +5,10 @@ using Xunit;
 
 namespace Warehouse.Core.Tests
 {
-    public class ReceptionWithInitiallyConfirmedExcludedGoodsTests
+    public class ReceptionWithoutInitiallyConfirmedGoodsTests
     {
         [Fact]
-        public async Task Validation_SkipInitiallyConfirmedGoods()
+        public async Task Confirmation_SkipInitiallyConfirmedGoods()
         {
             var reception = new MockReception(
                 "1",
@@ -19,10 +19,10 @@ namespace Warehouse.Core.Tests
                 await new MockReceptionGood("4", 3).FullyConfirmed()
             );
 
-            var excludedConfirmedGoodsReception = reception.ExcludeInitiallyConfirmed();
-            await excludedConfirmedGoodsReception.Confirmation().AddAsync(new MockReceptionGood("1", 4), 4);
-            await excludedConfirmedGoodsReception.Confirmation().AddAsync(new MockReceptionGood("3", 3), 2);
-            await excludedConfirmedGoodsReception.Confirmation().CommitAsync();
+            var receptionWithoutConfirmed = reception.WithoutInitiallyConfirmed();
+            await receptionWithoutConfirmed.Confirmation().AddAsync(new MockReceptionGood("1", 4), 4);
+            await receptionWithoutConfirmed.Confirmation().AddAsync(new MockReceptionGood("3", 3), 2);
+            await receptionWithoutConfirmed.Confirmation().CommitAsync();
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {
@@ -34,7 +34,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task Validation_InitiallyConfirmed_WasExtraConfirmed()
+        public async Task Confirmation_InitiallyConfirmed_WasExtraConfirmed()
         {
             var reception = new MockReception(
                 "1",
@@ -43,7 +43,7 @@ namespace Warehouse.Core.Tests
                 await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
             );
             await reception
-                .ExcludeInitiallyConfirmed()
+                .WithoutInitiallyConfirmed()
                 .WithExtraConfirmed()
                 .ConfirmAsync(
                     "360601",

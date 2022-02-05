@@ -29,25 +29,21 @@ namespace Warehouse.Core
             return _reception.ValidateAsync(goodsToValidate);
         }
 
-        public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
-            var good = _unknownGoods.FirstOrDefault(x => x.Equals(barcodeData));
-            if (good != null)
+            var unknownGoods = _unknownGoods.Where(x => x.Equals(barcodeData));
+            if (unknownGoods.Any())
             {
-                return good;
+                return unknownGoods.ToList();
             }
-            var goods = await _reception.Goods.ByBarcodeAsync(barcodeData);
+            var goods = await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
             if (goods.Any())
             {
-                if (ignoreConfirmed)
-                {
-                    return await goods.FirstAsync(async x => !await x.ConfirmedAsync());
-                }
-                return goods.First();
+                return goods;
             }
-            good = _reception.Goods.UnkownGood(barcodeData);
+            var good = _reception.Goods.UnkownGood(barcodeData);
             _unknownGoods.Add(good);
-            return good;
+            return new List<IReceptionGood> { good };
         }
     }
 }

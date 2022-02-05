@@ -17,6 +17,11 @@ namespace Warehouse.Core.Tests.Extensions
 
         public string Id => _origin.Id;
 
+        public Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        {
+            return _origin.ByBarcodeAsync(barcodeData, ignoreConfirmed);
+        }
+
         public async Task<T> ConfirmAsync()
         {
             var confirmation = _origin.Confirmation();

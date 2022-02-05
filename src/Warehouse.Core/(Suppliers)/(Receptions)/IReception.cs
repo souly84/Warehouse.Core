@@ -11,6 +11,8 @@ namespace Warehouse.Core
 
         IReceptionGoods Goods { get; }
 
+        Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false);
+
         Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate);
     }
 
@@ -45,6 +47,14 @@ namespace Warehouse.Core
         public List<IGoodConfirmation> ValidatedGoods { get; } = new List<IGoodConfirmation>();
 
         public string Id { get; }
+
+        public Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        {
+            return Goods.ByBarcodeAsync(
+                barcodeData,
+                ignoreConfirmed
+            );
+        }
 
         public override bool Equals(object? obj)
         {

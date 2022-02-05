@@ -29,5 +29,10 @@ namespace Warehouse.Core
             await _reception.ValidateAsync(goodsToValidate);
             _store.Remove(ReceptionKey);
         }
+
+        Task<IList<IReceptionGood>> IReception.ByBarcodeAsync(string barcodeData, bool ignoreConfirmed)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

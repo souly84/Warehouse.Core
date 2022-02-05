@@ -18,7 +18,7 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
         public async Task<IList<IReceptionGood>> ToListAsync()
         {
             var goods = await _goods.ToListAsync();
-            await SetInitiallyConfirmedGoodsAsync(goods);
+            await SetupInitiallyConfirmedGoodsAsync(goods);
             return goods;
         }
 
@@ -35,11 +35,11 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
         public IList<IGoodConfirmation> ExcludeInitiallyConfirmed(IList<IGoodConfirmation> goodsToValidate)
         {
             return goodsToValidate
-                .Where(confirmation => !IgnoredGood(confirmation.Good))
+                .Where(confirmation => !InitiallyConfirmedGood(confirmation.Good))
                 .ToList();
         }
 
-        private async Task SetInitiallyConfirmedGoodsAsync(IList<IReceptionGood> goods)
+        private async Task SetupInitiallyConfirmedGoodsAsync(IList<IReceptionGood> goods)
         {
             if (_initiallyConfirmedGoods == null)
             {
@@ -50,23 +50,34 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
             }
         }
 
-        private bool IgnoredGood(IReceptionGood good)
+        private bool InitiallyConfirmedGood(IReceptionGood good)
         {
             _ = _initiallyConfirmedGoods ?? throw new InvalidOperationException(
-                "Initially confirmed goods collection should be initialized"
+                "Initially confirmed goods collection should be initialized."
             );
             var confirmedGood = _initiallyConfirmedGoods.FirstOrDefault(g => g.Equals(good));
             if (confirmedGood != null)
             {
                 if (good.IsExtraConfirmed)
                 {
-                    good.Confirmation.Decrease(confirmedGood.Confirmation.ConfirmedQuantity);
+                    ReduceAlreadyConfirmedQuantity(good, confirmedGood);
                     return false;
                 }
                 return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Need to reduce already confirmed quantity because only
+        /// new confirmed quantity should be processed.
+        /// </summary>
+        private void ReduceAlreadyConfirmedQuantity(IReceptionGood goodToConfirm, IReceptionGood confirmedGood)
+        {
+            goodToConfirm
+                .Confirmation
+                .Decrease(confirmedGood.Confirmation.ConfirmedQuantity);
         }
     }
 }

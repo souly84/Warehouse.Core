@@ -5,12 +5,12 @@ using Warehouse.Core.Suppliers.Receptions.Goods;
 
 namespace Warehouse.Core
 {
-    public class ReceptionWithInitiallyConfirmedExcludedGoods : IReception
+    public class ReceptionWithoutInitiallyConfirmedGoods : IReception
     {
         private readonly IReception _reception;
         private InitiallyConfirmedExcludedGoods? _goods;
 
-        public ReceptionWithInitiallyConfirmedExcludedGoods(IReception reception)
+        public ReceptionWithoutInitiallyConfirmedGoods(IReception reception)
         {
             _reception = reception ?? throw new ArgumentNullException(nameof(reception));
         }
@@ -18,6 +18,11 @@ namespace Warehouse.Core
         public string Id => _reception.Id;
 
         public IReceptionGoods Goods => _goods ??= new InitiallyConfirmedExcludedGoods(_reception.Goods);
+
+        public Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        {
+            return _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
+        }
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
