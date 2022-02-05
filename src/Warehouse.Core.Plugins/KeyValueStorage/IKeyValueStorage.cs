@@ -2,13 +2,13 @@
 
 namespace Warehouse.Core.Plugins
 {
-    public interface IKeyValueStore
+    public interface IKeyValueStorage
     {
         IList<string> Keys { get; }
 
-        void Set(string key, string @object);
+        void Set<T>(string key, T @object);
 
-        string Get(string key);
+        T Get<T>(string key);
 
         void Remove(string key);
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Warehouse.Core.Plugins;
 
@@ -6,20 +7,30 @@ namespace Warehouse.Core
 {
     public class StatefulReception : IReception
     {
-        private readonly ReceptionWithExtraConfirmedGoods _reception;
-        private readonly IKeyValueStore _store;
+        private readonly IReception _reception;
+        private readonly IKeyValueStorage _store;
+        private IKeyValueStorage? _goodsSate;
+        private IReceptionGoods? _goods;
 
-        public StatefulReception(ReceptionWithExtraConfirmedGoods reception, IKeyValueStore store)
+        public StatefulReception(IReception reception, IKeyValueStorage store)
         {
             _reception = reception;
             _store = store;
         }
 
+        /// <summary>
+        /// Here we assume that receptionId is unique number in the system and
+        /// can not be reused by different suppliers.
+        /// </summary>
         private string ReceptionKey => $"Repcetion_{_reception.Id}";
 
-        public IReceptionGoods Goods => new StatefulReceptionGoods(
-            _reception,
-            new JObjectAsKeyStore(_store, ReceptionKey)
+        private IKeyValueStorage GoodsState => _goodsSate ??= new JObjectAsKeyStore(_store, ReceptionKey);
+
+        public IReceptionGoods Goods => _goods ??= new CachedReceptionGoods(
+            new StatefulReceptionGoods(
+                _reception,
+                GoodsState
+            )
         );
 
         public string Id => _reception.Id;
@@ -30,9 +41,22 @@ namespace Warehouse.Core
             _store.Remove(ReceptionKey);
         }
 
-        Task<IList<IReceptionGood>> IReception.ByBarcodeAsync(string barcodeData, bool ignoreConfirmed)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed)
         {
-            throw new System.NotImplementedException();
+            await RestoreConfirmationProgressAsync();
+            var goods = await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
+            return goods
+                .Select(good => new StatefulReceptionGood(good, GoodsState, barcodeData))
+                .ToList<IReceptionGood>();
+        }
+
+        private async Task RestoreConfirmationProgressAsync()
+        {
+            if (_goods == null)
+            {
+                // Restore 
+                _ = await Goods.ToListAsync();
+            }
         }
     }
 }

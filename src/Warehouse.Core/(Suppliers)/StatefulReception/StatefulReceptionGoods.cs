@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Warehouse.Core.Plugins;
@@ -8,58 +7,41 @@ namespace Warehouse.Core
 {
     public class StatefulReceptionGoods : IReceptionGoods
     {
-        private readonly ReceptionWithExtraConfirmedGoods _reception;
+        private readonly IReception _reception;
         private readonly IReceptionGoods _goods;
-        private readonly IKeyValueStore _goodsState;
+        private readonly IKeyValueStorage _goodsState;
+        private ConfirmationProgress _confirmationProgress;
+        private bool _wasAlreadyRestored;
 
         public StatefulReceptionGoods(
-           ReceptionWithExtraConfirmedGoods reception,
-           IKeyValueStore goodsState)
+           IReception reception,
+           IKeyValueStorage goodsState)
             : this(reception, reception.Goods, goodsState)
         {
         }
 
         public StatefulReceptionGoods(
-            ReceptionWithExtraConfirmedGoods reception,
+            IReception reception,
             IReceptionGoods goods,
-            IKeyValueStore goodsState)
+            IKeyValueStorage goodsState)
         {
             _reception = reception;
             _goods = goods;
             _goodsState = goodsState;
+            _confirmationProgress = new ConfirmationProgress(_reception, goodsState);
         }
 
         public async Task<IList<IReceptionGood>> ToListAsync()
         {
             var goods = await _goods.ToListAsync();
-            var statefulGoods = new List<IReceptionGood>();
-            foreach (var key in _goodsState.Keys)
+            if (!_wasAlreadyRestored)
             {
-                var goodsByKey = goods.Where(g => g.Id == key);
-                if (!goodsByKey.Any())
-                {
-                    goodsByKey = await _reception.ByBarcodeAsync(key);
-                    foreach (var goodByKey in goodsByKey)
-                    {
-                        goods.Add(goodByKey);
-                    }
-                }
-                var value = Convert.ToInt32(_goodsState.Get(key));
-                foreach (var goodByKey in goodsByKey)
-                {
-                    if (value > 0)
-                    {
-                        goodByKey.Confirmation.Increase(value);
-                    }
-                    else
-                    {
-                        goodByKey.Confirmation.Increase(Math.Abs(value));
-                    }
-                }
+                _wasAlreadyRestored = true;
+                await _confirmationProgress.RestoreAsync(goods);
             }
-
+            
             return goods
-                .Select(g => new StatefulReceptionGood(g, _goodsState))
+                .Select(g => new StatefulReceptionGood(g, _goodsState, string.Empty))
                 .ToList<IReceptionGood>();
         }
 
@@ -67,7 +49,8 @@ namespace Warehouse.Core
         {
             return new StatefulReceptionGood(
                 _goods.UnkownGood(barcode),
-                _goodsState
+                _goodsState,
+                barcode
             );
         }
 

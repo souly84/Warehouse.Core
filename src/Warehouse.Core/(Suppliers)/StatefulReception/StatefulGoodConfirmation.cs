@@ -1,5 +1,4 @@
-﻿using System;
-using MediaPrint;
+﻿using MediaPrint;
 using Warehouse.Core.Plugins;
 
 namespace Warehouse.Core
@@ -7,12 +6,17 @@ namespace Warehouse.Core
     public class StatefulGoodConfirmation : IGoodConfirmation
     {
         private readonly IGoodConfirmation _origin;
-        private readonly IKeyValueStore _goodState;
+        private readonly IKeyValueStorage _goodState;
+        private readonly string _goodUniqueKey;
 
-        public StatefulGoodConfirmation(IGoodConfirmation origin, IKeyValueStore goodState)
+        public StatefulGoodConfirmation(
+            IGoodConfirmation origin,
+            IKeyValueStorage goodState,
+            string goodUniqueKey)
         {
             _origin = origin;
             _goodState = goodState;
+            _goodUniqueKey = goodUniqueKey;
         }
 
         public int ConfirmedQuantity => _origin.ConfirmedQuantity;
@@ -21,28 +25,38 @@ namespace Warehouse.Core
 
         public IConfirmationState State => _origin.State;
 
-        private string GoodUniqueKey => _origin.Good.Id;
-
         public void Clear()
         {
-            _goodState.Remove(GoodUniqueKey);
+            _goodState.Remove(_goodUniqueKey);
             _origin.Clear();
         }
 
         public int Decrease(int quantity)
         {
             _goodState.Set(
-                GoodUniqueKey,
-                (Convert.ToInt32(_goodState.Get(GoodUniqueKey)) - 1).ToString()
+                _goodUniqueKey,
+                _goodState.Get<int>(_goodUniqueKey) - 1
             );
             return _origin.Decrease(quantity);
         }
 
         public int Increase(int quantity)
         {
+            if (Good.IsExtraConfirmed)
+            {
+                if (_goodState.Contains(Good.Id))
+                {
+                    _goodState.Set(
+                       _goodUniqueKey,
+                       _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(Good.Id)
+                    );
+                    _goodState.Remove(Good.Id);
+                }
+            }
+
             _goodState.Set(
-                GoodUniqueKey,
-                (Convert.ToInt32(_goodState.Get(GoodUniqueKey)) + 1).ToString()
+                _goodUniqueKey,
+                _goodState.Get<int>(_goodUniqueKey) + 1
             );
             return _origin.Increase(quantity);
         }

@@ -1,12 +1,179 @@
-﻿using Xunit;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Warehouse.Core.Tests.Extensions;
+using Xunit;
 
 namespace Warehouse.Core.Tests
 {
     public class StatefulReceptionTests
     {
+        private IReception _reception = new MockReception(
+            "1",
+            new MockReceptionGood("Id1", 2, "360600"),
+            new MockReceptionGood("Id2", 8, "360601"),
+            new MockReceptionGood("Id4", 3, "360602").FullyConfirmed().RunSync()
+        ).WithExtraConfirmed()
+         .WithoutInitiallyConfirmed();
+
         [Fact]
-        public void SyncWithPersistanceLayer()
+        public async Task ConfirmationOperationsStoredInPersistanceLayer()
         {
+            var persistanceLayer = new KeyValueStorage("ConfirmationOperationsStoredInPersistanceLayer");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("360600", "360600");
+
+            Assert.Equal(
+                2,
+                persistanceLayer
+                    .Get<JObject>("Repcetion_1")
+                    .Value<int>("Id1")
+            );
+        }
+
+        [Fact]
+        public async Task ConfirmationForExtraConfrimedGoodStoredInPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("ConfirmationForExtraConfrimedGoodStoredInPersistanceLayer");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("360600", "360600", "360600", "360600");
+
+            Assert.Equal(
+                4,
+                persistanceLayer
+                    .Get<JObject>("Repcetion_1")
+                    .Value<int>("360600")
+            );
+        }
+
+        [Fact]
+        public async Task ConfirmationForUnknownGoodStoredInPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("ConfirmationForUnknownGoodStoredInPersistanceLayer");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("UnknownBarcode", "UnknownBarcode");
+
+            Assert.Equal(
+                2,
+                persistanceLayer
+                    .Get<JObject>("Repcetion_1")
+                    .Value<int>("UnknownBarcode")
+            );
+        }
+
+        [Fact]
+        public async Task UnknownGoodConfirmationStoredInPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("UnknownGoodConfirmationStoredInPersistanceLayer");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("UnknownBarcode", "UnknownBarcode");
+
+            Assert.Equal(
+                2,
+                persistanceLayer
+                    .Get<JObject>("Repcetion_1")
+                    .Value<int>("UnknownBarcode")
+            );
+        }
+
+        [Fact]
+        public async Task ConfirmationRestoredFromPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("ConfirmationOperationsStoredInPersistanceLayer");
+            persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""Id2"" : 2 }"));
+            persistanceLayer.Set("Repcetion_2", JObject.Parse(@"{ ""Id1"" : 2 }"));
+            var goodsConfirmations = await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).NotConfirmedOnly().ToListAsync();
+            Assert.Equal(
+                2,
+                goodsConfirmations.Sum(goodsConfirmation => goodsConfirmation.ConfirmedQuantity)
+            );
+        }
+
+        [Fact]
+        public async Task ConfirmationForExtraConfirmedGoodRestoredFromPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("ConfirmationForExtraConfirmedGoodRestoredFromPersistanceLayer");
+            persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""360600"" : 3 }"));
+            var good = await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).Goods.ByBarcodeAsync("360600", true).FirstAsync();
+
+            Assert.Equal(
+                3,
+                good.Confirmation.ConfirmedQuantity
+            );
+        }
+
+        [Fact]
+        public async Task ConfirmationForUnknownGoodRestoredFromPersistanceLayer()
+        {
+            var persistanceLayer = new KeyValueStorage("ConfirmationForUnknownGoodRestoredFromPersistanceLayer");
+            persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""UnknownBarcode"" : 3 }"));
+            var good = await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).Goods.ByBarcodeAsync("UnknownBarcode").FirstAsync();
+
+            Assert.Equal(
+                3,
+                good.Confirmation.ConfirmedQuantity
+            );
+        }
+
+        [Fact]
+        public async Task PersistanceLayerClearedWhenConfirmationCommitted()
+        {
+            var persistanceLayer = new KeyValueStorage("PersistanceLayerClearedWhenConfirmationCommitted");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmAsync("360600", "360600");
+
+            Assert.False(
+                persistanceLayer.Contains("Repcetion_1")
+            );
+        }
+
+        [Fact]
+        public async Task MultipleReceptionsSupported()
+        {
+            var persistanceLayer = new KeyValueStorage("MultipleReceptionsSupported");
+            await new StatefulReception(
+                _reception,
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("360600", "360600");
+
+            await new StatefulReception(
+                new MockReception(
+                    "2",
+                    new MockReceptionGood("Id1", 2, "360600"),
+                    new MockReceptionGood("Id2", 8, "360601"),
+                    new MockReceptionGood("Id4", 3, "360602").FullyConfirmed().RunSync()
+                ).WithExtraConfirmed()
+                 .WithoutInitiallyConfirmed(),
+                persistanceLayer
+            ).ConfirmWithoutCommitAsync("360601", "360601");
+            Assert.EqualJson(
+                @"{ ""Id1"": 2 }",
+                persistanceLayer.Get<JObject>("Repcetion_1").ToString()
+            );
+
+            Assert.EqualJson(
+                @"{ ""Id2"": 2 }",
+                persistanceLayer.Get<JObject>("Repcetion_2").ToString()
+            );
         }
     }
 }

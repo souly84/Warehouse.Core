@@ -6,14 +6,17 @@ namespace Warehouse.Core
     public class StatefulReceptionGood : IReceptionGood
     {
         private readonly IReceptionGood _origin;
-        private readonly IKeyValueStore _goodState;
+        private readonly IKeyValueStorage _goodState;
+        private readonly string _barcodeData;
 
         public StatefulReceptionGood(
             IReceptionGood origin,
-            IKeyValueStore goodState)
+            IKeyValueStorage goodState,
+            string barcodeData)
         {
             _origin = origin;
             _goodState = goodState;
+            _barcodeData = barcodeData;
         }
 
         public int Quantity => _origin.Quantity;
@@ -24,10 +27,23 @@ namespace Warehouse.Core
 
         public IGoodConfirmation Confirmation => new StatefulGoodConfirmation(
             _origin.Confirmation,
-            _goodState
+            _goodState,
+            Id
         );
 
-        public string Id => _origin.Id;
+        public string Id => _origin.IsUnknown || _origin.IsExtraConfirmed
+            ? _barcodeData
+            : _origin.Id;
+
+        public override bool Equals(object? obj)
+        {
+            return _origin.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _origin.GetHashCode();
+        }
 
         public void PrintTo(IMedia media)
         {
