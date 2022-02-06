@@ -46,6 +46,7 @@ namespace Warehouse.Core
             {
                 if (_goodState.Contains(Good.Id))
                 {
+                    // Usually it happens when extra confirmed good appears
                     _goodState.Set(
                        _goodUniqueKey,
                        _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(Good.Id)

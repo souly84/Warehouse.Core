@@ -16,24 +16,26 @@ namespace Warehouse.Core.Plugins
         }
 
         public IList<string> Keys => _store
-            .GetOrCreateJson(_key)
+            .JsonFor(_key)
             .Properties()
             .Select(p => p.Name)
             .ToList();
 
         public bool Contains(string key)
         {
-            return _store.GetOrCreateJson(_key).Properties().Any(p => p.Name == key);
+            return _store.JsonFor(_key)
+                .Properties()
+                .Any(p => p.Name == key);
         }
 
         public T Get<T>(string key)
         {
-            return _store.GetOrCreateJson(_key).Value<T>(key) ?? default;
+            return _store.JsonFor(_key).Value<T>(key) ?? default;
         }
 
         public void Remove(string key)
         {
-            var jObject = _store.GetOrCreateJson(_key);
+            var jObject = _store.JsonFor(_key);
             jObject.Remove(key);
             _store.Set(_key, jObject);
         }
@@ -45,7 +47,7 @@ namespace Warehouse.Core.Plugins
             {
                 token = new JValue(@object);
             }
-            var jObject = _store.GetOrCreateJson(_key);
+            var jObject = _store.JsonFor(_key);
             jObject[key] = token;
             _store.Set(_key, jObject);
         }

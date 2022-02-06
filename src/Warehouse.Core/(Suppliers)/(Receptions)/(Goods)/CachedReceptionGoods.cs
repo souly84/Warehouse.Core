@@ -6,7 +6,8 @@ namespace Warehouse.Core
 {
     /// <summary>
     /// This entity is pretty tricky one. It's used during reception confirmation process.
-    /// Every time when user scans a barcode it tries to find a good using extension method ByBarcodeAsync.
+    /// Every time when user scans a barcode it tries to find a good using extension method
+    /// <see cref="GoodsExtensions.ByBarcodeAsync(IEntities{IReceptionGood}, string, bool)"/> .
     /// <code>
     /// var goodsByBracode = await confirmation.Reception.Goods.ByBarcodeAsync(barcode);
     /// </code>
