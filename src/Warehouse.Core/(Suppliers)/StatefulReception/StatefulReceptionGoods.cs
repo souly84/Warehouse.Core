@@ -10,8 +10,7 @@ namespace Warehouse.Core
         private readonly IReception _reception;
         private readonly IReceptionGoods _goods;
         private readonly IKeyValueStorage _goodsState;
-        private ConfirmationProgress _confirmationProgress;
-        private bool _wasAlreadyRestored;
+        private readonly StatefulConfirmationProgress _confirmationProgress;
 
         public StatefulReceptionGoods(
            IReception reception,
@@ -24,22 +23,31 @@ namespace Warehouse.Core
             IReception reception,
             IReceptionGoods goods,
             IKeyValueStorage goodsState)
+            : this(
+                  reception,
+                  goods,
+                  goodsState,
+                  new StatefulConfirmationProgress(reception, goodsState)
+              )
+        {
+        }
+
+        public StatefulReceptionGoods(
+            IReception reception,
+            IReceptionGoods goods,
+            IKeyValueStorage goodsState,
+            StatefulConfirmationProgress confirmationProgress)
         {
             _reception = reception;
             _goods = goods;
             _goodsState = goodsState;
-            _confirmationProgress = new ConfirmationProgress(_reception, goodsState);
+            _confirmationProgress = confirmationProgress;
         }
 
         public async Task<IList<IReceptionGood>> ToListAsync()
         {
             var goods = await _goods.ToListAsync();
-            if (!_wasAlreadyRestored)
-            {
-                _wasAlreadyRestored = true;
-                await _confirmationProgress.RestoreAsync(goods);
-            }
-            
+            await _confirmationProgress.RestoreAsync(goods);
             return goods
                 .Select(g => new StatefulReceptionGood(g, _goodsState, string.Empty))
                 .ToList<IReceptionGood>();
@@ -59,7 +67,8 @@ namespace Warehouse.Core
             return new StatefulReceptionGoods(
                 _reception,
                 (IReceptionGoods)_goods.With(filter),
-                _goodsState
+                _goodsState,
+                _confirmationProgress
             );
         }
     }

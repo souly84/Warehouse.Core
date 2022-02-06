@@ -23,6 +23,12 @@ namespace Warehouse.Core
             return filteredGoodsTask.WhereAsync(async good => !await good.ConfirmedAsync());
         }
 
+        public static IReceptionGoods Cached(
+            this IReceptionGoods goods)
+        {
+            return new CachedReceptionGoods(goods);
+        }
+
         public static Task<bool> ConfirmedAsync(this IReceptionGood good)
         {
             return good.Confirmation.DoneAsync();

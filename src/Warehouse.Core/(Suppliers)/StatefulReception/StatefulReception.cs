@@ -26,12 +26,10 @@ namespace Warehouse.Core
 
         private IKeyValueStorage GoodsState => _goodsSate ??= new JObjectAsKeyStore(_store, ReceptionKey);
 
-        public IReceptionGoods Goods => _goods ??= new CachedReceptionGoods(
-            new StatefulReceptionGoods(
-                _reception,
-                GoodsState
-            )
-        );
+        public IReceptionGoods Goods => _goods ??= new StatefulReceptionGoods(
+            _reception,
+            GoodsState
+        ).Cached();
 
         public string Id => _reception.Id;
 
@@ -41,7 +39,7 @@ namespace Warehouse.Core
             _store.Remove(ReceptionKey);
         }
 
-        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
             await RestoreConfirmationProgressAsync();
             var goods = await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
@@ -50,11 +48,14 @@ namespace Warehouse.Core
                 .ToList<IReceptionGood>();
         }
 
+        /// <summary>
+        /// This method triggers goods initialization what causing StatefulConfirmationProgress
+        /// to restore the progress.
+        /// </summary>
         private async Task RestoreConfirmationProgressAsync()
         {
             if (_goods == null)
             {
-                // Restore 
                 _ = await Goods.ToListAsync();
             }
         }

@@ -4,7 +4,7 @@ namespace Warehouse.Core.Plugins
 {
     public static class KeyValueStoreExtensions
     {
-        public static JObject GetOrCreateJson(this IKeyValueStorage keyValueStore, string key)
+        public static JObject JsonFor(this IKeyValueStorage keyValueStore, string key)
         {
             if (!keyValueStore.Contains(key))
             {

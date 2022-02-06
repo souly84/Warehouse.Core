@@ -42,16 +42,14 @@ namespace Warehouse.Core
 
         public int Increase(int quantity)
         {
-            if (Good.IsExtraConfirmed)
+            if (Good.IsExtraConfirmed && _goodState.Contains(Good.Id))
             {
-                if (_goodState.Contains(Good.Id))
-                {
-                    _goodState.Set(
-                       _goodUniqueKey,
-                       _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(Good.Id)
-                    );
-                    _goodState.Remove(Good.Id);
-                }
+                // Usually it happens when extra confirmed good appears
+                _goodState.Set(
+                   _goodUniqueKey,
+                   _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(Good.Id)
+                );
+                _goodState.Remove(Good.Id);
             }
 
             _goodState.Set(
