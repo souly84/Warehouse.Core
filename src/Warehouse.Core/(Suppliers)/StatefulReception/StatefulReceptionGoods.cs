@@ -10,7 +10,7 @@ namespace Warehouse.Core
         private readonly IReception _reception;
         private readonly IReceptionGoods _goods;
         private readonly IKeyValueStorage _goodsState;
-        private StatefulConfirmationProgress _confirmationProgress;
+        private readonly StatefulConfirmationProgress _confirmationProgress;
 
         public StatefulReceptionGoods(
            IReception reception,

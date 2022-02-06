@@ -39,7 +39,7 @@ namespace Warehouse.Core
             _store.Remove(ReceptionKey);
         }
 
-        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
             await RestoreConfirmationProgressAsync();
             var goods = await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
