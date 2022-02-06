@@ -22,6 +22,36 @@ namespace Warehouse.Core
             return result;
         }
 
+        public static async Task<IList<T>> WhereAsync<T>(
+            this Task<IEnumerable<T>> listTask,
+            Func<T, Task<bool>> predicateAsync)
+        {
+            var result = new List<T>();
+            foreach (var item in await listTask)
+            {
+                if (await predicateAsync(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+
+        public static async Task<IList<T>> WhereAsync<T>(
+            this Task<IList<T>> listTask,
+            Func<T, Task<bool>> predicateAsync)
+        {
+            var result = new List<T>();
+            foreach (var item in await listTask)
+            {
+                if (await predicateAsync(item))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
+
         public static async Task<T> FirstAsync<T>(
             this IEnumerable<T> list,
             Func<T, Task<bool>> predicateAsync)
@@ -34,6 +64,18 @@ namespace Warehouse.Core
                 }
             }
             throw new InvalidOperationException("No items found");
+        }
+
+        public static async Task<T> FirstAsync<T>(
+            this Task<IEnumerable<T>> listTask)
+        {
+            return (await listTask).First();
+        }
+
+        public static async Task<T> FirstAsync<T>(
+            this Task<IList<T>> listTask)
+        {
+            return (await listTask).First();
         }
 
         public static async Task<bool> AllAsync<T>(

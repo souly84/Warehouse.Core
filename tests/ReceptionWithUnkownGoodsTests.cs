@@ -14,10 +14,12 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("1", 4, "360600"),
                 await new ReceptionWithUnkownGoods(
                     new MockReception(
+                        "1",
                         new MockReceptionGood("1", 4, "360600"),
                         new MockReceptionGood("2", 8)
                     )
                 ).ByBarcodeAsync("360600")
+                 .FirstAsync()
             );
         }
 
@@ -26,12 +28,14 @@ namespace Warehouse.Core.Tests
         {
             var good = await new ReceptionWithUnkownGoods(
                 new MockReception(
+                    "1",
                     new MockReceptionGood("1", 4, "1111"),
                     await new MockReceptionGood("2", 1, "2222").FullyConfirmed(),
                     new MockReceptionGood("3", 1, "2222"),
                     new MockReceptionGood("4", 3, "3333")
                 )
-            ).ByBarcodeAsync("2222", true);
+            ).ByBarcodeAsync("2222", true)
+             .FirstAsync();
             Assert.False(
                 await good.ConfirmedAsync()
             );
@@ -44,10 +48,12 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("", 1000, "3606001", isUnknown: true),
                 await new ReceptionWithUnkownGoods(
                     new MockReception(
+                        "1",
                         new MockReceptionGood("1", 4, "360600"),
                         new MockReceptionGood("2", 8)
                     )
                 ).ByBarcodeAsync("3606001")
+                 .FirstAsync()
             );
         }
 
@@ -56,12 +62,14 @@ namespace Warehouse.Core.Tests
         {
             var good = await new ReceptionWithUnkownGoods(
                 new MockReception(
+                    "1",
                     new MockReceptionGood("1", 4, "1111"),
                     await new MockReceptionGood("2", 1, "2222").FullyConfirmed(),
                     new MockReceptionGood("3", 1, "2222"),
                     new MockReceptionGood("4", 3, "3333")
                 )
-            ).ByBarcodeAsync("2222");
+            ).ByBarcodeAsync("2222")
+             .FirstAsync();
             Assert.True(
                 await good.ConfirmedAsync()
             );
@@ -72,6 +80,7 @@ namespace Warehouse.Core.Tests
         {
             var reception = new ReceptionWithUnkownGoods(
                 new MockReception(
+                    "1",
                     new MockReceptionGood("1", 4, "360600"),
                     new MockReceptionGood("2", 8)
                 )
@@ -88,6 +97,7 @@ namespace Warehouse.Core.Tests
         public async Task ValidatesConfirmedGoods()
         {
             var reception = new MockReception(
+                "1",
                 new MockReceptionGood("1", 4, "360600"),
                 new MockReceptionGood("2", 8)
             );

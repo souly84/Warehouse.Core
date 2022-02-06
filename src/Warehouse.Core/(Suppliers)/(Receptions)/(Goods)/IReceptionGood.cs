@@ -4,6 +4,8 @@ namespace Warehouse.Core
 {
     public interface IReceptionGood : IPrintable
     {
+        string Id { get; }
+        
         int Quantity { get; }
 
         bool IsUnknown { get; }
@@ -33,6 +35,8 @@ namespace Warehouse.Core
             IsExtraConfirmed = isExtraConfirmed;
         }
 
+        public string Id => _id;
+
         public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
 
         public int Quantity { get; }
@@ -45,6 +49,7 @@ namespace Warehouse.Core
         {
             return ReferenceEquals(this, obj)
                 || TheSameMockObject(obj)
+                || TheSameGoodObject(obj)
                 || TheSameIdOrBarcode(obj);
         }
 
@@ -70,6 +75,11 @@ namespace Warehouse.Core
                 && _barcode == good._barcode
                 && IsUnknown == good.IsUnknown
                 && IsExtraConfirmed == good.IsExtraConfirmed;
+        }
+
+        private bool TheSameGoodObject(object obj)
+        {
+            return obj is IReceptionGood good && _id == good.Id;
         }
 
         private bool TheSameIdOrBarcode(object obj)

@@ -14,6 +14,7 @@ namespace Warehouse.Core.Tests
             var reception = await new ConfirmedReception<MockReception>(
                 (MockReception) await new MockSupplier(
                     new MockReception(
+                        "1",
                         new MockReceptionGood("1", 4),
                         new MockReceptionGood("2", 8)
                     )
@@ -35,10 +36,12 @@ namespace Warehouse.Core.Tests
         public async Task Reception_Validation_ForStartedConfirmationsOnly()
         {
             var reception = new MockReception(
+                "1",
                 new MockReceptionGood("1", 4),
                 new MockReceptionGood("2", 8),
                 new MockReceptionGood("3", 3)
             );
+
             await reception.Confirmation().AddAsync(new MockReceptionGood("1", 4), 4);
             await reception.Confirmation().AddAsync(new MockReceptionGood("3", 3), 2);
             await reception.Confirmation().CommitAsync();
@@ -71,6 +74,7 @@ namespace Warehouse.Core.Tests
         {
             var goodToConfirm = new MockReceptionGood("1", 4);
             await new MockReception(
+                "1",
                 goodToConfirm,
                 new MockReceptionGood("2", 8)
             ).Confirmation().AddAsync(goodToConfirm);
@@ -97,6 +101,7 @@ namespace Warehouse.Core.Tests
         {
             var goodToConfirm = new MockReceptionGood("1", 4);
             var confirmation = new MockReception(
+                "1",
                 goodToConfirm,
                 new MockReceptionGood("2", 8)
             ).Confirmation();
@@ -125,6 +130,7 @@ namespace Warehouse.Core.Tests
         {
             var goodToConfirm = new MockReceptionGood("1", 4, "360600");
             await new MockReception(
+                "1",
                 goodToConfirm,
                 new MockReceptionGood("2", 8)
             ).Confirmation().AddAsync("360600");
@@ -151,6 +157,7 @@ namespace Warehouse.Core.Tests
         {
             var goodToConfirm = new MockReceptionGood("1", 4, "360600");
             var confirmation = new MockReception(
+                "1",
                 goodToConfirm,
                 new MockReceptionGood("2", 8)
             ).Confirmation();
@@ -179,6 +186,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.True(
                 await new MockReception(
+                    "1",
                     new MockReceptionGood("1", 4, "360600"),
                     new MockReceptionGood("2", 8)
                 ).Confirmation()
@@ -191,6 +199,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.False(
                 await new MockReception(
+                    "1",
                     new MockReceptionGood("1", 4, "360601"),
                     new MockReceptionGood("2", 8, "360602")
                 ).Confirmation()
@@ -205,6 +214,7 @@ namespace Warehouse.Core.Tests
             Assert.Contains(
                 (await new MockReceptionGood("1", 4, "360601").FullyConfirmed()).Confirmation,
                 await new MockReception(
+                    "1",
                     await new MockReceptionGood("1", 4, "360601").FullyConfirmed(),
                     await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4)
                 ).Confirmation()
@@ -219,9 +229,10 @@ namespace Warehouse.Core.Tests
             Assert.Contains(
                 (await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4)).Confirmation,
                 await new MockReception(
+                    "1",
                     await new MockReceptionGood("1", 4, "360601").FullyConfirmed(),
                     await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4)
-                ).NeedConfirmation()
+                ).NotConfirmedOnly()
                  .ToListAsync()
             );
         }

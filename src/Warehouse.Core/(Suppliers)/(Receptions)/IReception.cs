@@ -7,7 +7,11 @@ namespace Warehouse.Core
 {
     public interface IReception
     {
+        string Id { get; }
+
         IReceptionGoods Goods { get; }
+
+        Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false);
 
         Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate);
     }
@@ -16,23 +20,24 @@ namespace Warehouse.Core
     {
         private readonly DateTime _receptionDate;
 
-        public MockReception(params IReceptionGood[] goods)
-            : this(DateTime.Now, goods)
+        public MockReception(string id, params IReceptionGood[] goods)
+            : this(id, DateTime.Now, goods)
         {
         }
 
-        public MockReception(DateTime receptionDate, params IReceptionGood[] goods)
-            : this(receptionDate, new ListOfEntities<IReceptionGood>(goods))
+        public MockReception(string id, DateTime receptionDate, params IReceptionGood[] goods)
+            : this(id, receptionDate, new ListOfEntities<IReceptionGood>(goods))
         {
         }
 
-        public MockReception(DateTime receptionDate, IEntities<IReceptionGood> goods)
-            : this(receptionDate, new MockReceptionGoods(goods))
+        public MockReception(string id, DateTime receptionDate, IEntities<IReceptionGood> goods)
+            : this(id, receptionDate, new MockReceptionGoods(goods))
         {
         }
 
-        public MockReception(DateTime receptionDate, IReceptionGoods goods)
+        public MockReception(string id, DateTime receptionDate, IReceptionGoods goods)
         {
+            Id = id;
             _receptionDate = receptionDate;
             Goods = goods;
         }
@@ -40,6 +45,16 @@ namespace Warehouse.Core
         public IReceptionGoods Goods { get; }
 
         public List<IGoodConfirmation> ValidatedGoods { get; } = new List<IGoodConfirmation>();
+
+        public string Id { get; }
+
+        public Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        {
+            return Goods.ByBarcodeAsync(
+                barcodeData,
+                ignoreConfirmed
+            );
+        }
 
         public override bool Equals(object? obj)
         {
@@ -50,12 +65,13 @@ namespace Warehouse.Core
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_receptionDate, Goods);
+            return HashCode.Combine(Id, _receptionDate, Goods);
         }
 
         public void PrintTo(IMedia media)
         {
             media
+                .Put("Id", Id)
                 .Put("ReceptionDate", _receptionDate)
                 .Put("Goods", Goods.ToListAsync().RunSync());
         }

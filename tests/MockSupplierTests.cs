@@ -11,7 +11,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.True(
                 new MockSupplier(
-                    new MockReception(DateTime.Now.AddDays(-2))
+                    new MockReception("1", DateTime.Now.AddDays(-2))
                 ).Equals(DateTime.Now.AddDays(-2))
             );
         }
@@ -21,7 +21,7 @@ namespace Warehouse.Core.Tests
         {
             Assert.False(
                 new MockSupplier(
-                    new MockReception(DateTime.Now.AddDays(-2))
+                    new MockReception("1", DateTime.Now.AddDays(-2))
                 ).Equals(DateTime.Now.AddDays(2))
             );
         }
@@ -32,7 +32,7 @@ namespace Warehouse.Core.Tests
             Assert.NotEqual(
                 0,
                 new MockSupplier(
-                    new MockReception(DateTime.Now.AddDays(-2))
+                    new MockReception("1", DateTime.Now.AddDays(-2))
                 ).GetHashCode()
             );
         }
@@ -41,7 +41,7 @@ namespace Warehouse.Core.Tests
         public void EqualsTheSame()
         {
             var suppleir = new MockSupplier(
-                new MockReception(DateTime.Now.AddDays(-2))
+                new MockReception("1", DateTime.Now.AddDays(-2))
             );
             Assert.True(
                 suppleir.Equals(suppleir)
@@ -56,21 +56,23 @@ namespace Warehouse.Core.Tests
                   ""name"": ""MockSupplier"",
                   ""receptions"": [
                     {
-                      ""ReceptionDate"": ""2021-01-31T00:00:00"",
-                      ""Goods"": [
-                        {
-                          ""Id"": ""1"",
-                          ""Quantity"": ""8"",
-                          ""IsUnknown"": false,
-                          ""IsExtraConfirmed"": false,
-                          ""Barcode"": ""1111""
-                        }
-                      ]
+                        ""Id"" : ""1"",
+                        ""ReceptionDate"": ""2021-01-31T00:00:00"",
+                        ""Goods"": [
+                          {
+                            ""Id"": ""1"",
+                            ""Quantity"": ""8"",
+                            ""IsUnknown"": false,
+                            ""IsExtraConfirmed"": false,
+                            ""Barcode"": ""1111""
+                          }
+                        ]
                     }
                   ]
                 }",
                 new MockSupplier(
                     new MockReception(
+                        "1",
                         new DateTime(2021, 01, 31),
                         new MockReceptionGood("1", 8, "1111")
                     )

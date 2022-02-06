@@ -6,22 +6,27 @@ namespace Warehouse.Core
 {
     public class ReceptionWithExtraConfirmedGoods : IReception
     {
-        private readonly ReceptionWithUnkownGoods _reception;
+        private readonly IReception _reception;
         private readonly int _defaultMaxQuantity;
         private readonly IList<IReceptionGood> _extraConfirmedGoods = new List<IReceptionGood>();
 
-        public ReceptionWithExtraConfirmedGoods(ReceptionWithUnkownGoods reception)
+        public ReceptionWithExtraConfirmedGoods(IReception reception)
             : this(reception, 1000)
         {
         }
 
-        public ReceptionWithExtraConfirmedGoods(ReceptionWithUnkownGoods reception, int defaultMaxQuantity)
+        public ReceptionWithExtraConfirmedGoods(IReception reception, int defaultMaxQuantity)
         {
             _reception = reception;
             _defaultMaxQuantity = defaultMaxQuantity;
         }
 
-        public IReceptionGoods Goods => new ExtraReceptionGoods(_reception, _extraConfirmedGoods);
+        public IReceptionGoods Goods => new CombinedReceptionGoods(
+            _reception.Goods,
+            _extraConfirmedGoods
+        );
+
+        public string Id => _reception.Id;
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
@@ -30,21 +35,26 @@ namespace Warehouse.Core
             );
         }
 
-        public async Task<IReceptionGood> ByBarcodeAsync(string barcodeData)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
-            var good = _extraConfirmedGoods.FirstOrDefault(x => x.Equals(barcodeData));
-            if (good != null)
+            var extraConfirmedGoods = _extraConfirmedGoods.Where(x => x.Equals(barcodeData));
+            if (extraConfirmedGoods.Any())
             {
-                return good;
+                return extraConfirmedGoods.ToList();
             }
-            var goods = await _reception.Goods.ByBarcodeAsync(barcodeData);
+            var goods = await _reception.ByBarcodeAsync(barcodeData, false);
             if (await NeedExtraGoodAsync(goods))
             {
                 var extraGood = new ExtraConfirmedReceptionGood(goods.ToList(), _defaultMaxQuantity);
                 _extraConfirmedGoods.Add(extraGood);
-                return extraGood;
+                return new List<IReceptionGood> { extraGood };
             }
-            return await _reception.ByBarcodeAsync(barcodeData, true);
+
+            if (!ignoreConfirmed)
+            {
+                return goods;
+            }
+            return await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
         }
 
         private async Task<bool> NeedExtraGoodAsync(IEnumerable<IReceptionGood> goods)

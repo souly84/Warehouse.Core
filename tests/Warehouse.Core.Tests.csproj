@@ -15,10 +15,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SimpleStorage" Version="1.4.36" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\src\Warehouse.Core\Warehouse.Core.csproj" />
     <ProjectReference Include="..\src\Warehouse.Core.Plugins\Warehouse.Core.Plugins.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="SimpleStorage" />
   </ItemGroup>
 </Project>
