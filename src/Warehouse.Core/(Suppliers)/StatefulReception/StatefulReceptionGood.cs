@@ -37,7 +37,9 @@ namespace Warehouse.Core
 
         public override bool Equals(object? obj)
         {
-            return _origin.Equals(obj);
+            return ReferenceEquals(this, obj)
+                || (obj is StatefulReceptionGood receptionGood && receptionGood._origin.Equals(_origin))
+                || _origin.Equals(obj);
         }
 
         public override int GetHashCode()
