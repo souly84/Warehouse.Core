@@ -5,7 +5,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=souly84_InventoryOperations&metric=ncloc)](https://sonarcloud.io/dashboard?id=souly84_InventoryOperations)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=souly84_InventoryOperations&metric=coverage)](https://sonarcloud.io/dashboard?id=souly84_InventoryOperations)
 
-The repository contains domain entities and contracts that main purpose is to manage goods in warehouse storage. The root domain entity is [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/(Company)/ICompany.cs) provides an access to all business entities. The repository represents Entities project in [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) approach.
+The repository contains domain entities and contracts that main purpose is to manage goods in warehouse storage. The root domain entity is [ICompany](https://github.com/souly84/Warehouse.Core/blob/main/src/Warehouse.Core/ICompany.cs) provides an access to all business entities. The repository represents Entities project in [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) approach.
 
 ## Plugins
 
@@ -32,7 +32,7 @@ The main goal is to provide some kind of root node to access the SDK features. T
 
 The diagram below shows all the entities that warehouse interface provides access to. The main responsibility is to give an access to collection of goods in the storage. There are a couple of major features that warehouse employee is processing:
 
-- Order's preparation for the delivery (collecting goods and move then to PutAway storage the day before the delivery date).
+- Order's preparation for the delivery (collecting goods and move them to PutAway storage the day before the delivery date).
 - Goods movement inside the warehouse between the storages.
 - Assigning the location to the goods that were validated during the reception validation process.
 
@@ -40,7 +40,7 @@ The diagram below shows all the entities that warehouse interface provides acces
 
 ## Storage
 
- The warehouse is a sequence of locations (the shelfs marked with unique identifiers). There are different storage types usually used in the warehouse:
+ The warehouse is a sequence of locations (shelfs marked with unique identifiers). There are different storage types usually used in the warehouse:
 
 - Put away storage
 - Race storage
@@ -66,8 +66,8 @@ The diagram below shows all the entities that supplier interface provides access
 ## Reception
 
 - Usually warehouse employee uses barcode scanner to confirm  goods that are part of the vendor's delivery. Once all the goods were confirmed a validation request is sent to the server to finish the reception processing.
-- During the reception confirmation process there is unexpected good can be part of reception delivery. The application should be able to handle such case properly. To do so [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
-- During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/docs-updates/src/Warehouse.Core/(Receptions)/(Goods)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
+- During the reception confirmation process there is unexpected good can be part of reception delivery. The application should be able to handle such case properly. To do so [ReceptionWithUnknownGoods](https://github.com/souly84/Warehouse.Core/blob/main/src/Warehouse.Core/(Suppliers)/(Receptions)/ReceptionWithUnkownGoods.cs) should be used to handle such case.
+- During the reception confirmation process some extra good can be detected as a part of reception delivery. The application should be able to handle such case properly. [ReceptionWithExtraConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/main/src/Warehouse.Core/(Suppliers)/(Receptions)/ReceptionWithExtraConfirmedGoods.cs) should be used to handle such case.
 - During the reception confirmation process all previously confirmed goods should not be part of reception validation process anymore. [ReceptionWithoutInitiallyConfirmedGoods](https://github.com/souly84/Warehouse.Core/blob/main/src/Warehouse.Core/(Suppliers)/(Receptions)/ReceptionWithoutInitiallyConfirmedGoods.cs) should be used to handle such case.
 - Also it's useful to be able to restore the confirmation progress once it's been interrupted. [StatefulReception](https://github.com/souly84/Warehouse.Core/blob/main/src/Warehouse.Core/(Suppliers)/StatefulReception/StatefulReception.cs) should be used to handle such case.
 

@@ -40,6 +40,17 @@ namespace Warehouse.Core
             return _origin.Decrease(quantity);
         }
 
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj)
+                || _origin.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _origin.GetHashCode();
+        }
+
         public int Increase(int quantity)
         {
             if (Good.IsExtraConfirmed && _goodState.Contains(Good.Id))
