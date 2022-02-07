@@ -61,5 +61,36 @@ namespace Warehouse.Core.Tests
                 reception.ValidatedGoods
             );
         }
+
+        [Fact]
+        public async Task ValidatesConfirmedGoods()
+        {
+            var reception = new MockReception(
+                "1",
+                new MockReceptionGood("1", 1, "1111"),
+                new MockReceptionGood("2", 2, "2222"),
+                new MockReceptionGood("3", 4, "3333")
+            );
+            await reception
+                .WithExtraConfirmed()
+                .WithoutInitiallyConfirmed()
+                .ConfirmAsync(
+                    "UknownBarcode",
+                    "1111",
+                    "1111",
+                    "2222"
+                );
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new ExtraConfirmedReceptionGood(
+                        new MockReceptionGood("1", 1, "1111")
+                    ).PartiallyConfirmed(2)).Confirmation,
+                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
+                    (await new MockReceptionGood("2", 2, "2222").PartiallyConfirmed(1)).Confirmation,
+                },
+                reception.ValidatedGoods
+            );
+        }
     }
 }

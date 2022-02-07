@@ -11,12 +11,12 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 new StatefulReceptionGood(
                     new MockReceptionGood("1", 1, "1111"),
-                    new KeyValueStorage("KeyStorage"),
+                    new KeyValueStorage(),
                     "1111"
                 ),
                 new StatefulReceptionGood(
                     new MockReceptionGood("1", 1, "1111"),
-                    new KeyValueStorage("KeyStorage"),
+                    new KeyValueStorage(),
                     "1111"
                 )
             );

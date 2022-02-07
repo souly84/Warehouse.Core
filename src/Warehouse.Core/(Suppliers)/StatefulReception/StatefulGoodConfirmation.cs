@@ -74,5 +74,10 @@ namespace Warehouse.Core
         {
             _origin.PrintTo(media);
         }
+
+        public override string ToString()
+        {
+            return this.ToJson().ToString();
+        }
     }
 }
