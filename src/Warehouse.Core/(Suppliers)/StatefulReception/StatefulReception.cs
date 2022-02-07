@@ -29,7 +29,7 @@ namespace Warehouse.Core
         public IReceptionGoods Goods => _goods ??= new StatefulReceptionGoods(
             _reception,
             GoodsState
-        ).Cached();
+        );
 
         public string Id => _reception.Id;
 

@@ -19,15 +19,24 @@ namespace Warehouse.Core
 
         public IReceptionGoods Goods => _goods ??= new InitiallyConfirmedExcludedGoods(_reception.Goods);
 
-        public Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
+        public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)
         {
-            return _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
+            await SetupInitiallyConfirmedAsync();
+            return await _reception.ByBarcodeAsync(barcodeData, ignoreConfirmed);
         }
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
             _ = _goods ?? throw new InvalidOperationException("Goods collection is not initialized. Goods property should be used first");
             return _reception.ValidateAsync(_goods.ExcludeInitiallyConfirmed(goodsToValidate));
+        }
+
+        private async Task SetupInitiallyConfirmedAsync()
+        {
+            if (_goods == null)
+            {
+                _ = await Goods.ToListAsync();
+            }
         }
     }
 }

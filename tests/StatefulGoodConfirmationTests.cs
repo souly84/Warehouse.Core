@@ -13,7 +13,7 @@ namespace Warehouse.Core.Tests
             Assert.True(
                 new StatefulGoodConfirmation(
                     new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0),
-                    new KeyValueStorage("EqualsToOriginalConfirmation"),
+                    new KeyValueStorage(),
                     "11111"
                 ).Equals(new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0))
             );
@@ -26,7 +26,7 @@ namespace Warehouse.Core.Tests
                 0,
                 new StatefulGoodConfirmation(
                     new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0),
-                    new KeyValueStorage("EqualsToOriginalConfirmation"),
+                    new KeyValueStorage(),
                     "11111"
                 ).GetHashCode()
             );
@@ -39,7 +39,7 @@ namespace Warehouse.Core.Tests
             {
                 new StatefulGoodConfirmation(
                     new MockReceptionGood("1", 5).Confirmation,
-                    new KeyValueStorage("ThrowsInvalidOperationException_WhenDecreasedToNegative"),
+                    new KeyValueStorage(),
                     "11111"
                 ).Decrease(1);
             });
@@ -52,7 +52,7 @@ namespace Warehouse.Core.Tests
             {
                 var confrimation = new StatefulGoodConfirmation(
                     new MockReceptionGood("1", 5).Confirmation,
-                    new KeyValueStorage("ThrowsInvalidOperationException_WhenTotalExceeded"),
+                    new KeyValueStorage(),
                     "11111"
                 );
                 confrimation.Increase(4);
@@ -66,7 +66,7 @@ namespace Warehouse.Core.Tests
         {
             var confrimation = new StatefulGoodConfirmation(
                 new MockReceptionGood("1", 5).Confirmation,
-                new KeyValueStorage("ConfirmationDone"),
+                new KeyValueStorage(),
                 "11111"
             );
             var confirmedGood = await confrimation.FullyConfirmed();
@@ -85,7 +85,7 @@ namespace Warehouse.Core.Tests
                        5,
                        5
                     ),
-                    new KeyValueStorage("AlreadyConfirmed"),
+                    new KeyValueStorage(),
                     "11111"
                 ).DoneAsync()
             );
@@ -96,7 +96,7 @@ namespace Warehouse.Core.Tests
         {
             var confrimation = new StatefulGoodConfirmation(
                 new MockReceptionGood("1", 5).Confirmation,
-                new KeyValueStorage("ConfirmationDone"),
+                new KeyValueStorage(),
                 "11111"
             );
             var confirmedGood = await confrimation.FullyConfirmed();

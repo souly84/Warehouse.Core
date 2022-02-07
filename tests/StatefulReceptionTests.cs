@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Warehouse.Core.Tests.Extensions;
@@ -19,7 +20,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationOperationsStoredInPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationOperationsStoredInPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -36,7 +37,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationForExtraConfrimedGoodStoredInPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationForExtraConfrimedGoodStoredInPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -53,7 +54,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationForUnknownGoodStoredInPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationForUnknownGoodStoredInPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -70,7 +71,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task UnknownGoodConfirmationStoredInPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("UnknownGoodConfirmationStoredInPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -87,7 +88,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationRestoredFromPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationOperationsStoredInPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""Id2"" : 2 }"));
             persistanceLayer.Set("Repcetion_2", JObject.Parse(@"{ ""Id1"" : 2 }"));
             var goodsConfirmations = await new StatefulReception(
@@ -103,7 +104,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationForExtraConfirmedGoodRestoredFromPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationForExtraConfirmedGoodRestoredFromPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""360600"" : 3 }"));
             var good = await new StatefulReception(
                 _reception,
@@ -119,7 +120,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationForUnknownGoodRestoredFromPersistanceLayer()
         {
-            var persistanceLayer = new KeyValueStorage("ConfirmationForUnknownGoodRestoredFromPersistanceLayer");
+            var persistanceLayer = new KeyValueStorage();
             persistanceLayer.Set("Repcetion_1", JObject.Parse(@"{ ""UnknownBarcode"" : 3 }"));
             var good = await new StatefulReception(
                 _reception,
@@ -135,7 +136,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task PersistanceLayerClearedWhenConfirmationCommitted()
         {
-            var persistanceLayer = new KeyValueStorage("PersistanceLayerClearedWhenConfirmationCommitted");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -149,7 +150,7 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task MultipleReceptionsSupported()
         {
-            var persistanceLayer = new KeyValueStorage("MultipleReceptionsSupported");
+            var persistanceLayer = new KeyValueStorage();
             await new StatefulReception(
                 _reception,
                 persistanceLayer
@@ -173,6 +174,39 @@ namespace Warehouse.Core.Tests
             Assert.EqualJson(
                 @"{ ""Id2"": 2 }",
                 persistanceLayer.Get<JObject>("Repcetion_2").ToString()
+            );
+        }
+
+        [Fact]
+        public async Task ValidatesConfirmedGoods()
+        {
+            var reception = new MockReception(
+                "1",
+                new MockReceptionGood("1", 1, "1111"),
+                new MockReceptionGood("2", 2, "2222"),
+                new MockReceptionGood("3", 4, "3333")
+            );
+            await new StatefulReception(
+                reception
+                    .WithExtraConfirmed()
+                    .WithoutInitiallyConfirmed(),
+                new KeyValueStorage()
+            ).ConfirmAsync(
+                "UknownBarcode",
+                "1111",
+                "1111",
+                "2222"
+            );
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new ExtraConfirmedReceptionGood(
+                        new MockReceptionGood("1", 1, "1111")
+                    ).PartiallyConfirmed(2)).Confirmation,
+                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
+                    (await new MockReceptionGood("2", 2, "2222").PartiallyConfirmed(1)).Confirmation,
+                },
+                reception.ValidatedGoods
             );
         }
     }
