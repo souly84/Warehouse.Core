@@ -13,6 +13,15 @@ namespace Warehouse.Core.Tests.Extensions
             return good;
         }
 
+        public static async Task<IGoodConfirmation> FullyConfirmed(this IGoodConfirmation goodConfirmation)
+        {
+            while (!await goodConfirmation.Good.ConfirmedAsync())
+            {
+                goodConfirmation.Increase(1);
+            }
+            return goodConfirmation;
+        }
+
         public static async Task<IReceptionGood> PartiallyConfirmed(this IReceptionGood good, int confirmedQty)
         {
             if (!await good.ConfirmedAsync())
