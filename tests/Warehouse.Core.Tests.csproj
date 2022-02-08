@@ -23,5 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="SimpleStorage" />
+    <None Remove="EbSoft.Warehouse.SDK" />
   </ItemGroup>
 </Project>

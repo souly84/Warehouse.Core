@@ -209,5 +209,37 @@ namespace Warehouse.Core.Tests
                 reception.ValidatedGoods
             );
         }
+
+        [Fact]
+        public async Task RestoreReceptionState()
+        {
+            var reception = new MockReception(
+                 "9",
+                 await new MockReceptionGood("1", 1, "5449000131805").FullyConfirmed(),
+                 await new MockReceptionGood("2", 1, "5410013108009").FullyConfirmed(),
+                 await new MockReceptionGood("3", 1, "5410013108009").FullyConfirmed(),
+                 await new MockReceptionGood("4", 1, "5410013108009").FullyConfirmed(),
+                 new MockReceptionGood("5", 1, "5410013108009"),
+                 await new MockReceptionGood("6", 1, "4005176891021").FullyConfirmed()
+                 );
+            var keyValueStorage = new KeyValueStorage();
+            keyValueStorage.Set<JObject>("Repcetion_9", JObject.Parse(@"{
+                  ""5449000131805"": 1,
+                  ""5410013108009"": 1,
+                  ""4005176891021"": 1
+                }"));
+
+            var result = await new StatefulReception(reception
+                .WithExtraConfirmed()
+                .WithoutInitiallyConfirmed(),
+                keyValueStorage)
+                .NotConfirmedOnly()
+                .ToListAsync();
+
+            Assert.Equal(
+                4,
+                result.Sum(x => x.ConfirmedQuantity)
+                );
+        }
     }
 }
