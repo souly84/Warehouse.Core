@@ -53,24 +53,27 @@ namespace Warehouse.Core
 
         private async Task<IEnumerable<IReceptionGood>?> RestoreByBarcode(string barcode)
         {
-            IEnumerable<IReceptionGood>? goodsByBarcode = null;
+            List<IReceptionGood>? goodsByBarcode = new List<IReceptionGood>();
             var value = _goodsState.Get<int>(barcode);
             while (value != 0)
             {
-                goodsByBarcode = await _reception.ByBarcodeAsync(barcode);
-                foreach (var goodByKey in goodsByBarcode)
+                var goodByBarcode = await _reception.ByBarcodeAsync(barcode, true).FirstAsync();
+                
+                if (value > 0)
                 {
-                    if (value > 0)
-                    {
-                        Restore(goodByKey, 1);
-                        value--;
-                    }
-                    else
-                    {
-                        Restore(goodByKey, -1);
-                        value++;
-                    }
+                    Restore(goodByBarcode, 1);
+                    value--;
                 }
+                else
+                {
+                    Restore(goodByBarcode, -1);
+                    value++;
+                }
+                if (goodsByBarcode.Contains(goodByBarcode))
+                {
+                    goodsByBarcode.Remove(goodByBarcode);
+                }
+                goodsByBarcode.Add(goodByBarcode);
             }
             return goodsByBarcode;
         }
