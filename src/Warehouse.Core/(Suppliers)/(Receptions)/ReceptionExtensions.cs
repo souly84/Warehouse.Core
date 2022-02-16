@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Warehouse.Core.Plugins;
 
 namespace Warehouse.Core
 {
@@ -27,6 +28,13 @@ namespace Warehouse.Core
         public static IReception WithoutInitiallyConfirmed(this IReception reception)
         {
             return new ReceptionWithoutInitiallyConfirmedGoods(reception);
+        }
+
+        public static IReception WithConfirmationProgress(
+            this IReception reception,
+            IKeyValueStorage keyValueStorage)
+        {
+            return new StatefulReception(reception, keyValueStorage);
         }
 
         public static ReceptionWithUnkownGoods WithUnknown(this IReception reception)
