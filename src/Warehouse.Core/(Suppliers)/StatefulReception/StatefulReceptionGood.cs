@@ -26,6 +26,7 @@ namespace Warehouse.Core
         public bool IsExtraConfirmed => _origin.IsExtraConfirmed;
 
         public IGoodConfirmation Confirmation => new StatefulGoodConfirmation(
+            this,
             _origin.Confirmation,
             _goodState,
             Id
