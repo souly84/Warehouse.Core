@@ -11,11 +11,14 @@ namespace Warehouse.Core.Tests
         public void EqualsToOriginalConfirmation()
         {
             Assert.True(
-                new StatefulGoodConfirmation(
-                    new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0),
-                    new KeyValueStorage(),
-                    "11111"
-                ).Equals(new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0))
+                new MockReceptionGood("1", 1, "1111")
+                    .Stateful(new KeyValueStorage())
+                    .Confirmation.Equals(
+                        new GoodConfirmation(
+                            new MockReceptionGood("1", 1, "1111"),
+                            1
+                        )
+                    )
             );
         }
 
@@ -24,11 +27,9 @@ namespace Warehouse.Core.Tests
         {
             Assert.NotEqual(
                 0,
-                new StatefulGoodConfirmation(
-                    new GoodConfirmation(new MockReceptionGood("1", 1, "1111"), 0),
-                    new KeyValueStorage(),
-                    "11111"
-                ).GetHashCode()
+                new MockReceptionGood("1", 1, "1111")
+                    .Stateful(new KeyValueStorage())
+                    .Confirmation.GetHashCode()
             );
         }
 
@@ -37,11 +38,10 @@ namespace Warehouse.Core.Tests
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                new StatefulGoodConfirmation(
-                    new MockReceptionGood("1", 5).Confirmation,
-                    new KeyValueStorage(),
-                    "11111"
-                ).Decrease(1);
+                // Originally 0 Confirmed
+                var confrimation = new MockReceptionGood("1", 1, "1111")
+                    .Stateful(new KeyValueStorage())
+                     .Confirmation.Decrease(1);
             });
         }
 
@@ -50,11 +50,9 @@ namespace Warehouse.Core.Tests
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
-                var confrimation = new StatefulGoodConfirmation(
-                    new MockReceptionGood("1", 5).Confirmation,
-                    new KeyValueStorage(),
-                    "11111"
-                );
+                var confrimation = new MockReceptionGood("1", 5, "1111")
+                    .Stateful(new KeyValueStorage())
+                    .Confirmation;
                 confrimation.Increase(4);
                 confrimation.Increase(1);
                 confrimation.Increase(1);
@@ -64,12 +62,10 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task ConfirmationDone()
         {
-            var confrimation = new StatefulGoodConfirmation(
-                new MockReceptionGood("1", 5).Confirmation,
-                new KeyValueStorage(),
-                "11111"
-            );
-            var confirmedGood = await confrimation.FullyConfirmed();
+            var confirmedGood = await new MockReceptionGood("1", 1, "1111")
+                .Stateful(new KeyValueStorage())
+                .Confirmation
+                .FullyConfirmed();
             Assert.True(
                await confirmedGood.Good.ConfirmedAsync()
             );
@@ -78,29 +74,23 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task AlreadyConfirmed()
         {
+            var confirmedGood = await new MockReceptionGood("1", 5, "1111").FullyConfirmed();
             Assert.True(
-                await new StatefulGoodConfirmation(
-                    new GoodConfirmation(
-                       new MockReceptionGood("1", 5),
-                       5,
-                       5
-                    ),
-                    new KeyValueStorage(),
-                    "11111"
-                ).DoneAsync()
+                await confirmedGood
+                    .Stateful(new KeyValueStorage())
+                    .Confirmation
+                    .DoneAsync()
             );
         }
 
         [Fact]
         public async Task ConfirmationClear()
         {
-            var confrimation = new StatefulGoodConfirmation(
-                new MockReceptionGood("1", 5).Confirmation,
-                new KeyValueStorage(),
-                "11111"
-            );
-            var confirmedGood = await confrimation.FullyConfirmed();
-            var notConfirmed = confirmedGood.Good.Clear();
+            var confirmation = await new MockReceptionGood("1", 1, "1111")
+                .Stateful(new KeyValueStorage())
+                .Confirmation
+                .FullyConfirmed();
+            var notConfirmed = confirmation.Good.Clear();
             Assert.False(
                 await notConfirmed.ConfirmedAsync()
             );

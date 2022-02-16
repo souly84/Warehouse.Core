@@ -35,6 +35,20 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task AllGoodsAreStatefulInConfirmation()
+        {
+            var statefulReceptionConfrimations = await _reception
+                .WithConfirmationProgress(new KeyValueStorage())
+                .NotConfirmedOnly()
+                .ToListAsync();
+
+            Assert.True(
+                statefulReceptionConfrimations
+                    .All(confirmation => confirmation.Good is StatefulReceptionGood)
+            );
+        }
+
+        [Fact]
         public async Task ConfirmationForExtraConfrimedGoodStoredInPersistanceLayer()
         {
             var persistanceLayer = new KeyValueStorage();
