@@ -5,15 +5,19 @@ namespace Warehouse.Core
 {
     public class StatefulGoodConfirmation : IGoodConfirmation
     {
+        private readonly IReceptionGood _statfulGood;
         private readonly IGoodConfirmation _origin;
         private readonly IKeyValueStorage _goodState;
         private readonly string _goodUniqueKey;
 
         public StatefulGoodConfirmation(
+            IReceptionGood statfulGood,
             IGoodConfirmation origin,
             IKeyValueStorage goodState,
             string goodUniqueKey)
         {
+            // stateful good is needed not to lose the reference
+            _statfulGood = statfulGood;
             _origin = origin;
             _goodState = goodState;
             _goodUniqueKey = goodUniqueKey;
@@ -21,7 +25,7 @@ namespace Warehouse.Core
 
         public int ConfirmedQuantity => _origin.ConfirmedQuantity;
 
-        public IReceptionGood Good => _origin.Good;
+        public IReceptionGood Good => _statfulGood;
 
         public IConfirmationState State => _origin.State;
 
@@ -53,14 +57,16 @@ namespace Warehouse.Core
 
         public int Increase(int quantity)
         {
-            if (Good.IsExtraConfirmed && _goodState.Contains(Good.Id))
+            // _origin.Good.Id is used because current good already has overriden Id
+            // which contains a barcode but initial Id is needed
+            if (Good.IsExtraConfirmed && _goodState.Contains(_origin.Good.Id))
             {
                 // Usually it happens when extra confirmed good appears
                 _goodState.Set(
                    _goodUniqueKey,
-                   _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(Good.Id)
+                   _goodState.Get<int>(_goodUniqueKey) + _goodState.Get<int>(_origin.Good.Id)
                 );
-                _goodState.Remove(Good.Id);
+                _goodState.Remove(_origin.Good.Id);
             }
 
             _goodState.Set(

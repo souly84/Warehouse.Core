@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Warehouse.Core.Plugins;
 
 namespace Warehouse.Core
 {
@@ -32,6 +33,21 @@ namespace Warehouse.Core
         public static Task<bool> ConfirmedAsync(this IReceptionGood good)
         {
             return good.Confirmation.DoneAsync();
+        }
+
+        public static IReceptionGood Stateful(
+           this IReceptionGood good,
+           IKeyValueStorage keyValueStorage)
+        {
+            return good.Stateful(keyValueStorage, string.Empty);
+        }
+
+        public static IReceptionGood Stateful(
+            this IReceptionGood good,
+            IKeyValueStorage keyValueStorage,
+            string barcodeData)
+        {
+            return new StatefulReceptionGood(good, keyValueStorage, barcodeData);
         }
 
         public static IReceptionGood Clear(this IReceptionGood good)
