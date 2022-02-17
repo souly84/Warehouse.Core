@@ -7,18 +7,11 @@ namespace Warehouse.Core
     public class ReceptionWithExtraConfirmedGoods : IReception
     {
         private readonly IReception _reception;
-        private readonly int _defaultMaxQuantity;
         private readonly IList<IReceptionGood> _extraConfirmedGoods = new List<IReceptionGood>();
 
         public ReceptionWithExtraConfirmedGoods(IReception reception)
-            : this(reception, 1000)
-        {
-        }
-
-        public ReceptionWithExtraConfirmedGoods(IReception reception, int defaultMaxQuantity)
         {
             _reception = reception;
-            _defaultMaxQuantity = defaultMaxQuantity;
         }
 
         public IReceptionGoods Goods => new CombinedReceptionGoods(
@@ -45,7 +38,7 @@ namespace Warehouse.Core
             var goods = await _reception.ByBarcodeAsync(barcodeData, false);
             if (await NeedExtraGoodAsync(goods))
             {
-                var extraGood = new ExtraConfirmedReceptionGood(goods.ToList(), _defaultMaxQuantity);
+                var extraGood = new ExtraConfirmedReceptionGood(goods.ToList());
                 _extraConfirmedGoods.Add(extraGood);
                 return new List<IReceptionGood> { extraGood };
             }

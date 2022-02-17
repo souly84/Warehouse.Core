@@ -11,7 +11,6 @@ namespace Warehouse.Core
     public class ExtraConfirmedReceptionGood : IReceptionGood
     {
         private readonly IList<IReceptionGood> _goods;
-        private readonly int _defaultMaxQuantity;
         private IGoodConfirmation? _confirmation;
 
         public ExtraConfirmedReceptionGood(params IReceptionGood[] goods)
@@ -20,22 +19,16 @@ namespace Warehouse.Core
         }
 
         public ExtraConfirmedReceptionGood(IList<IReceptionGood> goods)
-            : this(goods, 1000)
-        {
-        }
-
-        public ExtraConfirmedReceptionGood(IList<IReceptionGood> goods, int defaultMaxQuantity)
         {
             _goods = goods;
-            _defaultMaxQuantity = defaultMaxQuantity;
         }
 
         public int Quantity => _goods.Sum(g => g.Quantity);
 
-        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(
+        public IGoodConfirmation Confirmation => _confirmation ??= new ExtraGoodConfirmation(
             this,
-            _defaultMaxQuantity,
-            GoodsConfirmed())
+             _goods.First(),
+            GoodsConfirmed()
         );
 
         public bool IsUnknown => false;
