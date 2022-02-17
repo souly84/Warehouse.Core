@@ -37,7 +37,7 @@ namespace Warehouse.Core
 
         private IConfirmationState.ConfirmationState ToEnum()
         {
-            if (_confirmedQty == _totalQty)
+            if (_confirmedQty >= _totalQty)
             {
                 return IConfirmationState.ConfirmationState.Confirmed;
             }

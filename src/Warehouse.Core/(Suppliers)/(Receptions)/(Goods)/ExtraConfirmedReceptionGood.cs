@@ -32,10 +32,10 @@ namespace Warehouse.Core
 
         public int Quantity => _goods.Sum(g => g.Quantity);
 
-        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(
+        public IGoodConfirmation Confirmation => _confirmation ??= new GoodConfirmation(
             this,
             _defaultMaxQuantity,
-            GoodsConfirmed())
+            GoodsConfirmed()
         );
 
         public bool IsUnknown => false;

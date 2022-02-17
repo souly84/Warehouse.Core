@@ -16,7 +16,11 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("2", 8),
                 new MockReceptionGood("3", 3),
                 // this one is initially confirmed and should be skipped from the final comit
-                await new MockReceptionGood("4", 3).FullyConfirmed()
+                await new MockReceptionGood("4", 3).FullyConfirmed(),
+                // this one is initially extra confirmed and should be skipped from the final comit
+                await new ExtraConfirmedReceptionGood(
+                    await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
+                ).PartiallyConfirmed(1)
             );
 
             var receptionWithoutConfirmed = reception.WithoutInitiallyConfirmed();
@@ -30,6 +34,34 @@ namespace Warehouse.Core.Tests
                     (await new MockReceptionGood("3", 3).PartiallyConfirmed(2)).Confirmation
                 },
                 reception.ValidatedGoods
+            );
+        }
+
+        [Fact]
+        public async Task InitiallyExtraConfirmedGoodsNotVisibleInTheList()
+        {
+            var reception = new MockReception(
+                "1",
+                new MockReceptionGood("1", 4),
+                new MockReceptionGood("2", 8),
+                new MockReceptionGood("3", 3),
+                // this one is initially extra confirmed and should not be visible in the list
+                await new ExtraConfirmedReceptionGood(
+                    await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
+                ).PartiallyConfirmed(1)
+            );
+
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    new MockReceptionGood("1", 4).Confirmation,
+                    new MockReceptionGood("2", 8).Confirmation,
+                    new MockReceptionGood("3", 3).Confirmation,
+                },
+                await reception
+                    .WithoutInitiallyConfirmed()
+                    .NotConfirmedOnly()
+                    .ToListAsync()
             );
         }
 

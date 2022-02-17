@@ -50,6 +50,18 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task AlreadyExtraConfirmed()
+        {
+            Assert.True(
+               await new GoodConfirmation(
+                   new MockReceptionGood("1", 5),
+                   5,
+                   6
+               ).DoneAsync()
+            );
+        }
+
+        [Fact]
         public async Task ConfirmationClear()
         {
             var confirmedGood = await new MockReceptionGood("1", 5).FullyConfirmed();

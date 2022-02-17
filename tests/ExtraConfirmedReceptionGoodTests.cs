@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using Warehouse.Core.Tests.Extensions;
+using Xunit;
 
 namespace Warehouse.Core.Tests
 {
@@ -52,6 +54,17 @@ namespace Warehouse.Core.Tests
                     new MockReceptionGood("2", 3, "2222"),
                     new MockReceptionGood("3", 4, "333")
                 ).GetHashCode()
+            );
+        }
+
+        [Fact]
+        public async Task FullyConfirmedOnceInitiallyConfirmed()
+        {
+            var initiallyExtraConfirmedGood = new ExtraConfirmedReceptionGood(
+                await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
+            );
+            Assert.True(
+                await initiallyExtraConfirmedGood.ConfirmedAsync()
             );
         }
     }
