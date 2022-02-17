@@ -67,5 +67,18 @@ namespace Warehouse.Core.Tests
                 await initiallyExtraConfirmedGood.ConfirmedAsync()
             );
         }
+
+        [Fact]
+        public async Task PartiallyConfirmedOnceInitiallyConfirmedWasUpdated()
+        {
+            var initiallyExtraConfirmedGood = new ExtraConfirmedReceptionGood(
+                await new MockReceptionGood("4", 3, "360602").FullyConfirmed()
+            );
+            initiallyExtraConfirmedGood.Confirmation.Increase(1);
+            Assert.Equal(
+                IConfirmationState.ConfirmationState.Partially,
+                await initiallyExtraConfirmedGood.Confirmation.State.ToEnumAsync()
+            );
+        }
     }
 }

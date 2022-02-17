@@ -24,7 +24,7 @@ namespace Warehouse.Core.Tests.Extensions
 
         public static async Task<IReceptionGood> PartiallyConfirmed(this IReceptionGood good, int confirmedQty)
         {
-            if (!await good.ConfirmedAsync())
+            if (!await good.ConfirmedAsync() || good is ExtraConfirmedReceptionGood)
             {
                 good.Confirmation.Increase(confirmedQty);
             }

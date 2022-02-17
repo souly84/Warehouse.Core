@@ -19,6 +19,7 @@ namespace Warehouse.Core
     {
         private readonly string _id;
         private readonly string? _barcode;
+        private readonly int _confirmedQuantity;
         private IGoodConfirmation? _confirmation;
 
         public MockReceptionGood(
@@ -26,18 +27,19 @@ namespace Warehouse.Core
             int quantity,
             string? barcode = null,
             bool isUnknown = false,
-            bool isExtraConfirmed = false)
+            int confirmedQuantity = 0)
         {
             _id = id;
             Quantity = quantity;
             _barcode = barcode;
             IsUnknown = isUnknown;
-            IsExtraConfirmed = isExtraConfirmed;
+            IsExtraConfirmed = confirmedQuantity > Quantity;
+            _confirmedQuantity = confirmedQuantity;
         }
 
         public string Id => _id;
 
-        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity));
+        public IGoodConfirmation Confirmation => _confirmation ?? (_confirmation = new GoodConfirmation(this, Quantity, _confirmedQuantity));
 
         public int Quantity { get; }
 

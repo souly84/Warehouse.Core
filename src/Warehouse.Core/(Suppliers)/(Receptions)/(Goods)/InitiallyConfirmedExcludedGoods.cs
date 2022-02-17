@@ -32,11 +32,11 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
             return new InitiallyConfirmedExcludedGoods((IReceptionGoods)_goods.With(filter));
         }
 
-        public IList<IGoodConfirmation> ExcludeInitiallyConfirmed(IList<IGoodConfirmation> goodsToValidate)
+        public async Task<IList<IGoodConfirmation>> ExcludeInitiallyConfirmed(IList<IGoodConfirmation> goodsToValidate)
         {
-            return goodsToValidate
-                .Where(confirmation => !InitiallyConfirmedGood(confirmation.Good))
-                .ToList();
+            var goods = await goodsToValidate
+                .WhereAsync(async confirmation => !await InitiallyConfirmedGoodAsync(confirmation.Good));
+            return goods.ToList();
         }
 
         private async Task SetupInitiallyConfirmedGoodsAsync(IList<IReceptionGood> goods)
@@ -50,7 +50,7 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
             }
         }
 
-        private bool InitiallyConfirmedGood(IReceptionGood good)
+        private async Task<bool> InitiallyConfirmedGoodAsync(IReceptionGood good)
         {
             _ = _initiallyConfirmedGoods ?? throw new InvalidOperationException(
                 "Initially confirmed goods collection should be initialized."
@@ -58,7 +58,7 @@ namespace Warehouse.Core.Suppliers.Receptions.Goods
             var confirmedGood = _initiallyConfirmedGoods.FirstOrDefault(g => g.Equals(good));
             if (confirmedGood != null)
             {
-                if (good.IsExtraConfirmed)
+                if (good.IsExtraConfirmed && await good.Confirmation.PartiallyAsync())
                 {
                     ReduceAlreadyConfirmedQuantity(good, confirmedGood);
                     return false;
