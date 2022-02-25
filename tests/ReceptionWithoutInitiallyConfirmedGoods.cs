@@ -101,6 +101,7 @@ namespace Warehouse.Core.Tests
             );
             await reception
                 .WithExtraConfirmed()
+                .WithoutExtraConfirmedGoodDuplicates()
                 .WithoutInitiallyConfirmed()
                 .ConfirmAsync(
                     "UknownBarcode",

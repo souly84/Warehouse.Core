@@ -102,6 +102,36 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
+        public async Task ValidatesConfirmedGoods_WithoutExtraConfirmedGoodDuplicates()
+        {
+            var reception = new MockReception(
+                "1",
+                new MockReceptionGood("1", 2, "360600"),
+                new MockReceptionGood("2", 8, "360601")
+            );
+            await reception
+                .WithExtraConfirmed()
+                .WithoutExtraConfirmedGoodDuplicates()
+                .ConfirmAsync(
+                    "360600",
+                    "360600",
+                    "360600",
+                    "360600",
+                    "360601"
+                );
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                    (await new ExtraConfirmedReceptionGood(
+                        new MockReceptionGood("1", 2, "360600")
+                    ).PartiallyConfirmed(4)).Confirmation,
+                    (await new MockReceptionGood("2", 8, "360601").PartiallyConfirmed(1)).Confirmation,
+                },
+                reception.ValidatedGoods
+            );
+        }
+
+        [Fact]
         public async Task ValidatesConfirmedGoods()
         {
             var reception = new MockReception(
@@ -123,7 +153,8 @@ namespace Warehouse.Core.Tests
                 {
                     (await new ExtraConfirmedReceptionGood(
                         new MockReceptionGood("1", 2, "360600")
-                    ).PartiallyConfirmed(4)).Confirmation,
+                    ).PartiallyConfirmed(2)).Confirmation,
+                    (await new MockReceptionGood("1", 2, "360600").FullyConfirmed()).Confirmation,
                     (await new MockReceptionGood("2", 8, "360601").PartiallyConfirmed(1)).Confirmation,
                 },
                 reception.ValidatedGoods

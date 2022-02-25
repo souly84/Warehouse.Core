@@ -200,17 +200,18 @@ namespace Warehouse.Core.Tests
                 new MockReceptionGood("2", 2, "2222"),
                 new MockReceptionGood("3", 4, "3333")
             );
-            await new StatefulReception(
-                reception
-                    .WithExtraConfirmed()
-                    .WithoutInitiallyConfirmed(),
-                new KeyValueStorage()
-            ).ConfirmAsync(
-                "UknownBarcode",
-                "1111",
-                "1111",
-                "2222"
-            );
+            // Act
+            await reception
+                .WithExtraConfirmed()
+                .WithoutExtraConfirmedGoodDuplicates()
+                .WithoutInitiallyConfirmed()
+                .WithConfirmationProgress(new KeyValueStorage())
+                .ConfirmAsync(
+                    "UknownBarcode",
+                    "1111",
+                    "1111",
+                    "2222"
+                );
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {

@@ -20,9 +20,14 @@ namespace Warehouse.Core
             return reception.Confirmation().DoneAsync();
         }
 
-        public static ReceptionWithExtraConfirmedGoods WithExtraConfirmed(this IReception reception)
+        public static IReception WithExtraConfirmed(this IReception reception)
         {
             return new ReceptionWithExtraConfirmedGoods(reception.WithUnknown());
+        }
+
+        public static IReception WithoutExtraConfirmedGoodDuplicates(this IReception reception)
+        {
+            return new ReceptionWithoutExtraConfirmedGoodDuplicates(reception);
         }
 
         public static IReception WithoutInitiallyConfirmed(this IReception reception)
