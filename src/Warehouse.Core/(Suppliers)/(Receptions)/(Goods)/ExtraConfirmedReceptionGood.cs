@@ -27,7 +27,7 @@ namespace Warehouse.Core
 
         public IGoodConfirmation Confirmation => _confirmation ??= new ExtraGoodConfirmation(
             this,
-             _goods.First(),
+            _goods.First(),
             GoodsConfirmed()
         );
 

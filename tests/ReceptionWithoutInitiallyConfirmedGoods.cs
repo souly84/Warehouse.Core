@@ -111,10 +111,10 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {
+                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
                     (await new ExtraConfirmedReceptionGood(
                         new MockReceptionGood("1", 1, "1111")
                     ).PartiallyConfirmed(2)).Confirmation,
-                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
                     (await new MockReceptionGood("2", 2, "2222").PartiallyConfirmed(1)).Confirmation,
                 },
                 reception.ValidatedGoods
