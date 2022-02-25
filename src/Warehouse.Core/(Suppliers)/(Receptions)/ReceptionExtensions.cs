@@ -25,11 +25,6 @@ namespace Warehouse.Core
             return new ReceptionWithExtraConfirmedGoods(reception.WithUnknown());
         }
 
-        public static IReception WithoutExtraConfirmedGoodDuplicates(this IReception reception)
-        {
-            return new ReceptionWithoutExtraConfirmedGoodDuplicates(reception);
-        }
-
         public static IReception WithoutInitiallyConfirmed(this IReception reception)
         {
             return new ReceptionWithoutInitiallyConfirmedGoods(reception);

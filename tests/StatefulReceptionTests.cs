@@ -203,7 +203,6 @@ namespace Warehouse.Core.Tests
             // Act
             await reception
                 .WithExtraConfirmed()
-                .WithoutExtraConfirmedGoodDuplicates()
                 .WithoutInitiallyConfirmed()
                 .WithConfirmationProgress(new KeyValueStorage())
                 .ConfirmAsync(
@@ -215,10 +214,10 @@ namespace Warehouse.Core.Tests
             Assert.Equal(
                 new List<IGoodConfirmation>
                 {
+                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
                     (await new ExtraConfirmedReceptionGood(
                         new MockReceptionGood("1", 1, "1111")
                     ).PartiallyConfirmed(2)).Confirmation,
-                    (await new MockReceptionGood("", 1000, "UknownBarcode", isUnknown: true).PartiallyConfirmed(1)).Confirmation,
                     (await new MockReceptionGood("2", 2, "2222").PartiallyConfirmed(1)).Confirmation,
                 },
                 reception.ValidatedGoods
@@ -228,6 +227,13 @@ namespace Warehouse.Core.Tests
         [Fact]
         public async Task RestoreReceptionState()
         {
+            var keyValueStorage = new KeyValueStorage();
+            keyValueStorage.Set("Repcetion_9", JObject.Parse(@"{
+                ""5449000131805"": 1,
+                ""5410013108009"": 1,
+                ""4005176891021"": 1
+            }"));
+
             var reception = new MockReception(
                  "9",
                  await new MockReceptionGood("1", 1, "5449000131805").FullyConfirmed(),
@@ -236,25 +242,19 @@ namespace Warehouse.Core.Tests
                  await new MockReceptionGood("4", 1, "5410013108009").FullyConfirmed(),
                  new MockReceptionGood("5", 1, "5410013108009"),
                  await new MockReceptionGood("6", 1, "4005176891021").FullyConfirmed()
-                 );
-            var keyValueStorage = new KeyValueStorage();
-            keyValueStorage.Set<JObject>("Repcetion_9", JObject.Parse(@"{
-                  ""5449000131805"": 1,
-                  ""5410013108009"": 1,
-                  ""4005176891021"": 1
-                }"));
+            );
 
-            var result = await new StatefulReception(reception
+            var result = await reception
                 .WithExtraConfirmed()
-                .WithoutInitiallyConfirmed(),
-                keyValueStorage)
+                .WithoutInitiallyConfirmed()
+                .WithConfirmationProgress(keyValueStorage)
                 .NotConfirmedOnly()
                 .ToListAsync();
 
             Assert.Equal(
                 4,
                 result.Sum(x => x.ConfirmedQuantity)
-                );
+            );
         }
     }
 }
