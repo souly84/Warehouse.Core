@@ -40,7 +40,7 @@ namespace Warehouse.Core.Tests
         }
 
         [Fact]
-        public async Task DoesNotCombineExtraConfirmedGoodQuantity_WithOriginal()
+        public async Task CombinesExtraConfirmedGoodQuantity_WithOriginal()
         {
             var good = await new MockReception(
                 "1",
