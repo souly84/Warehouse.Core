@@ -30,6 +30,11 @@ namespace Warehouse.Core
             return new ReceptionWithoutInitiallyConfirmedGoods(reception);
         }
 
+        public static IReception WithoutExtraConfirmedDuplicates(this IReception reception)
+        {
+            return new ReceptionWithoutExtraConfirmedGoodDuplicates(reception);
+        }
+
         public static IReception WithConfirmationProgress(
             this IReception reception,
             IKeyValueStorage keyValueStorage)
