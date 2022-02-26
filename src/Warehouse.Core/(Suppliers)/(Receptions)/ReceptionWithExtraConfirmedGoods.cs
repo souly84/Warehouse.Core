@@ -23,9 +23,7 @@ namespace Warehouse.Core
 
         public Task ValidateAsync(IList<IGoodConfirmation> goodsToValidate)
         {
-            return _reception.ValidateAsync(
-                new WithoutExtraConfirmedGoodDuplicates(goodsToValidate).ToList()
-            );
+            return _reception.ValidateAsync(goodsToValidate);
         }
 
         public async Task<IList<IReceptionGood>> ByBarcodeAsync(string barcodeData, bool ignoreConfirmed = false)

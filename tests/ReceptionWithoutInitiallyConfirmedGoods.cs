@@ -73,6 +73,7 @@ namespace Warehouse.Core.Tests
             await reception
                 .WithoutInitiallyConfirmed()
                 .WithExtraConfirmed()
+                .WithoutExtraConfirmedDuplicates()
                 .ConfirmAsync(
                     "360601",
                     "360602"
@@ -102,6 +103,7 @@ namespace Warehouse.Core.Tests
             await reception
                 .WithExtraConfirmed()
                 .WithoutInitiallyConfirmed()
+                .WithoutExtraConfirmedDuplicates()
                 .ConfirmAsync(
                     "UknownBarcode",
                     "1111",

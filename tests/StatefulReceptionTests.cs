@@ -204,6 +204,7 @@ namespace Warehouse.Core.Tests
             await reception
                 .WithExtraConfirmed()
                 .WithoutInitiallyConfirmed()
+                .WithoutExtraConfirmedDuplicates()
                 .WithConfirmationProgress(new KeyValueStorage())
                 .ConfirmAsync(
                     "UknownBarcode",
