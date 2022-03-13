@@ -211,12 +211,25 @@ namespace Warehouse.Core.Tests
         // Souleymen, should show fully confirmed or partially confirmed should be presented also???
         public async Task HistoryShowsFullyConfimedGoodsOnly()
         {
-            Assert.Contains(
-                (await new MockReceptionGood("1", 4, "360601").FullyConfirmed()).Confirmation,
+            Assert.Equal(
+                new List<IGoodConfirmation>
+                {
+                     (await new MockReceptionGood("1", 4, "360601").FullyConfirmed()).Confirmation,
+                     (await new ExtraConfirmedReceptionGood(
+                        await new MockReceptionGood("4", 4, "360603").FullyConfirmed()
+                     ).PartiallyConfirmed(1)).Confirmation,
+                     (await new MockReception("1")
+                        .Goods.UnkownGood("Unknown")
+                        .PartiallyConfirmed(1)).Confirmation,
+                },
                 await new MockReception(
                     "1",
                     await new MockReceptionGood("1", 4, "360601").FullyConfirmed(),
-                    await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4)
+                    await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4),
+                    (await new ExtraConfirmedReceptionGood(
+                        await new MockReceptionGood("4", 4, "360603").FullyConfirmed()
+                    ).PartiallyConfirmed(1)),
+                    await new MockReception("1").Goods.UnkownGood("Unknown").PartiallyConfirmed(1)
                 ).Confirmation()
                  .History()
                  .ToListAsync()

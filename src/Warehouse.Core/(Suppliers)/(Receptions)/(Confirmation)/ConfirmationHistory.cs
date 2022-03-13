@@ -19,7 +19,9 @@ namespace Warehouse.Core
             var goodConfirmations = await _confirmation.ToListAsync();
             foreach (var goodConfirmation in goodConfirmations)
             {
-                if (await goodConfirmation.DoneAsync())
+                if (await goodConfirmation.DoneAsync()
+                    || goodConfirmation.Good.IsExtraConfirmed
+                    || goodConfirmation.Good.IsUnknown)
                 {
                     confirmedOnly.Add(goodConfirmation);
                 }
