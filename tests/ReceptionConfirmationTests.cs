@@ -218,6 +218,9 @@ namespace Warehouse.Core.Tests
                      (await new ExtraConfirmedReceptionGood(
                         await new MockReceptionGood("4", 4, "360603").FullyConfirmed()
                      ).PartiallyConfirmed(1)).Confirmation,
+                     (await new MockReception("1")
+                        .Goods.UnkownGood("Unknown")
+                        .PartiallyConfirmed(1)).Confirmation,
                 },
                 await new MockReception(
                     "1",
@@ -225,7 +228,8 @@ namespace Warehouse.Core.Tests
                     await new MockReceptionGood("2", 8, "360602").PartiallyConfirmed(4),
                     (await new ExtraConfirmedReceptionGood(
                         await new MockReceptionGood("4", 4, "360603").FullyConfirmed()
-                    ).PartiallyConfirmed(1))
+                    ).PartiallyConfirmed(1)),
+                    await new MockReception("1").Goods.UnkownGood("Unknown").PartiallyConfirmed(1)
                 ).Confirmation()
                  .History()
                  .ToListAsync()
