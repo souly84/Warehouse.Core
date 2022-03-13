@@ -8,7 +8,7 @@ namespace Warehouse.Core.Tests
     public class ListExtensionsTests
     {
         [Fact]
-        public async Task FirstAsync()
+        public async Task WhereAsync()
         {
             Assert.Equal(
                  new List<IReceptionGood>
@@ -52,6 +52,35 @@ namespace Warehouse.Core.Tests
                        new MockReceptionGood("3", 5),
                        new MockReceptionGood("4", 5)
                  }.FirstAsync(good => Task.FromResult(good.Equals(new MockReceptionGood("3", 5))))
+            );
+        }
+
+        [Fact]
+        public async Task FirstOrDefaultAsync_WithPredicate()
+        {
+            Assert.Equal(
+                 new MockReceptionGood("3", 5),
+                 await new List<IReceptionGood>
+                 {
+                       new MockReceptionGood("1", 5),
+                       new MockReceptionGood("2", 5),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 5)
+                 }.FirstOrDefaultAsync(good => Task.FromResult(good.Equals(new MockReceptionGood("3", 5))))
+            );
+        }
+
+        [Fact]
+        public async Task NullWhenNotFound()
+        {
+            Assert.Null(
+                 await new List<IReceptionGood>
+                 {
+                       new MockReceptionGood("1", 1),
+                       new MockReceptionGood("2", 3),
+                       new MockReceptionGood("3", 5),
+                       new MockReceptionGood("4", 7)
+                 }.FirstOrDefaultAsync(a => Task.FromResult(a == null))
             );
         }
     }
