@@ -106,5 +106,19 @@ namespace Warehouse.Core
         {
             return (await listTask).FirstOrDefault();
         }
+
+        public static async Task<T> FirstOrDefaultAsync<T>(
+            this IEnumerable<T> list,
+            Func<T, Task<bool>> predicateAsync)
+        {
+            foreach (var item in list)
+            {
+                if (await predicateAsync(item))
+                {
+                    return item;
+                }
+            }
+            return default(T);
+        }
     }
 }
