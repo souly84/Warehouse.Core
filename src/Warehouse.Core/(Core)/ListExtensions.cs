@@ -100,5 +100,11 @@ namespace Warehouse.Core
                 item => list.Contains(item)
             );
         }
+
+        public static async Task<T> FirstOrDefaultAsync<T>(
+            this Task<IEnumerable<T>> listTask)
+        {
+            return (await listTask).FirstOrDefault();
+        }
     }
 }
