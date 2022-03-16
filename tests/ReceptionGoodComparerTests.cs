@@ -45,5 +45,29 @@ namespace Warehouse.Core.Tests
                 )
             );
         }
+
+        [Fact]
+        public void RegularGoodIsGreaterThanUnknown()
+        {
+            Assert.Equal(
+                1,
+                new ReceptionGoodComparer().Compare(
+                     new MockReceptionGood("1", 1),
+                     new MockReceptionGood("1", 1, isUnknown: true)
+                )
+            );
+        }
+
+        [Fact]
+        public void RegularGoodIsGreaterThanExtraConfirmed()
+        {
+            Assert.Equal(
+                1,
+                new ReceptionGoodComparer().Compare(
+                     new MockReceptionGood("1", 1),
+                     new MockReceptionGood("1", 1, confirmedQuantity: 2)
+                )
+            );
+        }
     }
 }
