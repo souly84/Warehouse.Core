@@ -41,7 +41,7 @@ namespace Warehouse.Core
                 return y.IsExtraConfirmed ? 0 : -1;
             }
 
-            return y.IsExtraConfirmed ? 1 : 0;
+            return (y.IsExtraConfirmed || y.IsUnknown) ? 1 : 0;
         }
     }
 }
