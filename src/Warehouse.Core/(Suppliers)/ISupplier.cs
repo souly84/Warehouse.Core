@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaPrint;
@@ -20,17 +19,26 @@ namespace Warehouse.Core
         {
         }
 
-        public MockSupplier(string supplierName) :
-            this(
+        public MockSupplier(string supplierName)
+            : this(
+                supplierName,
+                DateTime.Now
+            )
+        {
+        }
+
+        public MockSupplier(string supplierName, DateTime receptionsDate)
+            : this(
                 supplierName,
                 new MockReception(
                     "1",
+                    receptionsDate,
                     new MockReceptionGood("1", 2, "123456789"),
                     new MockReceptionGood("2", 2, "123456780"),
                     new MockReceptionGood("3", 2, "123456781"),
                     new MockReceptionGood("4", 2, "123456782")
+                )
             )
-        )
         {
         }
 
